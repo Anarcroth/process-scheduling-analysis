@@ -2,6 +2,8 @@
 #include <chrono>
 #include <thread>
 
+#include "process.h"
+
 void draw_frame();
 
 int main()
@@ -9,14 +11,20 @@ int main()
     initscr();
     noecho();
     cbreak();
+    process pr1;
     int ch;
     nodelay(stdscr, TRUE);
-    while (1) {
+    while (1)
+    {
 	std::this_thread::sleep_for(std::chrono::milliseconds(100));
 	draw_frame();
-	if ((ch = getch()) == ERR) {
+	if ((ch = getch()) == ERR)
+	{
 	}
-	else {
+	else
+	{
+	    move(10, 10);
+	    addstr(pr1.get_id().c_str());
 	}
     }
     refresh();
