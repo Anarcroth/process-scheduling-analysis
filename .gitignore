@@ -2,6 +2,8 @@
 **/*.aux
 **/*.log
 compile_commands.json
+.bootrtags.sh
+nohup.out
 
 # Created by https://www.gitignore.io/api/c++
 # Edit at https://www.gitignore.io/?templates=c++
