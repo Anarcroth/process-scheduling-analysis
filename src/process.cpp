@@ -1,5 +1,5 @@
 #include <string>
-#include <vector>
+#include <algorithm>
 #include <iomanip>
 #include <sstream>
 #include <random>
@@ -37,8 +37,9 @@ std::string process::set_id()
     std::string temp_id = "";
     std::stringstream sstream;
     sstream << std::hex << raw_id(rng);
-
-    return sstream.str().substr(0, 4);
+    temp_id = sstream.str().substr(0, 4);
+    std::transform(temp_id.begin(), temp_id.end(), temp_id.begin(), ::toupper);
+    return temp_id;
 }
 
 unsigned int process::set_ttl()
