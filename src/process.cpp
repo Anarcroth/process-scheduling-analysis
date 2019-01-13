@@ -1,10 +1,7 @@
 #include <string>
-#include <algorithm>
-#include <iomanip>
-#include <sstream>
-#include <random>
 
 #include "process.h"
+#include "commons.h"
 #include "priority.h"
 
 process::process() : pr(set_pr()), id(set_id()), ttl(set_ttl())
@@ -31,14 +28,10 @@ priority process::set_pr()
 
 std::string process::set_id()
 {
-    std::mt19937 rng;
-    rng.seed(std::random_device()());
-    std::uniform_int_distribution<std::mt19937::result_type> raw_id;
-    std::string temp_id = "";
-    std::stringstream sstream;
-    sstream << std::hex << raw_id(rng);
-    temp_id = sstream.str().substr(0, 4);
+    std::string temp_id = commons::get().gen_hex();
+    temp_id = temp_id.substr(0, 4);
     std::transform(temp_id.begin(), temp_id.end(), temp_id.begin(), ::toupper);
+
     return temp_id;
 }
 
