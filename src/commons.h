@@ -4,7 +4,6 @@
 #include <string>
 #include <algorithm>
 #include <iomanip>
-#include <sstream>
 #include <random>
 
 class commons
@@ -15,12 +14,14 @@ public:
     commons(commons const&)        = delete;
     void operator=(commons const&) = delete;
 
+    int gen_rand();
+    int gen_rand(int l, int h);
     std::string gen_hex();
+
 private:
     commons();
 
     std::mt19937 rng;
-    std::stringstream sstream;
     std::uniform_int_distribution<std::mt19937::result_type> raw_int;
 };
 

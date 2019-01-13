@@ -16,14 +16,34 @@ process::process(priority p, unsigned int t) : pr(p), id(set_id()), ttl(t)
 {
 }
 
+std::string process::get_pr() const
+{
+    switch(pr)
+    {
+    case priority::LOW:
+	return "LOW";
+    case priority::MEDIUM:
+	return "MEDIUM";
+    case priority::HIGH:
+	return "HIGH";
+    default:
+	return "EXTREME";
+    }
+}
+
 std::string process::get_id() const
 {
     return id;
 }
 
+unsigned int process::get_ttl() const
+{
+    return ttl;
+}
+
 priority process::set_pr()
 {
-    return priority::MEDIUM;
+    return static_cast<priority>(commons::get().gen_rand() % 4);
 }
 
 std::string process::set_id()

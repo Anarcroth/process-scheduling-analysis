@@ -12,9 +12,9 @@ public:
     process(priority pr);
     process(priority pr, unsigned int ttl);
 
-    priority get_pr();
+    std::string get_pr() const;
     std::string get_id() const;
-    unsigned int get_ttl();
+    unsigned int get_ttl() const;
 
 private:
     priority pr;

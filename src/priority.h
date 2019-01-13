@@ -3,7 +3,7 @@
 
 enum class priority
 {
-    LOW,
+    LOW = 0,
     MEDIUM,
     HIGH,
     EXTREME
