@@ -13,14 +13,13 @@ public:
     void operator=(commons const&) = delete;
 
     int gen_rand();
-    int gen_rand(int l, int h);
+    int gen_rand(int lower_bound, int upper_bound);
     std::string gen_hex();
 
 private:
     commons();
 
     std::mt19937 rng;
-    std::uniform_int_distribution<std::mt19937::result_type> raw_int;
 };
 
 #endif

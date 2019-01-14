@@ -1,6 +1,8 @@
 #ifndef __PRIORITY_H_INCLUDED__
 #define __PRIORITY_H_INCLUDED__
 
+#include <string>
+
 enum class priority
 {
     LOW = 0,
@@ -8,5 +10,7 @@ enum class priority
     HIGH,
     EXTREME
 };
+
+std::string prtostr(priority pr);
 
 #endif

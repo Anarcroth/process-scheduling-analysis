@@ -25,6 +25,8 @@ int main()
 	{
 	    move(10, 10);
 	    addstr(pr1.get_id().c_str());
+	    move(11, 10);
+	    addstr(prtostr(pr1.get_pr()).c_str());
 	    refresh();
 	}
     }
