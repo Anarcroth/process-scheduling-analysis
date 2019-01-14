@@ -1,8 +1,6 @@
 #ifndef __PROCESS_H_INCLUDED__
 #define __PROCESS_H_INCLUDED__
 
-#include <string>
-
 #include "priority.h"
 
 class process
