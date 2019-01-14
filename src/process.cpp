@@ -1,4 +1,5 @@
 #include <string>
+#include <algorithm>
 
 #include "process.h"
 #include "commons.h"
