@@ -33,5 +33,5 @@ std::string process::get_id()
 
 unsigned int process::get_ttl()
 {
-    return ttl;
+    return commons::get().gen_rand(0, 1000);
 }
