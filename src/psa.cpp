@@ -27,7 +27,8 @@ int main()
 	    addstr(pr1.get_id().c_str());
 	    move(11, 10);
 	    addstr(prtostr(pr1.get_pr()).c_str());
-	    refresh();
+	    move(12, 10);
+	    addstr(std::to_string(pr1.get_ttl()).c_str());
 	}
     }
     refresh();
