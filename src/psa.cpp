@@ -3,6 +3,7 @@
 #include <thread>
 
 #include "process.h"
+#include "priority.h"
 
 void draw_frame();
 

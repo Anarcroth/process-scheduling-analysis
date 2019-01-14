@@ -3,7 +3,7 @@
 
 #include <string>
 
-enum class priority
+enum class priority : unsigned short
 {
     LOW = 0,
     MEDIUM,
