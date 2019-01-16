@@ -1,24 +1,24 @@
 #include "screen.h"
 
-const int PSAscreen::W_Y_ALG = 10;
-const int PSAscreen::W_X_ALG = 10;
-const int PSAscreen::W_W_ALG = 40;
-const int PSAscreen::W_H_ALG = 3;
+const int PSAscreen::W_Y_ALG = 1;
+const int PSAscreen::W_X_ALG = 3;
+const int PSAscreen::W_W_ALG = 120;
+const int PSAscreen::W_H_ALG = 39;
 
 const int PSAscreen::W_Y_PRC = 40;
-const int PSAscreen::W_X_PRC = 10;
-const int PSAscreen::W_W_PRC = 60;
-const int PSAscreen::W_H_PRC = 5;
+const int PSAscreen::W_X_PRC = 3;
+const int PSAscreen::W_W_PRC = 57;
+const int PSAscreen::W_H_PRC = 15;
 
 const int PSAscreen::W_Y_DONE = 40;
-const int PSAscreen::W_X_DONE = 80;
-const int PSAscreen::W_W_DONE = 60;
-const int PSAscreen::W_H_DONE = 5;
+const int PSAscreen::W_X_DONE = 66;
+const int PSAscreen::W_W_DONE = 57;
+const int PSAscreen::W_H_DONE = 15;
 
-const int PSAscreen::W_Y_LEGEND = 10;
-const int PSAscreen::W_X_LEGEND = 160;
-const int PSAscreen::W_W_LEGEND = 20;
-const int PSAscreen::W_H_LEGEND = 40;
+const int PSAscreen::W_Y_LEGEND = 1;
+const int PSAscreen::W_X_LEGEND = 124;
+const int PSAscreen::W_W_LEGEND = 64;
+const int PSAscreen::W_H_LEGEND = 54;
 
 
 PSAscreen::PSAscreen()
