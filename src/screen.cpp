@@ -33,6 +33,11 @@ PSAscreen::PSAscreen()
     wprc = newwin(W_H_PRC, W_W_PRC, W_Y_PRC, W_X_PRC);
     wdone = newwin(W_H_DONE, W_W_DONE, W_Y_DONE, W_X_DONE);
     wlegend = newwin(W_H_LEGEND, W_W_LEGEND, W_Y_LEGEND, W_X_LEGEND);
+
+    wattron(walg, A_BOLD);
+    wattron(wprc, A_BOLD);
+    wattron(wdone, A_BOLD);
+    wattron(wlegend, A_BOLD);
 }
 
 void PSAscreen::draw_frame()
@@ -44,23 +49,31 @@ void PSAscreen::draw_frame()
 void PSAscreen::draw_frame_alg()
 {
     box(walg, 0, 0);
+    wmove(walg, 0, 1);
+    waddstr(walg, " ALGORITHM ");
     wrefresh(walg);
 }
 
 void PSAscreen::draw_frame_prc()
 {
     box(wprc, 0, 0);
+    wmove(wprc, 0, 1);
+    waddstr(wprc, " PROCESS ");
     wrefresh(wprc);
 }
 
 void PSAscreen::draw_frame_done()
 {
     box(wdone, 0, 0);
+    wmove(wdone, 0, 1);
+    waddstr(wdone, " DONE ");
     wrefresh(wdone);
 }
 
 void PSAscreen::draw_frame_legend()
 {
     box(wlegend, 0, 0);
+    wmove(wlegend, 0, 1);
+    waddstr(wlegend, " LEGEND ");
     wrefresh(wlegend);
 }
