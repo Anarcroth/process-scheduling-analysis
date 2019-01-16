@@ -13,6 +13,7 @@ public:
     void draw_frame_prc();
     void draw_frame_done();
     void draw_frame_legend();
+    void draw_small_arrows();
 
 private:
     static const int W_X_ALG;

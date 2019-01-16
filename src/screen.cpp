@@ -43,7 +43,21 @@ PSAscreen::PSAscreen()
 void PSAscreen::draw_frame()
 {
     box(stdscr, 0, 0);
+    draw_small_arrows();
     refresh();
+}
+
+void PSAscreen::draw_small_arrows()
+{
+    // This draws the small arrows between the
+    // Process and Done window
+    move(45, 62);
+    addch(ACS_RARROW);
+    addch(ACS_RARROW);
+    move(50, 62);
+    addch(ACS_RARROW);
+    addch(ACS_RARROW);
+
 }
 
 void PSAscreen::draw_frame_alg()
