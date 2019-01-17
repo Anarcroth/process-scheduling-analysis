@@ -9,6 +9,7 @@ class PSAscreen
 {
 public:
     PSAscreen();
+    ~PSAscreen();
 
     void draw_frame();
     void draw_frame_alg();

@@ -14,7 +14,7 @@ int main()
     int ch;
     while (1)
     {
-	std::this_thread::sleep_for(std::chrono::milliseconds(60));
+	std::this_thread::sleep_for(std::chrono::milliseconds(30));
 	scr.draw_frame();
 	scr.draw_frame_alg();
 	scr.draw_frame_prc();
@@ -43,6 +43,5 @@ int main()
     }
     processes.clear();
 
-    endwin();
     return 0;
 }

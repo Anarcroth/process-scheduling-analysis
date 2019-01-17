@@ -84,7 +84,7 @@ void PSAscreen::draw_frame_prc()
 void PSAscreen::add_prc(std::vector<process*> &processes)
 {
     int w = 1, h = 1;
-    for (int i = 0; i < processes.size(); i++)
+    for (size_t i = 0; i < processes.size(); i++)
     {
 	if (w >= W_W_PRC - 2)
 	{
@@ -115,4 +115,13 @@ void PSAscreen::draw_frame_legend()
     wmove(wlegend, 0, 1);
     waddstr(wlegend, " LEGEND ");
     wrefresh(wlegend);
+}
+
+PSAscreen::~PSAscreen()
+{
+    delwin(walg);
+    delwin(wprc);
+    delwin(wdone);
+    delwin(wlegend);
+    endwin();
 }
