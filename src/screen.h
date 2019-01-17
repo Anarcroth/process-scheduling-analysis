@@ -3,6 +3,8 @@
 
 #include <ncurses.h>
 
+class process;
+
 class PSAscreen
 {
 public:
@@ -14,6 +16,7 @@ public:
     void draw_frame_done();
     void draw_frame_legend();
     void draw_small_arrows();
+    void add_prc(std::vector<process*> &processes);
 
 private:
     static const int W_X_ALG;

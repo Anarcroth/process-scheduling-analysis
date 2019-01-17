@@ -1,5 +1,7 @@
 #include <chrono>
 #include <thread>
+#include <vector>
+#include <memory>
 
 #include "process.h"
 #include "priority.h"
@@ -7,12 +9,12 @@
 
 int main()
 {
+    std::vector<process*> processes;
     PSAscreen scr;
-    process pr1;
     int ch;
     while (1)
     {
-	std::this_thread::sleep_for(std::chrono::milliseconds(100));
+	std::this_thread::sleep_for(std::chrono::milliseconds(60));
 	scr.draw_frame();
 	scr.draw_frame_alg();
 	scr.draw_frame_prc();
@@ -20,18 +22,27 @@ int main()
 	scr.draw_frame_legend();
 	if ((ch = getch()) == ERR)
 	{
+
 	}
 	else
 	{
-	    move(10, 10);
-	    addstr(pr1.get_id().c_str());
-	    move(11, 10);
-	    addstr(prtostr(pr1.get_pr()).c_str());
-	    move(12, 10);
-	    addstr(std::to_string(pr1.get_ttl()).c_str());
+	    switch(ch)
+	    {
+	    case 'r':
+		processes.push_back(new process());
+		scr.add_prc(processes);
+		break;
+	    }
 	}
 	refresh();
     }
+
+    for (std::vector<process*>::iterator it = processes.begin(); it != processes.end(); ++it)
+    {
+	delete (*it);
+    }
+    processes.clear();
+
     endwin();
     return 0;
 }

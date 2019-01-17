@@ -1,4 +1,8 @@
+#include <string>
+#include <vector>
+
 #include "screen.h"
+#include "process.h"
 
 const int PSAscreen::W_Y_ALG = 1;
 const int PSAscreen::W_X_ALG = 3;
@@ -36,6 +40,7 @@ PSAscreen::PSAscreen()
 
     wattron(walg, A_BOLD);
     wattron(wprc, A_BOLD);
+    //scrollok(wprc, TRUE);
     wattron(wdone, A_BOLD);
     wattron(wlegend, A_BOLD);
 }
@@ -50,7 +55,7 @@ void PSAscreen::draw_frame()
 void PSAscreen::draw_small_arrows()
 {
     // This draws the small arrows between the
-    // Process and Done window
+    // Process and Done windows
     move(45, 62);
     addch(ACS_RARROW);
     addch(ACS_RARROW);
@@ -74,6 +79,26 @@ void PSAscreen::draw_frame_prc()
     wmove(wprc, 0, 1);
     waddstr(wprc, " PROCESS ");
     wrefresh(wprc);
+}
+
+void PSAscreen::add_prc(std::vector<process*> &processes)
+{
+    int w = 1, h = 1;
+    for (int i = 0; i < processes.size(); i++)
+    {
+	if (w >= W_W_PRC - 2)
+	{
+	    w = 1;
+	    h += 1;
+	}
+	if (h >= W_H_PRC)
+	{
+	    break;
+	}
+	wmove(wprc, h, w);
+	waddstr(wprc, processes[i]->get_id().c_str());
+	w += 5;
+    }
 }
 
 void PSAscreen::draw_frame_done()
