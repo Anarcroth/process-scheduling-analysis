@@ -3,6 +3,7 @@
 
 #include "screen.h"
 #include "process.h"
+#include "priority.h"
 
 const int PSAscreen::W_Y_ALG = 1;
 const int PSAscreen::W_X_ALG = 3;
@@ -32,6 +33,18 @@ PSAscreen::PSAscreen()
     cbreak();
     curs_set(0);
     nodelay(stdscr, TRUE);
+    if(has_colors() == FALSE)
+    {	endwin();
+	printf("Your terminal does not support color\n");
+	exit(1);
+    }
+    start_color();
+    init_pair(1, COLOR_BLUE, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(4, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(5, COLOR_RED, COLOR_BLACK);
+    init_pair(6, COLOR_WHITE, COLOR_BLACK);
 
     walg = newwin(W_H_ALG, W_W_ALG, W_Y_ALG, W_X_ALG);
     wprc = newwin(W_H_PRC, W_W_PRC, W_Y_PRC, W_X_PRC);
@@ -40,7 +53,6 @@ PSAscreen::PSAscreen()
 
     wattron(walg, A_BOLD);
     wattron(wprc, A_BOLD);
-    //scrollok(wprc, TRUE);
     wattron(wdone, A_BOLD);
     wattron(wlegend, A_BOLD);
 }
@@ -96,8 +108,28 @@ void PSAscreen::add_prc(std::vector<process*> &processes)
 	    break;
 	}
 	wmove(wprc, h, w);
+	int n = 2;
+	switch (processes[i]->get_pr())
+	{
+	case priority::LOW:
+	    wattron(wprc, COLOR_PAIR(n));
+	    break;
+	case priority::MEDIUM:
+	    n = 3;
+	    wattron(wprc, COLOR_PAIR(3));
+	    break;
+	case priority::HIGH:
+	    n = 4;
+	    wattron(wprc, COLOR_PAIR(n));
+	    break;
+	case priority::EXTREME:
+	    n = 5;
+	    wattron(wprc, COLOR_PAIR(n));
+	    break;
+	}
 	waddstr(wprc, processes[i]->get_id().c_str());
 	w += 5;
+	wattron(wprc, COLOR_PAIR(6));
     }
 }
 
