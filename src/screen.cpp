@@ -7,22 +7,22 @@
 
 const int PSAscreen::W_Y_ALG = 1;
 const int PSAscreen::W_X_ALG = 3;
-const int PSAscreen::W_W_ALG = 120;
+const int PSAscreen::W_W_ALG = 119;
 const int PSAscreen::W_H_ALG = 39;
 
 const int PSAscreen::W_Y_PRC = 40;
 const int PSAscreen::W_X_PRC = 3;
-const int PSAscreen::W_W_PRC = 57;
+const int PSAscreen::W_W_PRC = 56;
 const int PSAscreen::W_H_PRC = 15;
 
 const int PSAscreen::W_Y_DONE = 40;
 const int PSAscreen::W_X_DONE = 66;
-const int PSAscreen::W_W_DONE = 57;
+const int PSAscreen::W_W_DONE = 56;
 const int PSAscreen::W_H_DONE = 15;
 
 const int PSAscreen::W_Y_LEGEND = 1;
-const int PSAscreen::W_X_LEGEND = 124;
-const int PSAscreen::W_W_LEGEND = 64;
+const int PSAscreen::W_X_LEGEND = 123;
+const int PSAscreen::W_W_LEGEND = 65;
 const int PSAscreen::W_H_LEGEND = 54;
 
 
@@ -103,7 +103,7 @@ void PSAscreen::add_prc(std::vector<process*> &processes)
 	    w = 1;
 	    h += 1;
 	}
-	if (h >= W_H_PRC)
+	if (h >= W_H_PRC - 1)
 	{
 	    break;
 	}
