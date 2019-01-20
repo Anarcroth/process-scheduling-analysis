@@ -1,15 +1,16 @@
 #ifndef __FCFS_H_INCLUDED__
 #define __FCFS_H_INCLUDED__
 
-#include <vector>
+#include "alg.h"
 
-class process;
-
-class fcfs
+class fcfs : public alg
 {
 public:
     fcfs();
     ~fcfs();
+
+    void work();
 private:
-    std::vector<process*> queue;
 };
+
+#endif
