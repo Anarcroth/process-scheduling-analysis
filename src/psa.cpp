@@ -6,11 +6,13 @@
 #include "process.h"
 #include "priority.h"
 #include "screen.h"
+#include "fcfs.h"
 
 int main()
 {
     std::vector<process*> processes;
     PSAscreen scr;
+    fcfs f;
     int ch;
     while (1)
     {

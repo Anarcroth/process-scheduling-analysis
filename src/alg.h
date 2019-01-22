@@ -1,7 +1,7 @@
 #ifndef __ALG_H_INCLUDED__
 #define __ALG_H_INCLUDED__
 
-#include <vector>
+#include <queue>
 
 class process;
 
@@ -12,8 +12,10 @@ public:
     ~alg();
 
     void work();
-private:
-    std::vector<process*> queue;
+
+protected:
+    // TODO use smart pointers instead of raw ones
+    std::queue<process*> p_que;
 };
 
 #endif
