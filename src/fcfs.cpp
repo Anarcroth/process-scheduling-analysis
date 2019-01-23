@@ -8,6 +8,10 @@ fcfs::fcfs()
 {
 }
 
+fcfs::~fcfs()
+{
+}
+
 void fcfs::work()
 {
     while (p_que.size() > 0)

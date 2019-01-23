@@ -7,9 +7,10 @@ alg::alg()
 
 alg::~alg()
 {
-    for (auto it = queue.begin(); it != queue.end(); ++it)
+    for (size_t i = 0; i < p_que.size(); i++)
     {
-	delete (*it);
+	delete &p_que.front();
     }
-    queue.clear();
+    // This clears the queue
+    p_que = {};
 }
