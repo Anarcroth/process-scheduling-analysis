@@ -34,6 +34,9 @@ int main()
 		processes.push_back(new process());
 		scr.add_prc(processes);
 		break;
+	    case 's':
+		f.work(processes);
+		break;
 	    }
 	}
 	refresh();

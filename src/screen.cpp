@@ -5,6 +5,8 @@
 #include "process.h"
 #include "priority.h"
 
+// TODO	add orange color
+
 const int PSAscreen::W_Y_ALG = 1;
 const int PSAscreen::W_X_ALG = 3;
 const int PSAscreen::W_W_ALG = 119;
@@ -131,6 +133,17 @@ void PSAscreen::add_prc(std::vector<process*> &processes)
 	w += 5;
 	wattron(wprc, COLOR_PAIR(6));
     }
+}
+
+void PSAscreen::show_process(process* pr)
+{
+    wmove(walg, 2, 2);
+    waddstr(walg, pr->get_id().c_str());
+    wmove(walg, 3, 2);
+    waddstr(walg, prtostr(pr->get_pr()).c_str());
+    wmove(walg, 4, 2);
+    waddstr(walg, std::to_string(pr->get_ttl()).c_str());
+    wrefresh(walg);
 }
 
 void PSAscreen::draw_frame_done()

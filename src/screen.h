@@ -17,6 +17,9 @@ public:
     void draw_frame_done();
     void draw_frame_legend();
     void draw_small_arrows();
+
+    void show_process(process* pr);
+
     void add_prc(std::vector<process*> &processes);
 
 private:
