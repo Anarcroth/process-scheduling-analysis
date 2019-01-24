@@ -11,17 +11,16 @@
 int main()
 {
     std::vector<process*> processes;
-    PSAscreen scr;
     fcfs f;
     int ch;
     while (1)
     {
 	std::this_thread::sleep_for(std::chrono::milliseconds(30));
-	scr.draw_frame();
-	scr.draw_frame_alg();
-	scr.draw_frame_prc();
-	scr.draw_frame_done();
-	scr.draw_frame_legend();
+	PSAscreen::get().draw_frame();
+	PSAscreen::get().draw_frame_alg();
+	PSAscreen::get().draw_frame_prc();
+	PSAscreen::get().draw_frame_done();
+	PSAscreen::get().draw_frame_legend();
 	if ((ch = getch()) == ERR)
 	{
 
@@ -32,14 +31,14 @@ int main()
 	    {
 	    case 'r':
 		processes.push_back(new process());
-		scr.add_prc(processes);
+	        PSAscreen::get().add_prc(processes);
 		break;
 	    case 's':
 		f.work(processes);
 		break;
 	    }
 	}
-	refresh();
+	//refresh();
     }
 
     for (std::vector<process*>::iterator it = processes.begin(); it != processes.end(); ++it)

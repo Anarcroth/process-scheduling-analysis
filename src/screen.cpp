@@ -15,18 +15,17 @@ const int PSAscreen::W_H_ALG = 39;
 const int PSAscreen::W_Y_PRC = 40;
 const int PSAscreen::W_X_PRC = 3;
 const int PSAscreen::W_W_PRC = 56;
-const int PSAscreen::W_H_PRC = 15;
+const int PSAscreen::W_H_PRC = 12;
 
 const int PSAscreen::W_Y_DONE = 40;
 const int PSAscreen::W_X_DONE = 66;
 const int PSAscreen::W_W_DONE = 56;
-const int PSAscreen::W_H_DONE = 15;
+const int PSAscreen::W_H_DONE = 12;
 
 const int PSAscreen::W_Y_LEGEND = 1;
 const int PSAscreen::W_X_LEGEND = 123;
 const int PSAscreen::W_W_LEGEND = 65;
-const int PSAscreen::W_H_LEGEND = 54;
-
+const int PSAscreen::W_H_LEGEND = 51;
 
 PSAscreen::PSAscreen()
 {
@@ -57,6 +56,12 @@ PSAscreen::PSAscreen()
     wattron(wprc, A_BOLD);
     wattron(wdone, A_BOLD);
     wattron(wlegend, A_BOLD);
+}
+
+PSAscreen& PSAscreen::get()
+{
+    static PSAscreen intstance;
+    return intstance;
 }
 
 void PSAscreen::draw_frame()

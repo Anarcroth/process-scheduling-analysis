@@ -8,8 +8,10 @@ class process;
 class PSAscreen
 {
 public:
-    PSAscreen();
-    ~PSAscreen();
+    static PSAscreen& get();
+
+    PSAscreen(PSAscreen const&)      = delete;
+    void operator=(PSAscreen const&) = delete;
 
     void draw_frame();
     void draw_frame_alg();
@@ -23,6 +25,9 @@ public:
     void add_prc(std::vector<process*> &processes);
 
 private:
+    PSAscreen();
+    ~PSAscreen();
+
     static const int W_X_ALG;
     static const int W_Y_ALG;
     static const int W_W_ALG;
