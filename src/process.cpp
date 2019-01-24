@@ -39,5 +39,15 @@ std::string process::set_id()
 
 unsigned int process::set_ttl()
 {
-    return commons::get().gen_rand(0, 1000);
+    switch (get_pr())
+    {
+    case priority::LOW:
+	return commons::get().gen_rand(0, 300);
+    case priority::MEDIUM:
+	return commons::get().gen_rand(300, 900);
+    case priority::HIGH:
+	return commons::get().gen_rand(900, 1500);
+    default: // priority::EXTREME
+	return commons::get().gen_rand(1500, 3000);
+    }
 }
