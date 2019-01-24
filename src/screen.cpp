@@ -29,23 +29,8 @@ const int PSAscreen::W_H_LEGEND = 51;
 
 PSAscreen::PSAscreen()
 {
-    initscr();
-    noecho();
-    cbreak();
-    curs_set(0);
-    nodelay(stdscr, TRUE);
-    if(has_colors() == FALSE)
-    {	endwin();
-	printf("Your terminal does not support color\n");
-	exit(1);
-    }
-    start_color();
-    init_pair(1, COLOR_BLUE, COLOR_BLACK);
-    init_pair(2, COLOR_GREEN, COLOR_BLACK);
-    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(4, COLOR_MAGENTA, COLOR_BLACK);
-    init_pair(5, COLOR_RED, COLOR_BLACK);
-    init_pair(6, COLOR_WHITE, COLOR_BLACK);
+    // Makes basic setup and starts colors
+    init();
 
     walg = newwin(W_H_ALG, W_W_ALG, W_Y_ALG, W_X_ALG);
     wprc = newwin(W_H_PRC, W_W_PRC, W_Y_PRC, W_X_PRC);
@@ -58,46 +43,46 @@ PSAscreen::PSAscreen()
     wattron(wlegend, A_BOLD);
 }
 
+void PSAscreen::init()
+{
+    initscr();
+    noecho();
+    cbreak();
+    curs_set(0);
+    nodelay(stdscr, TRUE);
+
+    if (has_colors() == FALSE)
+    {
+	endwin();
+	printf("Your terminal does not support color\n");
+	exit(1);
+    }
+
+    start_color();
+    init_pair(1, COLOR_BLUE, COLOR_BLACK);
+    init_pair(2, COLOR_GREEN, COLOR_BLACK);
+    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(4, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(5, COLOR_RED, COLOR_BLACK);
+    init_pair(6, COLOR_WHITE, COLOR_BLACK);
+}
+
 PSAscreen& PSAscreen::get()
 {
     static PSAscreen intstance;
     return intstance;
 }
 
-void PSAscreen::draw_frame()
-{
-    box(stdscr, 0, 0);
-    draw_small_arrows();
-    wnoutrefresh(stdscr);
-}
-
 void PSAscreen::draw_small_arrows()
 {
     // This draws the small arrows between the
     // Process and Done windows
-    move(45, 62);
+    move(43, 62);
     addch(ACS_RARROW);
     addch(ACS_RARROW);
-    move(50, 62);
+    move(48, 62);
     addch(ACS_RARROW);
     addch(ACS_RARROW);
-
-}
-
-void PSAscreen::draw_frame_alg()
-{
-    box(walg, 0, 0);
-    wmove(walg, 0, 1);
-    waddstr(walg, " ALGORITHM ");
-    wnoutrefresh(walg);
-}
-
-void PSAscreen::draw_frame_prc()
-{
-    box(wprc, 0, 0);
-    wmove(wprc, 0, 1);
-    waddstr(wprc, " PROCESS ");
-    wnoutrefresh(wprc);
 }
 
 void PSAscreen::add_prc(std::vector<process*> &processes)
@@ -124,42 +109,64 @@ void PSAscreen::add_prc(std::vector<process*> &processes)
 
 void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 {
-    int n = 2;
     switch (pr)
     {
     case priority::LOW:
-	wattron(w, COLOR_PAIR(n));
+	wattron(w, COLOR_PAIR(2));
 	break;
     case priority::MEDIUM:
-	n = 3;
 	wattron(w, COLOR_PAIR(3));
 	break;
     case priority::HIGH:
-	n = 4;
-	wattron(w, COLOR_PAIR(n));
+	wattron(w, COLOR_PAIR(4));
 	break;
     case priority::EXTREME:
-	n = 5;
-	wattron(w, COLOR_PAIR(n));
+	wattron(w, COLOR_PAIR(5));
 	break;
     }
 }
 
 void PSAscreen::show_process(process* pr)
 {
+    // This will color in the process
     colorinprocess(walg, pr->get_pr());
+
     wmove(walg, 2, 2);
     waddstr(walg, pr->get_id().c_str());
+
+    // This clears the previous data, since it might be too long in chars
     wmove(walg, 3, 2);
-    waddstr(walg, "          ");
-    wmove(walg, 3, 2);
-    waddstr(walg, prtostr(pr->get_pr()).c_str());
+    waddstr(walg, (prtostr(pr->get_pr()) + "    ").c_str());
+
+    // This clears the previous data, since it might be too long in chars
     wmove(walg, 4, 2);
-    waddstr(walg, "          ");
-    wmove(walg, 4, 2);
-    waddstr(walg, std::to_string(pr->get_ttl()).c_str());
+    waddstr(walg, (std::to_string(pr->get_ttl()) + "    ").c_str());
+
     wattron(walg, COLOR_PAIR(6));
     wrefresh(walg);
+}
+
+void PSAscreen::draw_frame()
+{
+    box(stdscr, 0, 0);
+    draw_small_arrows();
+    wnoutrefresh(stdscr);
+}
+
+void PSAscreen::draw_frame_alg()
+{
+    box(walg, 0, 0);
+    wmove(walg, 0, 1);
+    waddstr(walg, " ALGORITHM ");
+    wnoutrefresh(walg);
+}
+
+void PSAscreen::draw_frame_prc()
+{
+    box(wprc, 0, 0);
+    wmove(wprc, 0, 1);
+    waddstr(wprc, " PROCESS ");
+    wnoutrefresh(wprc);
 }
 
 void PSAscreen::draw_frame_done()

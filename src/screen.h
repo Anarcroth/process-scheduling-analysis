@@ -30,6 +30,7 @@ private:
     PSAscreen();
     ~PSAscreen();
 
+    void init();
     void colorinprocess(WINDOW *w, priority pr);
 
     static const int W_X_ALG;
