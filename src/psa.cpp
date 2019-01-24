@@ -15,12 +15,6 @@ int main()
     int ch;
     while (1)
     {
-	std::this_thread::sleep_for(std::chrono::milliseconds(50));
-	PSAscreen::get().draw_frame();
-	PSAscreen::get().draw_frame_alg();
-	PSAscreen::get().draw_frame_prc();
-	PSAscreen::get().draw_frame_done();
-	PSAscreen::get().draw_frame_legend();
 	if ((ch = getch()) == ERR)
 	{
 
@@ -38,6 +32,12 @@ int main()
 		break;
 	    }
 	}
+	std::this_thread::sleep_for(std::chrono::milliseconds(50));
+	PSAscreen::get().draw_frame();
+	PSAscreen::get().draw_frame_alg();
+	PSAscreen::get().draw_frame_prc();
+	PSAscreen::get().draw_frame_done();
+	PSAscreen::get().draw_frame_legend();
 	doupdate();
     }
 

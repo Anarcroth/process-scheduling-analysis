@@ -3,6 +3,8 @@
 
 #include <ncurses.h>
 
+#include "priority.h"
+
 class process;
 
 class PSAscreen
@@ -27,6 +29,8 @@ public:
 private:
     PSAscreen();
     ~PSAscreen();
+
+    void colorinprocess(WINDOW *w, priority pr);
 
     static const int W_X_ALG;
     static const int W_Y_ALG;

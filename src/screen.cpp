@@ -115,39 +115,50 @@ void PSAscreen::add_prc(std::vector<process*> &processes)
 	    break;
 	}
 	wmove(wprc, h, w);
-	int n = 2;
-	switch (processes[i]->get_pr())
-	{
-	case priority::LOW:
-	    wattron(wprc, COLOR_PAIR(n));
-	    break;
-	case priority::MEDIUM:
-	    n = 3;
-	    wattron(wprc, COLOR_PAIR(3));
-	    break;
-	case priority::HIGH:
-	    n = 4;
-	    wattron(wprc, COLOR_PAIR(n));
-	    break;
-	case priority::EXTREME:
-	    n = 5;
-	    wattron(wprc, COLOR_PAIR(n));
-	    break;
-	}
+	colorinprocess(wprc, processes[i]->get_pr());
 	waddstr(wprc, processes[i]->get_id().c_str());
 	w += 5;
 	wattron(wprc, COLOR_PAIR(6));
     }
 }
 
+void PSAscreen::colorinprocess(WINDOW *w, priority pr)
+{
+    int n = 2;
+    switch (pr)
+    {
+    case priority::LOW:
+	wattron(w, COLOR_PAIR(n));
+	break;
+    case priority::MEDIUM:
+	n = 3;
+	wattron(w, COLOR_PAIR(3));
+	break;
+    case priority::HIGH:
+	n = 4;
+	wattron(w, COLOR_PAIR(n));
+	break;
+    case priority::EXTREME:
+	n = 5;
+	wattron(w, COLOR_PAIR(n));
+	break;
+    }
+}
+
 void PSAscreen::show_process(process* pr)
 {
+    colorinprocess(walg, pr->get_pr());
     wmove(walg, 2, 2);
     waddstr(walg, pr->get_id().c_str());
     wmove(walg, 3, 2);
+    waddstr(walg, "          ");
+    wmove(walg, 3, 2);
     waddstr(walg, prtostr(pr->get_pr()).c_str());
     wmove(walg, 4, 2);
+    waddstr(walg, "          ");
+    wmove(walg, 4, 2);
     waddstr(walg, std::to_string(pr->get_ttl()).c_str());
+    wattron(walg, COLOR_PAIR(6));
     wrefresh(walg);
 }
 
