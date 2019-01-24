@@ -9,7 +9,7 @@ public:
     fcfs();
     ~fcfs();
 
-    void work();
+    void work(std::vector<process*> processes);
 private:
 };
 

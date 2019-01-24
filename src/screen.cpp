@@ -68,7 +68,7 @@ void PSAscreen::draw_frame()
 {
     box(stdscr, 0, 0);
     draw_small_arrows();
-    refresh();
+    wnoutrefresh(stdscr);
 }
 
 void PSAscreen::draw_small_arrows()
@@ -89,7 +89,7 @@ void PSAscreen::draw_frame_alg()
     box(walg, 0, 0);
     wmove(walg, 0, 1);
     waddstr(walg, " ALGORITHM ");
-    wrefresh(walg);
+    wnoutrefresh(walg);
 }
 
 void PSAscreen::draw_frame_prc()
@@ -97,7 +97,7 @@ void PSAscreen::draw_frame_prc()
     box(wprc, 0, 0);
     wmove(wprc, 0, 1);
     waddstr(wprc, " PROCESS ");
-    wrefresh(wprc);
+    wnoutrefresh(wprc);
 }
 
 void PSAscreen::add_prc(std::vector<process*> &processes)
@@ -156,7 +156,7 @@ void PSAscreen::draw_frame_done()
     box(wdone, 0, 0);
     wmove(wdone, 0, 1);
     waddstr(wdone, " DONE ");
-    wrefresh(wdone);
+    wnoutrefresh(wdone);
 }
 
 void PSAscreen::draw_frame_legend()
@@ -164,7 +164,7 @@ void PSAscreen::draw_frame_legend()
     box(wlegend, 0, 0);
     wmove(wlegend, 0, 1);
     waddstr(wlegend, " LEGEND ");
-    wrefresh(wlegend);
+    wnoutrefresh(wlegend);
 }
 
 PSAscreen::~PSAscreen()

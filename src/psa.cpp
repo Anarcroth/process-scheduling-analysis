@@ -15,7 +15,7 @@ int main()
     int ch;
     while (1)
     {
-	std::this_thread::sleep_for(std::chrono::milliseconds(30));
+	std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	PSAscreen::get().draw_frame();
 	PSAscreen::get().draw_frame_alg();
 	PSAscreen::get().draw_frame_prc();
@@ -38,7 +38,7 @@ int main()
 		break;
 	    }
 	}
-	//refresh();
+	doupdate();
     }
 
     for (std::vector<process*>::iterator it = processes.begin(); it != processes.end(); ++it)

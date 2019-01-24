@@ -3,6 +3,7 @@
 
 #include "fcfs.h"
 #include "process.h"
+#include "screen.h"
 
 fcfs::fcfs()
 {
@@ -12,11 +13,11 @@ fcfs::~fcfs()
 {
 }
 
-void fcfs::work()
+void fcfs::work(std::vector<process*> processes)
 {
-    while (p_que.size() > 0)
+    for (auto &p : processes)
     {
-	std::this_thread::sleep_for(std::chrono::milliseconds(p_que.front()->get_ttl()));
-	p_que.pop();
+	std::this_thread::sleep_for(std::chrono::milliseconds(p->get_ttl()));
+	PSAscreen::get().show_process(p);
     }
 }
