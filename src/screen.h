@@ -58,6 +58,8 @@ private:
     static const int W_W_LEGEND;
     static const int W_H_LEGEND;
 
+    static const int COLOR_ORANGE;
+
     WINDOW *walg;
     WINDOW *wprc;
     WINDOW *wdone;

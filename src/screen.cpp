@@ -5,8 +5,6 @@
 #include "process.h"
 #include "priority.h"
 
-// TODO	add orange color
-
 const int PSAscreen::W_Y_ALG = 1;
 const int PSAscreen::W_X_ALG = 3;
 const int PSAscreen::W_W_ALG = 119;
@@ -26,6 +24,8 @@ const int PSAscreen::W_Y_LEGEND = 1;
 const int PSAscreen::W_X_LEGEND = 123;
 const int PSAscreen::W_W_LEGEND = 65;
 const int PSAscreen::W_H_LEGEND = 51;
+
+const int PSAscreen::COLOR_ORANGE = 100;
 
 PSAscreen::PSAscreen()
 {
@@ -59,10 +59,11 @@ void PSAscreen::init()
     }
 
     start_color();
+    init_color(COLOR_ORANGE, 1000, 647, 0);
     init_pair(1, COLOR_BLUE, COLOR_BLACK);
     init_pair(2, COLOR_GREEN, COLOR_BLACK);
     init_pair(3, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(4, COLOR_MAGENTA, COLOR_BLACK);
+    init_pair(4, COLOR_ORANGE, COLOR_BLACK);
     init_pair(5, COLOR_RED, COLOR_BLACK);
     init_pair(6, COLOR_WHITE, COLOR_BLACK);
 }
