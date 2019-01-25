@@ -73,6 +73,26 @@ PSAscreen& PSAscreen::get()
     return intstance;
 }
 
+WINDOW* PSAscreen::get_walg() const
+{
+    return walg;
+}
+
+WINDOW* PSAscreen::get_wprc() const
+{
+    return wprc;
+}
+
+WINDOW* PSAscreen::get_wdone() const
+{
+    return wdone;
+}
+
+WINDOW* PSAscreen::get_wlegend() const
+{
+    return wlegend;
+}
+
 void PSAscreen::draw_small_arrows()
 {
     // This draws the small arrows between the
@@ -85,25 +105,25 @@ void PSAscreen::draw_small_arrows()
     addch(ACS_RARROW);
 }
 
-void PSAscreen::add_prc(std::vector<process*> &processes)
+void PSAscreen::push_prc_in(WINDOW* w, std::vector<process*> &processes)
 {
-    int w = 1, h = 1;
+    int width = 1, height = 1;
     for (size_t i = 0; i < processes.size(); i++)
     {
-	if (w >= W_W_PRC - 2)
+	if (width >= W_W_PRC - 2)
 	{
-	    w = 1;
-	    h += 1;
+	    width = 1;
+	    height += 1;
 	}
-	if (h >= W_H_PRC - 1)
+	if (height >= W_H_PRC - 1)
 	{
 	    break;
 	}
-	wmove(wprc, h, w);
-	colorinprocess(wprc, processes[i]->get_pr());
-	waddstr(wprc, processes[i]->get_id().c_str());
-	w += 5;
-	wattron(wprc, COLOR_PAIR(6));
+	wmove(w, height, width);
+	colorinprocess(w, processes[i]->get_pr());
+	waddstr(w, processes[i]->get_id().c_str());
+	width += 5;
+	wattron(w, COLOR_PAIR(6));
     }
 }
 
