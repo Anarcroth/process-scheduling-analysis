@@ -22,6 +22,7 @@ int main()
 	    {
 	    case 'r':
 		processes.push_back(new process());
+		PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
 		break;
 	    case 's':
 		f.work(processes);
@@ -31,7 +32,6 @@ int main()
 	PSAscreen::get().draw_frame();
 	PSAscreen::get().draw_frame_alg();
 	PSAscreen::get().draw_frame_prc();
-	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
 	PSAscreen::get().draw_frame_done();
 	PSAscreen::get().draw_frame_legend();
 	doupdate();

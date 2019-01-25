@@ -107,6 +107,7 @@ void PSAscreen::draw_small_arrows()
 
 void PSAscreen::push_prc_in(WINDOW* w, std::vector<process*> &processes)
 {
+    wclear(w);
     int width = 1, height = 1;
     for (size_t i = 0; i < processes.size(); i++)
     {
