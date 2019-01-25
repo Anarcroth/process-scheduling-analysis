@@ -1,7 +1,4 @@
-#include <chrono>
-#include <thread>
 #include <vector>
-#include <memory>
 
 #include "process.h"
 #include "priority.h"
@@ -31,7 +28,6 @@ int main()
 		break;
 	    }
 	}
-	std::this_thread::sleep_for(std::chrono::milliseconds(50));
 	PSAscreen::get().draw_frame();
 	PSAscreen::get().draw_frame_alg();
 	PSAscreen::get().draw_frame_prc();
