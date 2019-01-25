@@ -30,10 +30,10 @@ int main()
 	    }
 	}
 	PSAscreen::get().draw_frame();
-	PSAscreen::get().draw_frame_alg();
-	PSAscreen::get().draw_frame_prc();
-	PSAscreen::get().draw_frame_done();
-	PSAscreen::get().draw_frame_legend();
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_walg(), " ALGORITHM ");
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wlegend(), " LEGEND ");
 	doupdate();
     }
 

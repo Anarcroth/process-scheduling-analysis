@@ -16,10 +16,8 @@ public:
     void operator=(PSAscreen const&) = delete;
 
     void draw_frame();
-    void draw_frame_alg();
-    void draw_frame_prc();
-    void draw_frame_done();
-    void draw_frame_legend();
+    void draw_frame_of(WINDOW *w, std::string title);
+
     void draw_small_arrows();
 
     void show_process(process* pr);
@@ -45,13 +43,10 @@ private:
 
     static const int W_X_PRC;
     static const int W_Y_PRC;
-    static const int W_W_PRC;
-    static const int W_H_PRC;
-
     static const int W_X_DONE;
     static const int W_Y_DONE;
-    static const int W_W_DONE;
-    static const int W_H_DONE;
+    static const int W_W_PRC_DONE;
+    static const int W_H_PRC_DONE;
 
     static const int W_X_LEGEND;
     static const int W_Y_LEGEND;

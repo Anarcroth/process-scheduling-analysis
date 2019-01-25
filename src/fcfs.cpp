@@ -26,11 +26,11 @@ void fcfs::work(std::vector<process*> &processes)
 
 	done_processes.push_back(p);
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), done_processes);
-	PSAscreen::get().draw_frame_done();
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 
 	processes.erase(std::remove(processes.begin(), processes.end(), p), processes.end());
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
-	PSAscreen::get().draw_frame_prc();
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
 
 	doupdate();
     }
