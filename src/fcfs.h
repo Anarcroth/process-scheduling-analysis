@@ -11,8 +11,11 @@ public:
     fcfs();
     ~fcfs();
 
+    int get_awt();
     void work(std::vector<process*> &processes);
+
 private:
+    int average_wait_time;
 };
 
 #endif

@@ -7,7 +7,7 @@
 
 #include "screen.h"
 
-fcfs::fcfs()
+fcfs::fcfs() : average_wait_time(0)
 {
 }
 
@@ -17,6 +17,7 @@ fcfs::~fcfs()
 
 void fcfs::work(std::vector<process*> &processes)
 {
+    average_wait_time = 0;
     std::vector<process*> done_processes;
     std::vector<process*> copy_processes = processes;
     for (auto &p : copy_processes)
@@ -33,5 +34,7 @@ void fcfs::work(std::vector<process*> &processes)
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
 
 	doupdate();
+
+	average_wait_time += p->get_ttl();
     }
 }
