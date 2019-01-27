@@ -4,6 +4,7 @@
 #include "screen.h"
 #include "process.h"
 #include "priority.h"
+#include "commons.h"
 
 const int PSAscreen::W_Y_ALG = 1;
 const int PSAscreen::W_X_ALG = 3;
@@ -143,6 +144,12 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 	wattron(w, COLOR_PAIR(5));
 	break;
     }
+}
+
+void PSAscreen::show_awt(int awt)
+{
+    wmove(walg, 6, 2);
+    waddstr(walg,  (commons::get().get_time(awt)).c_str());
 }
 
 void PSAscreen::show_process(process* pr)

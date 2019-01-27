@@ -15,6 +15,7 @@ public:
     int gen_rand(int lower_bound, int upper_bound);
     std::string gen_hex();
 
+    std::string get_time(int t);
 private:
     commons();
 

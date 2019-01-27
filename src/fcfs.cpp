@@ -1,10 +1,9 @@
+#include <algorithm>
 #include <chrono>
 #include <thread>
 
 #include "fcfs.h"
 #include "process.h"
-#include <algorithm>
-
 #include "screen.h"
 
 fcfs::fcfs() : average_wait_time(0)
@@ -22,6 +21,8 @@ void fcfs::work(std::vector<process*> &processes)
     std::vector<process*> copy_processes = processes;
     for (auto &p : copy_processes)
     {
+	PSAscreen::get().show_awt(average_wait_time);
+
 	PSAscreen::get().show_process(p);
 	std::this_thread::sleep_for(std::chrono::milliseconds(p->get_ttl()));
 

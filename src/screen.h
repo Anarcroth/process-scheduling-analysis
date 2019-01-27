@@ -20,6 +20,7 @@ public:
 
     void draw_small_arrows();
 
+    void show_awt(int awt);
     void show_process(process* pr);
 
     void push_prc_in(WINDOW* w, std::vector<process*> &processes);

@@ -33,3 +33,17 @@ std::string commons::gen_hex()
     sstream << std::hex << gen_rand();
     return sstream.str();
 }
+
+std::string commons::get_time(int t)
+{
+    t = t - 3600000 * (t / 3600000);
+    long min = t / 60000;
+    t = t - 60000 * min;
+    long sec = t / 1000;
+    t = t - 1000 * sec;
+    std::ostringstream os;
+    os << "Average waiting time -> minutes: "
+       << min << ", seconds: "
+       << sec << ", milliseconds: " << t;
+    return os.str();
+}
