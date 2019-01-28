@@ -6,12 +6,17 @@
 #include "process.h"
 #include "screen.h"
 
-fcfs::fcfs() : average_wait_time(0)
+fcfs::fcfs() : alg(0)
 {
 }
 
 fcfs::~fcfs()
 {
+}
+
+int fcfs::get_awt()
+{
+    return average_wait_time;
 }
 
 void fcfs::work(std::vector<process*> &processes)

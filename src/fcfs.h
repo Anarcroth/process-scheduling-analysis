@@ -11,11 +11,10 @@ public:
     fcfs();
     ~fcfs();
 
-    int get_awt();
-    void work(std::vector<process*> &processes);
+    virtual int get_awt() override;
+    virtual void work(std::vector<process*> &processes) override;
 
 private:
-    int average_wait_time;
 };
 
 #endif
