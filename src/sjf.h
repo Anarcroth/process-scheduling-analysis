@@ -1,13 +1,13 @@
-#ifndef __FCFS_H_INCLUDED__
-#define __FCFS_H_INCLUDED__
+#ifndef __SJF_H_INCLUDED__
+#define __SJF_H_INCLUDED__
 
 #include "alg.h"
 
-class fcfs : public alg
+class sjf : public alg
 {
 public:
-    fcfs();
-    ~fcfs();
+    sjf();
+    ~sjf();
 
     virtual int get_awt() override;
     virtual void work(std::vector<process*> &processes) override;

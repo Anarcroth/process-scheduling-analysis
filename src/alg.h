@@ -8,15 +8,14 @@ class process;
 class alg
 {
 public:
+    alg();
+    alg(int awt);
+    ~alg();
+
     virtual int get_awt() = 0;
     virtual void work(std::vector<process*> &processes) = 0;
 
     int average_wait_time;
-
-private:
-    alg();
-    alg(int awt);
-    ~alg();
 };
 
 #endif

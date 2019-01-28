@@ -4,11 +4,13 @@
 #include "priority.h"
 #include "screen.h"
 #include "fcfs.h"
+#include "sjf.h"
 
 int main()
 {
     std::vector<process*> processes;
     fcfs f;
+    sjf s;
     int ch;
     while (1)
     {
@@ -26,6 +28,9 @@ int main()
 		break;
 	    case 's':
 		f.work(processes);
+		break;
+	    case 'a':
+		s.work(processes);
 		break;
 	    }
 	}
