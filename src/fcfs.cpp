@@ -14,11 +14,6 @@ fcfs::~fcfs()
 {
 }
 
-int fcfs::get_awt()
-{
-    return average_wait_time;
-}
-
 void fcfs::work(std::vector<process*> &processes)
 {
     average_wait_time = 0;

@@ -6,30 +6,22 @@
 #include "process.h"
 #include "screen.h"
 
-bool sort_by_pr_ttl(const process* a, const process* b);
-
 sjf::sjf() : alg(0)
 {
 }
 
-sjf::~sjf()
-{
-}
-
-int sjf::get_awt()
-{
-    return average_wait_time;
-}
-
 void sjf::work(std::vector<process*> &processes)
 {
+    std::sort(processes.begin(), processes.end(), [] (const process* a, const process* b) { return a->get_ttl() < b->get_ttl(); });
+    std::vector<process*> prs_sorted_by_ttl = processes;
+    exec(processes, prs_sorted_by_ttl);
+}
+
+void sjf::exec(std::vector<process*> &processes, std::vector<process*> &prs_sorted_by_ttl)
+{
     average_wait_time = 0;
-
     std::vector<process*> done_processes;
-    std::sort(processes.begin(), processes.end(), sort_by_pr_ttl);
-    std::vector<process*> copy_processes = processes;
-
-    for (auto &p : copy_processes)
+    for (auto &p : prs_sorted_by_ttl)
     {
 	PSAscreen::get().show_awt(average_wait_time);
 
@@ -50,7 +42,6 @@ void sjf::work(std::vector<process*> &processes)
     }
 }
 
-bool sort_by_pr_ttl(const process* a, const process* b)
+sjf::~sjf()
 {
-    return a->get_ttl() < b->get_ttl();
 }

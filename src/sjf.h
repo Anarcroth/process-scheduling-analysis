@@ -9,10 +9,10 @@ public:
     sjf();
     ~sjf();
 
-    virtual int get_awt() override;
     virtual void work(std::vector<process*> &processes) override;
 
 private:
+    void exec(std::vector<process*> &processes, std::vector<process*> &prs_sorted_by_ttl);
 };
 
 #endif

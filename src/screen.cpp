@@ -108,7 +108,7 @@ void PSAscreen::push_prc_in(WINDOW* w, std::vector<process*> &processes)
 {
     wclear(w);
     int width = 1, height = 1;
-    for (size_t i = 0; i < processes.size(); i++)
+    for (auto &p : processes)
     {
 	if (width >= W_W_PRC_DONE - 2)
 	{
@@ -120,10 +120,11 @@ void PSAscreen::push_prc_in(WINDOW* w, std::vector<process*> &processes)
 	    break;
 	}
 	wmove(w, height, width);
-	colorinprocess(w, processes[i]->get_pr());
-	waddstr(w, processes[i]->get_id().c_str());
-	width += 5;
+	colorinprocess(w, p->get_pr());
+	waddstr(w, p->get_id().c_str());
 	wattron(w, COLOR_PAIR(6));
+
+	width += 5; // 5 is the length of a process ID plus one white space
     }
 }
 

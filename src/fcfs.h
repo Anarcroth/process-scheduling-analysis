@@ -9,7 +9,6 @@ public:
     fcfs();
     ~fcfs();
 
-    virtual int get_awt() override;
     virtual void work(std::vector<process*> &processes) override;
 
 private:
