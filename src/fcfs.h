@@ -6,10 +6,10 @@
 class fcfs : public alg
 {
 public:
-    fcfs();
+    fcfs(std::vector<process*> prs);
     ~fcfs();
 
-    virtual void work(std::vector<process*> &processes) override;
+    virtual void work() override;
 
 private:
 };

@@ -6,13 +6,13 @@
 class sjf : public alg
 {
 public:
-    sjf();
+    sjf(std::vector<process*> prs);
     ~sjf();
 
-    virtual void work(std::vector<process*> &processes) override;
+    virtual void work() override;
 
 private:
-    void exec(std::vector<process*> &processes, std::vector<process*> &prs_sorted_by_ttl);
+    void exec(std::vector<process*> &prs_sorted_by_ttl);
 };
 
 #endif

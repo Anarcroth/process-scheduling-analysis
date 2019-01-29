@@ -6,18 +6,18 @@
 #include "process.h"
 #include "screen.h"
 
-sjf::sjf() : alg(0)
+sjf::sjf(std::vector<process*> prs) : alg(0, prs)
 {
 }
 
-void sjf::work(std::vector<process*> &processes)
+void sjf::work()
 {
     std::sort(processes.begin(), processes.end(), [] (const process* a, const process* b) { return a->get_ttl() < b->get_ttl(); });
     std::vector<process*> prs_sorted_by_ttl = processes;
-    exec(processes, prs_sorted_by_ttl);
+    exec(prs_sorted_by_ttl);
 }
 
-void sjf::exec(std::vector<process*> &processes, std::vector<process*> &prs_sorted_by_ttl)
+void sjf::exec(std::vector<process*> &prs_sorted_by_ttl)
 {
     average_wait_time = 0;
     std::vector<process*> done_processes;

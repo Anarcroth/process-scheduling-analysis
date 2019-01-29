@@ -5,7 +5,7 @@ alg::alg()
 {
 }
 
-alg::alg(int awt) : average_wait_time(awt)
+alg::alg(int awt, std::vector<process*> prs) : average_wait_time(awt), processes(prs)
 {
 }
 

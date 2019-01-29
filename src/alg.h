@@ -9,14 +9,15 @@ class alg
 {
 public:
     alg();
-    alg(int awt);
+    alg(int awt, std::vector<process*> prs);
     ~alg();
 
     int get_awt() const;
 
-    virtual void work(std::vector<process*> &processes) = 0;
+    virtual void work() = 0;
 
     int average_wait_time;
+    std::vector<process*> processes;
 };
 
 #endif

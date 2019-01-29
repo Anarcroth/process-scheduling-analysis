@@ -9,8 +9,6 @@
 int main()
 {
     std::vector<process*> processes;
-    fcfs f;
-    sjf s;
     int ch;
     while (1)
     {
@@ -20,19 +18,24 @@ int main()
 	}
 	else
 	{
-	    switch(ch)
+	    if (ch == 'c')
 	    {
-	    case 'r':
 		processes.push_back(new process());
 		PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
-		break;
-	    case 's':
-		f.work(processes);
-		break;
-	    case 'a':
-		s.work(processes);
+	    }
+	    if (ch == 'f')
+	    {
+		fcfs f(processes);
+		f.work();
 		break;
 	    }
+	    if (ch == 's')
+	    {
+		sjf s(processes);
+		s.work();
+		break;
+	    }
+
 	}
 	PSAscreen::get().draw_frame();
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_walg(), " ALGORITHM ");

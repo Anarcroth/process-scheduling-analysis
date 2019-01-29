@@ -6,7 +6,7 @@
 #include "process.h"
 #include "screen.h"
 
-fcfs::fcfs() : alg(0)
+fcfs::fcfs(std::vector<process*> prs) : alg(0, prs)
 {
 }
 
@@ -14,7 +14,7 @@ fcfs::~fcfs()
 {
 }
 
-void fcfs::work(std::vector<process*> &processes)
+void fcfs::work()
 {
     average_wait_time = 0;
     std::vector<process*> done_processes;
