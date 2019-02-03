@@ -17,13 +17,28 @@ psa: psa.o process.o commons.o priority.o screen.o alg.o fcfs.o sjf.o
 
 # Provide source files:
 psa.o: psa.cpp
-process.o: process.cpp process.h priority.h commons.h
-commons.o: commons.cpp commons.h
-priority.o: priority.cpp priority.h
-screen.o: screen.cpp screen.h
-alg.o: alg.cpp alg.h
-fcfs.o: fcfs.cpp fcfs.h
-sjf.o: sjf.cpp sjf.h
+	$(CC) -c psa.cpp
+
+process.o: process.cpp
+	$(CC) -c process.cpp
+
+commons.o: commons.cpp
+	$(CC) -c commons.cpp
+
+priority.o: priority.cpp
+	$(CC) -c priority.cpp
+
+screen.o: screen.cpp
+	$(CC) -c screen.cpp
+
+alg.o: alg.cpp
+	$(CC) -c alg.cpp
+
+fcfs.o: fcfs.cpp
+	$(CC) -c fcfs.cpp
+
+sjf.o: sjf.cpp
+	$(CC) -c sjf.cpp
 
 # Remove executable files, as well as old .o object
 # files and *~ backup files:
