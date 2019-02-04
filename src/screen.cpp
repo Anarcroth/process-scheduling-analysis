@@ -47,7 +47,6 @@ void PSAscreen::init()
     noecho();
     cbreak();
     curs_set(0);
-    nodelay(stdscr, TRUE);
 
     if (has_colors() == FALSE)
     {
