@@ -13,10 +13,6 @@ process::process(priority p) : pr(p), id(set_id()), ttl(set_ttl())
 {
 }
 
-process::process(priority p, unsigned int t) : pr(p), id(set_id()), ttl(t)
-{
-}
-
 priority process::get_pr() const { return pr; }
 
 std::string process::get_id() const { return id; }

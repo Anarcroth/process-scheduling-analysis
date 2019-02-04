@@ -10,7 +10,6 @@ class process
 public:
     process();
     process(priority pr);
-    process(priority pr, unsigned int ttl);
 
     priority get_pr() const;
     std::string get_id() const;

@@ -12,20 +12,42 @@ int main()
     int ch;
     while ((ch = getch()) != 'q')
     {
-	if (ch == 'c')
+	if (ch == 'r')
 	{
 	    processes.push_back(new process());
 	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
 	}
-	if (ch == 'f')
+	else if (ch == 'l')
+	{
+	    processes.push_back(new process(priority::LOW));
+	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
+	}
+	else if (ch == 'm')
+	{
+	    processes.push_back(new process(priority::MEDIUM));
+	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
+	}
+	else if (ch == 'h')
+	{
+	    processes.push_back(new process(priority::HIGH));
+	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
+	}
+	else if (ch == 'x')
+	{
+	    processes.push_back(new process(priority::EXTREME));
+	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
+	}
+	else if (ch == 'f')
 	{
 	    fcfs f(processes);
 	    f.work();
+	    processes.clear();
 	}
-	if (ch == 's')
+	else if (ch == 's')
 	{
 	    sjf s(processes);
 	    s.work();
+	    processes.clear();
 	}
 
 	PSAscreen::get().draw_frame();
