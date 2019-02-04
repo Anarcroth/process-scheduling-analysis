@@ -1,0 +1,38 @@
+\documentclass{article}
+
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{fullpage}
+
+\renewcommand{\familydefault}{\sfdefault}
+
+\definecolor{codegray}{gray}{0.9}
+\newcommand{\code}[1]{\colorbox{codegray}{\texttt{#1}}}
+
+\title{Senior Project Thesis\\
+       \large Process scheduling - comparison and contrast}
+\date{\today}
+\author{Martin Nestorov}
+\linespread{1}
+
+\begin{document}
+
+\maketitle
+\pagenumbering{arabic}
+
+\newpage
+
+\section{Introduction}
+
+Hello World!
+
+\subsection{Description}
+
+There are several process scheduling algorithms that are used in batch, interactive, and real-time systems. These include, but are not limited to, First Come First Serve (\textbf{FCFS}), Shortest Job First (\textbf{SJF}), Priority Scheduling, Round-Robbin Scheduling, Guaranteed Scheduling, Lottery Scheduling, and Multilevel Queue Scheduling. All of them have their advantages and weaknesses. Some are simpler and work for small sequential systems, while others are more complex, but distribute the workload better.
+
+The purpose of this project is to analyze and compare these different algorithms, to show their strengths and weaknesses.
+
+Another thing to consider is the type of the system that lies under the processes. In general, we can either consider a \textit{real-time} system, or an \textit{interactive} one. \textit{Real-time} systems are such that take into consideration time as an essential role. Typically, one or more devices can stimulate the system and it has to react accordingly in a certain amount of time. \textit{Interactive} systems, much like the 'real-time' ones, can and are stimulated by other programs, but don't have such a strict time constraint.
+
+\end{document}
