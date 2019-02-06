@@ -23,6 +23,16 @@ const int PSAscreen::W_X_LEGEND = 123;
 const int PSAscreen::W_W_LEGEND = 65;
 const int PSAscreen::W_H_LEGEND = 51;
 
+const std::string PSAscreen::LEG_PR = " Processes ";
+const std::string PSAscreen::LEG_LPR = "Low Priority: (l)";
+const std::string PSAscreen::LEG_MPR = "Medium Priority: (m)";
+const std::string PSAscreen::LEG_HPR = "High Priority: (h)";
+const std::string PSAscreen::LEG_XPR = "Extreme Priority: (x)";
+const std::string PSAscreen::LEG_RPR = "Random: (r)";
+const std::string PSAscreen::LEG_ALG = " Algorithm ";
+const std::string PSAscreen::LEG_FCFS_ALG = "First Come First Serve: FCFS (f)";
+const std::string PSAscreen::LEG_SJF_ALG = "Shortest Job First: SJF (s)";
+
 const int PSAscreen::COLOR_ORANGE = 100;
 
 PSAscreen::PSAscreen()
@@ -101,6 +111,52 @@ void PSAscreen::draw_small_arrows()
     move(48, 62);
     addch(ACS_RARROW);
     addch(ACS_RARROW);
+}
+
+void PSAscreen::draw_legend_cont()
+{
+    // Creates the Process and Algorithm sub-windows
+    wattron(wlegend, COLOR_PAIR(6));
+    wmove(wlegend, 2, 0);
+    waddch(wlegend, ACS_LTEE);
+    whline(wlegend, ACS_HLINE, W_W_LEGEND - 2);
+    wmove(wlegend, 2, W_W_LEGEND - 1);
+    waddch(wlegend, ACS_RTEE);
+    wmove(wlegend, 2, 2);
+    waddstr(wlegend, LEG_PR.c_str());
+
+    wmove(wlegend, 10, 0);
+    waddch(wlegend, ACS_LTEE);
+    whline(wlegend, ACS_HLINE, W_W_LEGEND - 2);
+    wmove(wlegend, 10, W_W_LEGEND - 1);
+    waddch(wlegend, ACS_RTEE);
+    wmove(wlegend, 10, 2);
+    waddstr(wlegend, LEG_ALG.c_str());
+
+    // Adds different Processes
+    wmove(wlegend, 4, 2);
+    wattron(wlegend, COLOR_PAIR(2));
+    waddstr(wlegend, (LEG_LPR + "\t").c_str());
+    wattron(wlegend, COLOR_PAIR(3));
+    waddstr(wlegend, LEG_MPR.c_str());
+
+    wmove(wlegend, 6, 2);
+    wattron(wlegend, COLOR_PAIR(4));
+    waddstr(wlegend, (LEG_HPR + "\t").c_str());
+    wattron(wlegend, COLOR_PAIR(5));
+    waddstr(wlegend, LEG_XPR.c_str());
+
+    wmove(wlegend, 8, 2);
+    wattron(wlegend, COLOR_PAIR(6));
+    waddstr(wlegend, (LEG_RPR + "\t").c_str());
+
+    // Adds different Algorithms
+    wmove(wlegend, 12, 2);
+    waddstr(wlegend, LEG_FCFS_ALG.c_str());
+    wmove(wlegend, 14, 2);
+    waddstr(wlegend, LEG_SJF_ALG.c_str());
+
+    wnoutrefresh(wlegend);
 }
 
 void PSAscreen::push_prc_in(WINDOW* w, std::vector<process*> &processes)

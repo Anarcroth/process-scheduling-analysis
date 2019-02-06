@@ -21,6 +21,8 @@ public:
 
     void draw_small_arrows();
 
+    void draw_legend_cont();
+
     void show_awt(int awt);
     void show_process(process* pr);
 
@@ -54,6 +56,16 @@ private:
     static const int W_Y_LEGEND;
     static const int W_W_LEGEND;
     static const int W_H_LEGEND;
+
+    static const std::string LEG_PR;
+    static const std::string LEG_LPR;
+    static const std::string LEG_MPR;
+    static const std::string LEG_HPR;
+    static const std::string LEG_XPR;
+    static const std::string LEG_RPR;
+    static const std::string LEG_ALG;
+    static const std::string LEG_FCFS_ALG;
+    static const std::string LEG_SJF_ALG;
 
     static const int COLOR_ORANGE;
 
