@@ -8,46 +8,41 @@
 
 int main()
 {
-    std::vector<process*> processes;
+    std::vector<process*> pool;
     int ch;
     while ((ch = getch()) != 'q')
     {
-	if (ch == 'r')
+	switch (ch)
 	{
-	    processes.push_back(new process());
-	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
+	case 'r':
+	    pool.push_back(new process());
+	    break;
+	case 'l':
+	    pool.push_back(new process(priority::LOW));
+	    break;
+	case 'm':
+	    pool.push_back(new process(priority::MEDIUM));
+	    break;
+	case 'h':
+	    pool.push_back(new process(priority::HIGH));
+	    break;
+	case 'x':
+	    pool.push_back(new process(priority::EXTREME));
+	    break;
 	}
-	else if (ch == 'l')
+	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool);
+
+	if (ch == 'f')
 	{
-	    processes.push_back(new process(priority::LOW));
-	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
-	}
-	else if (ch == 'm')
-	{
-	    processes.push_back(new process(priority::MEDIUM));
-	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
-	}
-	else if (ch == 'h')
-	{
-	    processes.push_back(new process(priority::HIGH));
-	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
-	}
-	else if (ch == 'x')
-	{
-	    processes.push_back(new process(priority::EXTREME));
-	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
-	}
-	else if (ch == 'f')
-	{
-	    fcfs f(processes);
+	    fcfs f(pool);
 	    f.work();
-	    processes.clear();
+	    pool.clear();
 	}
 	else if (ch == 's')
 	{
-	    sjf s(processes);
+	    sjf s(pool);
 	    s.work();
-	    processes.clear();
+	    pool.clear();
 	}
 
 	PSAscreen::get().draw_frame();
@@ -59,11 +54,11 @@ int main()
 	doupdate();
     }
 
-    for (std::vector<process*>::iterator it = processes.begin(); it != processes.end(); ++it)
+    for (std::vector<process*>::iterator it = pool.begin(); it != pool.end(); ++it)
     {
 	delete (*it);
     }
-    processes.clear();
+    pool.clear();
 
     return 0;
 }
