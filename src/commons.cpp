@@ -3,6 +3,8 @@
 #include <limits>
 
 #include "commons.h"
+#include "process.h"
+#include "priority.h"
 
 commons::commons() : rng()
 {
@@ -46,4 +48,26 @@ std::string commons::get_time(int t)
        << min << ", seconds: "
        << sec << ", milliseconds: " << t;
     return os.str();
+}
+
+void commons::make_pr(int ch, std::vector<std::unique_ptr<process>> &pool)
+{
+    switch (ch)
+    {
+    case 'r':
+	pool.push_back(std::make_unique<process>());
+	break;
+    case 'l':;
+	pool.push_back(std::make_unique<process>(priority::LOW));
+	break;
+    case 'm':
+	pool.push_back(std::make_unique<process>(priority::MEDIUM));
+	break;
+    case 'h':
+	pool.push_back(std::make_unique<process>(priority::HIGH));
+	break;
+    case 'x':
+	pool.push_back(std::make_unique<process>(priority::EXTREME));
+	break;
+    }
 }

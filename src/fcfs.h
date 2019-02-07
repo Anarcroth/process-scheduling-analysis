@@ -6,8 +6,7 @@
 class fcfs : public alg
 {
 public:
-    fcfs(std::vector<process*> prs);
-    ~fcfs();
+    fcfs(std::vector<std::unique_ptr<process>> prs);
 
     virtual void work() override;
 

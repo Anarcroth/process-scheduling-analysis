@@ -159,7 +159,7 @@ void PSAscreen::draw_legend_cont()
     wnoutrefresh(wlegend);
 }
 
-void PSAscreen::push_prc_in(WINDOW* w, std::vector<process*> &processes)
+void PSAscreen::push_prc_in(WINDOW* w, std::vector<std::unique_ptr<process>> &processes)
 {
     wclear(w);
     int width = 1, height = 1;
@@ -179,7 +179,7 @@ void PSAscreen::push_prc_in(WINDOW* w, std::vector<process*> &processes)
 	waddstr(w, p->get_id().c_str());
 	wattron(w, COLOR_PAIR(6));
 
-	width += 5; // 5 is the length of a process ID plus one white space
+	width += p->get_id().length() + 1;
     }
 }
 
@@ -208,21 +208,21 @@ void PSAscreen::show_awt(int awt)
     waddstr(walg,  (commons::get().get_time(awt)).c_str());
 }
 
-void PSAscreen::show_process(process* pr)
+void PSAscreen::show_process(process pr)
 {
     // This will color in the process
-    colorinprocess(walg, pr->get_pr());
+    colorinprocess(walg, pr.get_pr());
 
     wmove(walg, 2, 2);
-    waddstr(walg, pr->get_id().c_str());
+    waddstr(walg, pr.get_id().c_str());
 
     // This clears the previous data, since it might be too long in chars
     wmove(walg, 3, 2);
-    waddstr(walg, (prtostr(pr->get_pr()) + "    ").c_str());
+    waddstr(walg, (prtostr(pr.get_pr()) + "    ").c_str());
 
     // This clears the previous data, since it might be too long in chars
     wmove(walg, 4, 2);
-    waddstr(walg, (std::to_string(pr->get_ttl()) + "    ").c_str());
+    waddstr(walg, (std::to_string(pr.get_ttl()) + "    ").c_str());
 
     wattron(walg, COLOR_PAIR(6));
     wrefresh(walg);

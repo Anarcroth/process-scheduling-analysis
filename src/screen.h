@@ -2,9 +2,11 @@
 #define __SCREEN_H_INCLUDED__
 
 #include <vector>
+#include <memory>
 #include <ncurses.h>
 
 #include "priority.h"
+#include "process.h"
 
 class process;
 
@@ -24,9 +26,10 @@ public:
     void draw_legend_cont();
 
     void show_awt(int awt);
-    void show_process(process* pr);
+    void show_process(process pr);
 
-    void push_prc_in(WINDOW* w, std::vector<process*> &processes);
+    void push_prc_in(WINDOW* w,
+		     std::vector<std::unique_ptr<process>> &processes);
 
     WINDOW* get_walg() const;
     WINDOW* get_wprc() const;

@@ -2,6 +2,9 @@
 #define __COMMONS_H_INCLUDED__
 
 #include <random>
+#include <memory>
+
+#include "process.h"
 
 class commons
 {
@@ -16,6 +19,9 @@ public:
     std::string gen_hex();
 
     std::string get_time(int t);
+
+    void make_pr(int ch, std::vector<std::unique_ptr<process>> &pool);
+
 private:
     commons();
 
