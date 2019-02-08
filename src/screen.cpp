@@ -159,7 +159,7 @@ void PSAscreen::draw_legend_cont()
     wnoutrefresh(wlegend);
 }
 
-void PSAscreen::push_prc_in(WINDOW* w, std::vector<std::unique_ptr<process>> &processes)
+void PSAscreen::push_prc_in(WINDOW* w, std::vector<process>& processes)
 {
     wclear(w);
     int width = 1, height = 1;
@@ -175,11 +175,11 @@ void PSAscreen::push_prc_in(WINDOW* w, std::vector<std::unique_ptr<process>> &pr
 	    break;
 	}
 	wmove(w, height, width);
-	colorinprocess(w, p->get_pr());
-	waddstr(w, p->get_id().c_str());
+	colorinprocess(w, p.get_pr());
+	waddstr(w, p.get_id().c_str());
 	wattron(w, COLOR_PAIR(6));
 
-	width += p->get_id().length() + 1;
+	width += p.get_id().length() + 1;
     }
 }
 
@@ -208,7 +208,7 @@ void PSAscreen::show_awt(int awt)
     waddstr(walg,  (commons::get().get_time(awt)).c_str());
 }
 
-void PSAscreen::show_process(process pr)
+void PSAscreen::show_process(process& pr)
 {
     // This will color in the process
     colorinprocess(walg, pr.get_pr());

@@ -6,12 +6,10 @@
 class sjf : public alg
 {
 public:
-    sjf(std::vector<std::unique_ptr<process>> prs);
+    sjf(std::vector<process>&& prs);
 
-    virtual void work() override;
-
-private:
-    void exec();
+    virtual void work();
+    virtual void exec();
 };
 
 #endif

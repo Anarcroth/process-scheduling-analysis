@@ -10,7 +10,7 @@
 
 int main()
 {
-    std::vector<std::unique_ptr<process>> pool;
+    std::vector<process> pool;
     int ch;
     while ((ch = getch()) != 'q')
     {
@@ -19,12 +19,12 @@ int main()
 
 	if (ch == 'f')
 	{
-	    fcfs f(pool);
+	    fcfs f(std::move(pool));
 	    f.work();
 	}
 	else if (ch == 's')
 	{
-	    sjf s(pool);
+	    sjf s(std::move(pool));
 	    s.work();
 	}
 
