@@ -8,8 +8,11 @@ public:
 
     int get_awt() const;
 
-    virtual void work();
-    virtual void exec();
+    void exec();
+
+    void fcfs();
+    void sjf();
+    void round_rob();
 
 private:
     int average_wait_time;

@@ -15,10 +15,6 @@ int alg::get_awt() const
     return average_wait_time;
 }
 
-void alg::work()
-{
-}
-
 void alg::exec()
 {
     average_wait_time = 0;
@@ -42,4 +38,22 @@ void alg::exec()
 
 	doupdate();
     }
+}
+
+void alg::fcfs()
+{
+    exec();
+}
+
+void alg::sjf()
+{
+    std::sort(pool::get().get_pool().begin(),
+	      pool::get().get_pool().end(),
+	      [] (const process a, const process b) { return a.get_ttl() < b.get_ttl(); });
+    exec();
+}
+
+void alg::round_rob()
+{
+
 }

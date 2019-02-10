@@ -4,13 +4,13 @@
 #include "process.h"
 #include "priority.h"
 #include "screen.h"
-#include "fcfs.h"
-#include "sjf.h"
+#include "alg.h"
 #include "commons.h"
 #include "pool.h"
 
 int main()
 {
+    alg ag;
     int ch;
     while ((ch = getch()) != 'q')
     {
@@ -20,13 +20,11 @@ int main()
 
 	if (ch == 'f')
 	{
-	    fcfs f;
-	    f.work();
+	    ag.fcfs();
 	}
 	else if (ch == 's')
 	{
-	    sjf s;
-	    s.work();
+	    ag.sjf();
 	}
 
 	PSAscreen::get().draw_frame();
