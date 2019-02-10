@@ -28,8 +28,7 @@ public:
     void show_awt(int awt);
     void show_process(process& pr);
 
-    void push_prc_in(WINDOW* w,
-		     std::vector<process>& processes);
+    void push_prc_in(WINDOW* w, std::vector<process>& processes);
 
     WINDOW* get_walg() const;
     WINDOW* get_wprc() const;

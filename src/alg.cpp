@@ -18,22 +18,24 @@ int alg::get_awt() const
 void alg::exec()
 {
     average_wait_time = 0;
+
     std::vector<process> done_processes;
-    std::vector<process> copy_processes = pool::get().get_pool();
-    for (auto &p : copy_processes)
+
+    auto pit = pool::get().get_pool().begin();
+    while (pit != pool::get().get_pool().end())
     {
 	PSAscreen::get().show_awt(average_wait_time);
-	average_wait_time += p.get_ttl();
+	average_wait_time += pit->get_ttl();
 
-	PSAscreen::get().show_process(p);
-	std::this_thread::sleep_for(std::chrono::milliseconds(p.get_ttl()));
+	PSAscreen::get().show_process(*pit);
+	std::this_thread::sleep_for(std::chrono::milliseconds(pit->get_ttl()));
 
-	done_processes.push_back(p);
+	done_processes.push_back(*pit);
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), done_processes);
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 
-	//processes.erase(std::remove(processes.begin(), processes.end(), p), processes.end());
-	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), copy_processes);
+	pit = pool::get().get_pool().erase(pit);
+	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::get().get_pool());
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
 
 	doupdate();
