@@ -5,6 +5,7 @@
 #include "commons.h"
 #include "process.h"
 #include "priority.h"
+#include "pool.h"
 
 commons::commons() : rng()
 {
@@ -48,26 +49,4 @@ std::string commons::get_time(int t)
        << min << ", seconds: "
        << sec << ", milliseconds: " << t;
     return os.str();
-}
-
-void commons::make_pr(int ch, std::vector<process> &pool)
-{
-    switch (ch)
-    {
-    case 'r':
-	pool.push_back(process());
-	break;
-    case 'l':;
-	pool.push_back(process(priority::LOW));
-	break;
-    case 'm':
-	pool.push_back(process(priority::MEDIUM));
-	break;
-    case 'h':
-	pool.push_back(process(priority::HIGH));
-	break;
-    case 'x':
-	pool.push_back(process(priority::EXTREME));
-	break;
-    }
 }

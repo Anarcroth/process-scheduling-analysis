@@ -6,7 +6,7 @@
 class sjf : public alg
 {
 public:
-    sjf(std::vector<process>&& prs);
+    sjf();
 
     virtual void work();
     virtual void exec();

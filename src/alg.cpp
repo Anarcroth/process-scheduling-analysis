@@ -6,10 +6,9 @@
 #include "alg.h"
 #include "process.h"
 #include "screen.h"
+#include "pool.h"
 
-alg::alg(int awt, std::vector<process>&& prs) : average_wait_time(awt), processes(std::move(prs))
-{
-}
+alg::alg() : average_wait_time(0) {}
 
 int alg::get_awt() const
 {
@@ -24,7 +23,7 @@ void alg::exec()
 {
     average_wait_time = 0;
     std::vector<process> done_processes;
-    std::vector<process> copy_processes = processes;
+    std::vector<process> copy_processes = pool::get().get_pool();
     for (auto &p : copy_processes)
     {
 	PSAscreen::get().show_awt(average_wait_time);
@@ -38,7 +37,7 @@ void alg::exec()
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 
 	//processes.erase(std::remove(processes.begin(), processes.end(), p), processes.end());
-	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), processes);
+	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), copy_processes);
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
 
 	doupdate();

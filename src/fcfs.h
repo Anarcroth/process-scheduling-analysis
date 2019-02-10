@@ -6,7 +6,7 @@
 class fcfs : public alg
 {
 public:
-    fcfs(std::vector<process>&& prs);
+    fcfs();
 
     virtual void work();
     virtual void exec();

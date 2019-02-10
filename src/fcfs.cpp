@@ -1,9 +1,7 @@
 #include "fcfs.h"
 #include "process.h"
 
-fcfs::fcfs(std::vector<process>&& prs) : alg(0, std::move(prs))
-{
-}
+fcfs::fcfs() {}
 
 void fcfs::work()
 {

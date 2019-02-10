@@ -13,8 +13,11 @@ public:
     pool(pool const&)           = delete;
     void operator=(pool const&) = delete;
 
+    void make_pr(int ch);
+    void push(process& pr);
+
     void set_pool(std::vector<process> p);
-    std::vector<process> get_pool();
+    std::vector<process>& get_pool();
 
 private:
     pool();

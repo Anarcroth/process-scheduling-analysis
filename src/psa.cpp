@@ -7,24 +7,25 @@
 #include "fcfs.h"
 #include "sjf.h"
 #include "commons.h"
+#include "pool.h"
 
 int main()
 {
-    std::vector<process> pool;
     int ch;
     while ((ch = getch()) != 'q')
     {
-	commons::get().make_pr((ch), pool);
-	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool);
+	pool::get().make_pr(ch);
+	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(),
+				     pool::get().get_pool());
 
 	if (ch == 'f')
 	{
-	    fcfs f(std::move(pool));
+	    fcfs f;
 	    f.work();
 	}
 	else if (ch == 's')
 	{
-	    sjf s(std::move(pool));
+	    sjf s;
 	    s.work();
 	}
 

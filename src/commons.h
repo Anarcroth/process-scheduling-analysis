@@ -20,8 +20,6 @@ public:
 
     std::string get_time(int t);
 
-    void make_pr(int ch, std::vector<process> &pool);
-
 private:
     commons();
 
