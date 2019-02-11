@@ -12,8 +12,8 @@ CPPFLAGS = -g -std=c++11 -Wall -lncurses
 default: psa
 
 # To create the executable file:
-psa: psa.o process.o commons.o priority.o screen.o alg.o pool.o
-	$(CC) $(CPPFLAGS) -o psa.app psa.o process.o commons.o priority.o screen.o alg.o pool.o
+psa: psa.o process.o commons.o priority.o screen.o alg.o pool.o pcb.o
+	$(CC) $(CPPFLAGS) -o psa.app psa.o process.o commons.o priority.o screen.o alg.o pool.o pcb.o
 
 # Provide source files:
 psa.o: psa.cpp
@@ -36,6 +36,9 @@ alg.o: alg.cpp
 
 pool.o: pool.cpp
 	$(CC) -c pool.cpp
+
+pcb.o: pcb.cpp
+	$(CC) -c pcb.cpp
 
 # Remove executable files, as well as old .o object
 # files and *~ backup files:
