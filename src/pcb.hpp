@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "process.h"
+#include "process.hpp"
 
 enum class state
 {
@@ -17,10 +17,12 @@ enum class state
 class pcb
 {
 public:
-    pcb(process _pr);
-
     void save_state();
     void restore_state();
+
+    void set_process(process _pr);
+
+    process get_process();
 
 private:
     int wait_time;

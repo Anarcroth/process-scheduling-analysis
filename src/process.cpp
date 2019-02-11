@@ -1,9 +1,9 @@
 #include <string>
 #include <algorithm>
 
-#include "process.h"
-#include "commons.h"
-#include "priority.h"
+#include "process.hpp"
+#include "commons.hpp"
+#include "priority.hpp"
 
 process::process() : pr(set_pr()), id(set_id()), ttl(set_ttl())
 {

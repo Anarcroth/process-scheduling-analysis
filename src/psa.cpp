@@ -1,12 +1,12 @@
 #include <vector>
 #include <memory>
 
-#include "process.h"
-#include "priority.h"
-#include "screen.h"
-#include "alg.h"
-#include "commons.h"
-#include "pool.h"
+#include "process.hpp"
+#include "priority.hpp"
+#include "screen.hpp"
+#include "alg.hpp"
+#include "commons.hpp"
+#include "pool.hpp"
 
 int main()
 {

@@ -1,10 +1,10 @@
 #include <string>
 #include <vector>
 
-#include "screen.h"
-#include "process.h"
-#include "priority.h"
-#include "commons.h"
+#include "screen.hpp"
+#include "process.hpp"
+#include "priority.hpp"
+#include "commons.hpp"
 
 const int PSAscreen::W_Y_ALG = 1;
 const int PSAscreen::W_X_ALG = 3;

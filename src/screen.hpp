@@ -5,8 +5,8 @@
 #include <memory>
 #include <ncurses.h>
 
-#include "priority.h"
-#include "process.h"
+#include "priority.hpp"
+#include "process.hpp"
 
 class process;
 

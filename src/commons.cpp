@@ -2,10 +2,10 @@
 #include <sstream>
 #include <limits>
 
-#include "commons.h"
-#include "process.h"
-#include "priority.h"
-#include "pool.h"
+#include "commons.hpp"
+#include "process.hpp"
+#include "priority.hpp"
+#include "pool.hpp"
 
 commons::commons() : rng()
 {

@@ -1,4 +1,4 @@
-#include "priority.h"
+#include "priority.hpp"
 
 std::string prtostr(priority pr)
 {

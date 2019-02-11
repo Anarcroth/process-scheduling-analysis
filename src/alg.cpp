@@ -3,10 +3,10 @@
 #include <thread>
 #include <utility>
 
-#include "alg.h"
-#include "process.h"
-#include "screen.h"
-#include "pool.h"
+#include "alg.hpp"
+#include "process.hpp"
+#include "screen.hpp"
+#include "pool.hpp"
 
 alg::alg() : average_wait_time(0) {}
 
