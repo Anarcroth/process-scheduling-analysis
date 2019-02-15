@@ -3,9 +3,6 @@
 #include <limits>
 
 #include "commons.hpp"
-#include "process.hpp"
-#include "priority.hpp"
-#include "pool.hpp"
 
 commons::commons() : rng()
 {
@@ -49,4 +46,19 @@ std::string commons::get_time(int t)
        << min << ", seconds: "
        << sec << ", milliseconds: " << t;
     return os.str();
+}
+
+std::string commons::prtostr(priority prty)
+{
+    switch(prty)
+    {
+    case priority::LOW:
+	return "LOW";
+    case priority::MEDIUM:
+	return "MEDIUM";
+    case priority::HIGH:
+	return "HIGH";
+    default:
+	return "EXTREME";
+    }
 }

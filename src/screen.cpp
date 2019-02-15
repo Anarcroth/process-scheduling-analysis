@@ -3,7 +3,6 @@
 
 #include "screen.hpp"
 #include "process.hpp"
-#include "priority.hpp"
 #include "commons.hpp"
 
 const int PSAscreen::W_Y_ALG = 1;
@@ -159,11 +158,11 @@ void PSAscreen::draw_legend_cont()
     wnoutrefresh(wlegend);
 }
 
-void PSAscreen::push_prc_in(WINDOW* w, std::vector<process>& processes)
+void PSAscreen::push_prc_in(WINDOW* w, std::vector<process>& prcs)
 {
     wclear(w);
     int width = 1, height = 1;
-    for (auto &p : processes)
+    for (auto &p : prcs)
     {
 	if (width >= W_W_PRC_DONE - 2)
 	{
@@ -175,7 +174,7 @@ void PSAscreen::push_prc_in(WINDOW* w, std::vector<process>& processes)
 	    break;
 	}
 	wmove(w, height, width);
-	colorinprocess(w, p.get_pr());
+	colorinprocess(w, p.get_prty());
 	waddstr(w, p.get_id().c_str());
 	wattron(w, COLOR_PAIR(6));
 
@@ -211,14 +210,14 @@ void PSAscreen::show_awt(int awt)
 void PSAscreen::show_process(process& pr)
 {
     // This will color in the process
-    colorinprocess(walg, pr.get_pr());
+    colorinprocess(walg, pr.get_prty());
 
     wmove(walg, 2, 2);
     waddstr(walg, pr.get_id().c_str());
 
     // This clears the previous data, since it might be too long in chars
     wmove(walg, 3, 2);
-    waddstr(walg, (prtostr(pr.get_pr()) + "    ").c_str());
+    waddstr(walg, (commons::get().prtostr(pr.get_prty()) + "    ").c_str());
 
     // This clears the previous data, since it might be too long in chars
     wmove(walg, 4, 2);

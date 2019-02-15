@@ -52,7 +52,7 @@ unsigned int process::set_ttl()
     }
 }
 
-std::vector<unsigned int> set_ioops()
+std::vector<unsigned int> process::set_ioops()
 {
     std::vector<unsigned int> temp_ioops(commons::get().gen_rand());
     for (size_t i = 0; i < temp_ioops.size(); i++)

@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "pcb.hpp"
+#include "process.hpp"
 
 class pool
 {
@@ -16,8 +16,7 @@ public:
     void make_pr(int ch);
     void push(process& pr);
 
-    void set_pool(std::vector<pcb> pr_pool);
-    std::vector<pcb>& get_pool();
+    std::vector<process>& get_pool();
 
 private:
     pool();

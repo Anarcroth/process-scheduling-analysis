@@ -1,11 +1,8 @@
 #include <vector>
 #include <memory>
 
-#include "process.hpp"
-#include "priority.hpp"
 #include "screen.hpp"
 #include "alg.hpp"
-#include "commons.hpp"
 #include "pool.hpp"
 
 int main()

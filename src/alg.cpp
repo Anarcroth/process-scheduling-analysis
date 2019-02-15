@@ -1,7 +1,7 @@
-#include <algorithm>
-#include <chrono>
 #include <thread>
+#include <chrono>
 #include <utility>
+#include <algorithm>
 
 #include "alg.hpp"
 #include "process.hpp"

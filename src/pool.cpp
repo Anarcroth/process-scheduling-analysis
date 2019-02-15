@@ -1,8 +1,4 @@
-#include <vector>
-
 #include "pool.hpp"
-#include "commons.hpp"
-#include "priority.hpp"
 
 pool::pool()
 {
@@ -16,39 +12,32 @@ pool& pool::get()
 
 void pool::make_pr(int ch)
 {
-    pcb pr_block;
     switch (ch)
     {
     case 'r':
-	pr_block.set_process(process());
+	process_pool.push_back(process());
 	break;
     case 'l':;
-	pr_block.set_process(process(priority::LOW));
+	process_pool.push_back(process(priority::LOW));
 	break;
     case 'm':
-	pr_block.set_process(process(priority::MEDIUM));
+	process_pool.push_back(process(priority::MEDIUM));
 	break;
     case 'h':
-	pr_block.set_process(process(priority::HIGH));
+	process_pool.push_back(process(priority::HIGH));
 	break;
     case 'x':
-	pr_block.set_process(process(priority::EXTREME));
+	process_pool.push_back(process(priority::EXTREME));
 	break;
     }
-    processes.push_back(pr_block);
 }
 
-void pool::push(process &pr)
+void pool::push(process &prcs)
 {
-    processes.push_back(pr);
+    process_pool.push_back(prcs);
 }
 
-void pool::set_pool(std::vector<pcb> pr_pool)
+std::vector<process>& pool::get_pool()
 {
-    process_pool = pr_pool;
-}
-
-std::vector<pcb>& pool::get_pool()
-{
-    return processes;
+    return process_pool;
 }
