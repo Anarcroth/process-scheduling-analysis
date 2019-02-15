@@ -3,23 +3,27 @@
 
 #include "process.hpp"
 #include "commons.hpp"
-#include "priority.hpp"
 
-process::process() : pr(set_pr()), id(set_id()), ttl(set_ttl())
-{
-}
+process::process() : stt(state::NEW),
+		     prty(set_prty()),
+		     id(set_id()),
+		     ttl(set_ttl()),
+		     ioops(set_ioops()) {}
 
-process::process(priority p) : pr(p), id(set_id()), ttl(set_ttl())
-{
-}
+process::process(priority p) : stt(state::NEW), prty(p), id(set_id()), ttl(set_ttl()) {}
 
-priority process::get_pr() const { return pr; }
-
+state process::get_state() const { return stt; }
+priority process::get_prty() const { return prty; }
 std::string process::get_id() const { return id; }
-
 unsigned int process::get_ttl() const { return ttl; }
+std::vector<unsigned int> process::get_ioops() const { return ioops; }
 
-priority process::set_pr()
+void process::set_state(state _stt)
+{
+    stt = _stt;
+}
+
+priority process::set_prty()
 {
     return static_cast<priority>(commons::get().gen_rand(0, 3));
 }
@@ -35,7 +39,7 @@ std::string process::set_id()
 
 unsigned int process::set_ttl()
 {
-    switch (get_pr())
+    switch (prty)
     {
     case priority::LOW:
 	return commons::get().gen_rand(0, 300);
@@ -46,4 +50,14 @@ unsigned int process::set_ttl()
     default: // priority::EXTREME
 	return commons::get().gen_rand(1500, 3000);
     }
+}
+
+std::vector<unsigned int> set_ioops()
+{
+    std::vector<unsigned int> temp_ioops(commons::get().gen_rand());
+    for (size_t i = 0; i < temp_ioops.size(); i++)
+    {
+	temp_ioops.push_back(commons::get().gen_rand());
+    }
+    return temp_ioops;
 }
