@@ -7,7 +7,7 @@
 
 int main()
 {
-    alg ag;
+    scheduler ag;
     int ch;
     while ((ch = getch()) != 'q')
     {

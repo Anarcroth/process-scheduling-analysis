@@ -3,10 +3,10 @@
 
 #include "process.hpp"
 
-class alg
+class scheduler
 {
 public:
-    alg();
+    scheduler();
 
     int get_awt() const;
 

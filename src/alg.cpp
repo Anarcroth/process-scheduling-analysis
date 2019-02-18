@@ -8,16 +8,16 @@
 #include "screen.hpp"
 #include "pool.hpp"
 
-const int alg::TIME_QUANTUM = 50;
+const int scheduler::TIME_QUANTUM = 50;
 
-alg::alg() : average_wait_time(0) {}
+scheduler::scheduler() : average_wait_time(0) {}
 
-int alg::get_awt() const
+int scheduler::get_awt() const
 {
     return average_wait_time;
 }
 
-void alg::exec(std::vector<process>::iterator pit)
+void scheduler::exec(std::vector<process>::iterator pit)
 {
     average_wait_time += pit->get_ttl();
     std::this_thread::sleep_for(std::chrono::milliseconds(pit->get_ttl()));
@@ -25,7 +25,7 @@ void alg::exec(std::vector<process>::iterator pit)
     pit = pool::get().r_q().erase(pit);
 }
 
-void alg::fcfs()
+void scheduler::fcfs()
 {
     average_wait_time = 0;
     auto pit = pool::get().r_q().begin();
@@ -36,7 +36,7 @@ void alg::fcfs()
     }
 }
 
-void alg::sjf()
+void scheduler::sjf()
 {
     std::sort(pool::get().r_q().begin(),
 	      pool::get().r_q().end(),
@@ -51,7 +51,7 @@ void alg::sjf()
     }
 }
 
-void alg::round_rob()
+void scheduler::round_rob()
 {
 
 }
