@@ -16,12 +16,13 @@ public:
     void make_pr(int ch);
     void push(process& pr);
 
-    std::vector<process>& get_pool();
+    std::vector<process>& r_q();
 
 private:
     pool();
 
-    std::vector<process> process_pool;
+    std::vector<process> wait_queue;
+    std::vector<process> ready_queue;
 };
 
 #endif

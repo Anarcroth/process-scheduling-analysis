@@ -15,29 +15,29 @@ void pool::make_pr(int ch)
     switch (ch)
     {
     case 'r':
-	process_pool.push_back(process());
+	ready_queue.push_back(process());
 	break;
     case 'l':;
-	process_pool.push_back(process(priority::LOW));
+	ready_queue.push_back(process(priority::LOW));
 	break;
     case 'm':
-	process_pool.push_back(process(priority::MEDIUM));
+	ready_queue.push_back(process(priority::MEDIUM));
 	break;
     case 'h':
-	process_pool.push_back(process(priority::HIGH));
+	ready_queue.push_back(process(priority::HIGH));
 	break;
     case 'x':
-	process_pool.push_back(process(priority::EXTREME));
+	ready_queue.push_back(process(priority::EXTREME));
 	break;
     }
 }
 
 void pool::push(process &prcs)
 {
-    process_pool.push_back(prcs);
+    ready_queue.push_back(prcs);
 }
 
-std::vector<process>& pool::get_pool()
+std::vector<process>& pool::r_q()
 {
-    return process_pool;
+    return ready_queue;
 }

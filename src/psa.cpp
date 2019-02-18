@@ -13,7 +13,7 @@ int main()
     {
 	pool::get().make_pr(ch);
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(),
-				     pool::get().get_pool());
+				     pool::get().r_q());
 
 	if (ch == 'f')
 	{
