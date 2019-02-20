@@ -17,8 +17,9 @@ public:
     void round_rob();
 
 private:
-    int average_wait_time;
+    void interrupt();
 
+    int average_wait_time;
     std::vector<process> done_processes;
 
     static const int TIME_QUANTUM;

@@ -7,7 +7,7 @@
 
 int main()
 {
-    scheduler ag;
+    scheduler schedule;
     int ch;
     while ((ch = getch()) != 'q')
     {
@@ -17,11 +17,15 @@ int main()
 
 	if (ch == 'f')
 	{
-	    ag.fcfs();
+	    schedule.fcfs();
 	}
 	else if (ch == 's')
 	{
-	    ag.sjf();
+	    schedule.sjf();
+	}
+	else if (ch == 'o')
+	{
+	    schedule.round_rob();
 	}
 
 	PSAscreen::get().draw_frame();

@@ -15,8 +15,8 @@ process::process(priority p) : stt(state::NEW), prty(p), id(set_id()), ttl(set_t
 state process::get_state() const { return stt; }
 priority process::get_prty() const { return prty; }
 std::string process::get_id() const { return id; }
-unsigned int process::get_ttl() const { return ttl; }
-std::vector<unsigned int> process::get_ioops() const { return ioops; }
+ int process::get_ttl() const { return ttl; }
+std::vector<int> process::get_ioops() const { return ioops; }
 
 void process::set_state(state _stt)
 {
@@ -37,7 +37,12 @@ std::string process::set_id()
     return temp_id;
 }
 
-unsigned int process::set_ttl()
+void process::set_ttl(int _ttl)
+{
+    ttl = _ttl;
+}
+
+int process::set_ttl()
 {
     switch (prty)
     {
@@ -52,9 +57,9 @@ unsigned int process::set_ttl()
     }
 }
 
-std::vector<unsigned int> process::set_ioops()
+std::vector<int> process::set_ioops()
 {
-    std::vector<unsigned int> temp_ioops(commons::get().gen_rand());
+    std::vector<int> temp_ioops(commons::get().gen_rand());
     for (size_t i = 0; i < temp_ioops.size(); i++)
     {
 	temp_ioops.push_back(commons::get().gen_rand());

@@ -30,21 +30,23 @@ public:
     state get_state() const;
     priority get_prty() const;
     std::string get_id() const;
-    unsigned int get_ttl() const;
-    std::vector<unsigned int> get_ioops() const;
+    int get_ttl() const;
+    std::vector<int> get_ioops() const;
+
+    void set_ttl(int _ttl);
 
 private:
     void set_state(state _stt);
     priority set_prty();
     std::string set_id();
-    unsigned int set_ttl();
-    std::vector<unsigned int> set_ioops();
+    int set_ttl();
+    std::vector<int> set_ioops();
 
     state stt;
     priority prty;
     std::string id;
-    unsigned int ttl;
-    std::vector<unsigned int> ioops;
+    int ttl;
+    std::vector<int> ioops;
 };
 
 #endif

@@ -53,5 +53,31 @@ void scheduler::sjf()
 
 void scheduler::round_rob()
 {
+    average_wait_time = 0;
+    auto pit = pool::get().r_q().begin();
+    //std::thread ti(interrupt);
+    while (!pool::get().r_q().empty())
+    {
+	std::this_thread::sleep_for(std::chrono::milliseconds(TIME_QUANTUM));
+	int left_ttl = pit->get_ttl() - TIME_QUANTUM;
+	average_wait_time += left_ttl;
+	pit->set_ttl(left_ttl);
+	if (left_ttl < 1)
+	{
+	    done_processes.push_back(std::move(*pit));
+	    pit = pool::get().r_q().erase(pit);
+	}
+	else
+	{
+	    std::rotate(pool::get().r_q().begin(), pit + 1, pool::get().r_q().end());
+	}
+
+	PSAscreen::get().draw_process_exec(average_wait_time, *pit, done_processes);
+    }
+    //ti.join();
+}
+
+void scheduler::interrupt()
+{
 
 }
