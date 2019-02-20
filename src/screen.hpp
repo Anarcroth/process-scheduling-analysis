@@ -65,6 +65,7 @@ private:
     static const std::string LEG_ALG;
     static const std::string LEG_FCFS_ALG;
     static const std::string LEG_SJF_ALG;
+    static const std::string LEG_RR_ALG;
 
     static const int COLOR_ORANGE;
 

@@ -32,6 +32,7 @@ const std::string PSAscreen::LEG_RPR = "Random: (r)";
 const std::string PSAscreen::LEG_ALG = " Algorithm ";
 const std::string PSAscreen::LEG_FCFS_ALG = "First Come First Serve: FCFS (f)";
 const std::string PSAscreen::LEG_SJF_ALG = "Shortest Job First: SJF (s)";
+const std::string PSAscreen::LEG_RR_ALG = "Round Robbin: RR (o)";
 
 const int PSAscreen::COLOR_ORANGE = 100;
 
@@ -155,6 +156,8 @@ void PSAscreen::draw_legend_cont()
     waddstr(wlegend, LEG_FCFS_ALG.c_str());
     wmove(wlegend, 14, 2);
     waddstr(wlegend, LEG_SJF_ALG.c_str());
+    wmove(wlegend, 16, 2);
+    waddstr(wlegend, LEG_RR_ALG.c_str());
 
     wnoutrefresh(wlegend);
 }
