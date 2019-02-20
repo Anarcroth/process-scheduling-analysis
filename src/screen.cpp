@@ -159,14 +159,13 @@ void PSAscreen::draw_legend_cont()
     wnoutrefresh(wlegend);
 }
 
-void PSAscreen::draw_process_exec(int awt, process pit, std::vector<process> d_p)
+void PSAscreen::draw_process_exec(int awt, process& pit, std::vector<process>& d_p)
 {
     show_awt(awt);
     show_process(pit);
 
     push_prc_in(wdone, d_p);
     draw_frame_of(wdone, " DONE ");
-
 
     push_prc_in(wprc, pool::get().r_q());
     draw_frame_of(wprc, " PROCESS ");

@@ -15,7 +15,7 @@ process::process(priority p) : stt(state::NEW), prty(p), id(set_id()), ttl(set_t
 state process::get_state() const { return stt; }
 priority process::get_prty() const { return prty; }
 std::string process::get_id() const { return id; }
- int process::get_ttl() const { return ttl; }
+int process::get_ttl() const { return ttl; }
 std::vector<int> process::get_ioops() const { return ioops; }
 
 void process::set_state(state _stt)
@@ -39,7 +39,8 @@ std::string process::set_id()
 
 void process::set_ttl(int _ttl)
 {
-    ttl = _ttl;
+    if (_ttl < 0) ttl = 0;
+    else ttl = _ttl;
 }
 
 int process::set_ttl()

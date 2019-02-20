@@ -20,7 +20,7 @@ public:
 
     void draw_small_arrows();
     void draw_legend_cont();
-    void draw_process_exec(int awt, process pit, std::vector<process> d_p);
+    void draw_process_exec(int awt, process& pit, std::vector<process>& d_p);
 
     void show_awt(int awt);
     void show_process(process& pr);
