@@ -25,7 +25,7 @@ void process::set_state(state _stt)
 
 priority process::set_prty()
 {
-    return static_cast<priority>(commons::get().gen_rand(0, 3));
+    return static_cast<priority>(commons::get().gen_even_rand(0, 3));
 }
 
 std::string process::set_id()
@@ -45,25 +45,19 @@ void process::set_ttl(int _ttl)
 
 int process::set_ttl()
 {
-    switch (prty)
-    {
-    case priority::LOW:
-	return commons::get().gen_rand(0, 300);
-    case priority::MEDIUM:
-	return commons::get().gen_rand(300, 900);
-    case priority::HIGH:
-	return commons::get().gen_rand(900, 1500);
-    default: // priority::EXTREME
-	return commons::get().gen_rand(1500, 3000);
-    }
+    return commons::get().gen_normal_rand(0, 4000); //ms
 }
 
 std::vector<int> process::set_ioops()
 {
-    std::vector<int> temp_ioops(commons::get().gen_rand());
+    // Creates a Gaussian distribution (0-20) IO operations
+    // with a Gaussian distribution (0-3000ms) for each IO
+    int number_of_ios = commons::get().gen_normal_rand(0, 20);
+    std::vector<int> temp_ioops(number_of_ios);
+    temp_ioops.reserve(number_of_ios);
     for (size_t i = 0; i < temp_ioops.size(); i++)
     {
-	temp_ioops.push_back(commons::get().gen_rand());
+	temp_ioops.push_back(commons::get().gen_normal_rand(10, 3000));
     }
     return temp_ioops;
 }

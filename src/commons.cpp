@@ -15,22 +15,34 @@ commons& commons::get()
     return instance;
 }
 
-int commons::gen_rand()
+int commons::gen_even_rand()
 {
-    return gen_rand(0, std::numeric_limits<int>::max());
+    return gen_even_rand(0, std::numeric_limits<int>::max());
 }
 
-int commons::gen_rand(int lower_bound, int upper_bound)
+int commons::gen_even_rand(int lower_bound, int upper_bound)
 {
     std::uniform_int_distribution<std::mt19937::result_type> int_in_range(lower_bound,
 									  upper_bound);
     return int_in_range(rng);
 }
 
+int commons::gen_normal_rand()
+{
+    return gen_normal_rand(0, std::numeric_limits<int>::max());
+}
+
+int commons::gen_normal_rand(int lower_bound, int upper_bound)
+{
+    std::normal_distribution<> int_in_range(lower_bound,
+					    upper_bound);
+    return std::round(int_in_range(rng));
+}
+
 std::string commons::gen_hex()
 {
     std::stringstream sstream;
-    sstream << std::hex << gen_rand();
+    sstream << std::hex << gen_even_rand();
     return sstream.str();
 }
 

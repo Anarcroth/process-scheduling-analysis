@@ -12,6 +12,7 @@ pool& pool::get()
 
 void pool::make_pr(int ch)
 {
+    // TODO this maybe should create a random process since it would be evaluated before each algorithm
     switch (ch)
     {
     case 'r':
