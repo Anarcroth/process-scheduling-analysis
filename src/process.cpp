@@ -4,8 +4,14 @@
 #include "process.hpp"
 #include "commons.hpp"
 
+const double process::PROCESS_TTL_MEAN = 1000.0;
+const double process::PROCESS_TTL_STDDEV = 15.0;
+const double process::PROCESS_IO_MEAN = 10.0;
+const double process::PROCESS_IO_STDDEV = 2.0;
+const double process::IO_TTL_MEAN = 1500.0;
+const double process::IO_TTL_STDDEV = 15.0;
+
 process::process() : stt(state::NEW),
-		     prty(set_prty()),
 		     id(set_id()),
 		     ttl(set_ttl()),
 		     ioops(set_ioops()) {}
@@ -23,17 +29,15 @@ void process::set_state(state _stt)
     stt = _stt;
 }
 
-priority process::set_prty()
+void process::set_prty(priority _prty)
 {
-    return static_cast<priority>(commons::get().gen_even_rand(0, 3));
+    prty = _prty;
 }
 
 std::string process::set_id()
 {
-    std::string temp_id = commons::get().gen_hex();
-    temp_id = temp_id.substr(1, 4);
-    std::transform(temp_id.begin(), temp_id.end(), temp_id.begin(), ::toupper);
-
+    std::string temp_id = commons::gen_hex().substr(1, 4);
+    //std::transform(temp_id.begin(), temp_id.end(), temp_id.begin(), ::toupper);
     return temp_id;
 }
 
@@ -45,19 +49,18 @@ void process::set_ttl(int _ttl)
 
 int process::set_ttl()
 {
-    return commons::get().gen_normal_rand(0, 4000); //ms
+    return commons::gen_gaus_rand(PROCESS_TTL_MEAN, PROCESS_TTL_STDDEV);
 }
 
 std::vector<int> process::set_ioops()
 {
     // Creates a Gaussian distribution (0-20) IO operations
     // with a Gaussian distribution (0-3000ms) for each IO
-    int number_of_ios = commons::get().gen_normal_rand(0, 20);
+    int number_of_ios = commons::gen_gaus_rand(PROCESS_IO_MEAN, PROCESS_IO_STDDEV);
     std::vector<int> temp_ioops(number_of_ios);
-    temp_ioops.reserve(number_of_ios);
-    for (size_t i = 0; i < temp_ioops.size(); i++)
+    for (size_t i = 0; i < number_of_ios; i++)
     {
-	temp_ioops.push_back(commons::get().gen_normal_rand(10, 3000));
+	temp_ioops.push_back(commons::gen_gaus_rand(IO_TTL_MEAN, IO_TTL_STDDEV));
     }
     return temp_ioops;
 }

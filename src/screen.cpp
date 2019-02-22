@@ -222,7 +222,7 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 void PSAscreen::show_awt(int awt)
 {
     wmove(walg, 6, 2);
-    waddstr(walg,  (commons::get().get_time(awt)).c_str());
+    waddstr(walg,  (commons::get_time(awt)).c_str());
 }
 
 void PSAscreen::show_process(process& pr)
@@ -235,7 +235,7 @@ void PSAscreen::show_process(process& pr)
 
     // This clears the previous data, since it might be too long in chars
     wmove(walg, 3, 2);
-    waddstr(walg, (commons::get().prtostr(pr.get_prty()) + "    ").c_str());
+    waddstr(walg, (commons::prtostr(pr.get_prty()) + "    ").c_str());
 
     // This clears the previous data, since it might be too long in chars
     wmove(walg, 4, 2);

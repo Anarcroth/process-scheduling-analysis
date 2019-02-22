@@ -37,7 +37,7 @@ public:
 
 private:
     void set_state(state _stt);
-    priority set_prty();
+    void set_prty(priority _prty);
     std::string set_id();
     int set_ttl();
     std::vector<int> set_ioops();
@@ -47,6 +47,13 @@ private:
     std::string id;
     int ttl;
     std::vector<int> ioops;
+
+    static const double PROCESS_TTL_MEAN;
+    static const double PROCESS_TTL_STDDEV;
+    static const double PROCESS_IO_MEAN;
+    static const double PROCESS_IO_STDDEV;
+    static const double IO_TTL_MEAN;
+    static const double IO_TTL_STDDEV;
 };
 
 #endif

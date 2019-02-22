@@ -4,9 +4,11 @@
 #include "screen.hpp"
 #include "alg.hpp"
 #include "pool.hpp"
+#include "commons.hpp"
 
 int main()
 {
+    commons::init();
     scheduler schedule;
     int ch;
     while ((ch = getch()) != 'q')

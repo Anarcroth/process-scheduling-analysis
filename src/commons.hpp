@@ -2,30 +2,21 @@
 #define __COMMONS_H_INCLUDED__
 
 #include <random>
-#include <memory>
 
 #include "process.hpp"
 
-class commons
+namespace commons
 {
-public:
-    static commons& get();
-
-    commons(commons const&)        = delete;
-    void operator=(commons const&) = delete;
+    void init();
 
     int gen_even_rand();
-    int gen_even_rand(int lower_bound, int upper_bound);
-    int gen_normal_rand();
-    int gen_normal_rand(int lower_bound, int upper_bound);
+    int gen_gaus_rand(double mean, double stddev);
     std::string gen_hex();
     std::string get_time(int t);
     std::string prtostr(priority prty);
 
-private:
-    commons();
-
-    std::mt19937 rng;
-};
+    extern std::mt19937 rng;
+    extern std::uniform_int_distribution<int> even_rand;
+}
 
 #endif
