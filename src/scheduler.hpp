@@ -17,8 +17,6 @@ public:
     void round_rob();
 
 private:
-    void interrupt();
-
     int average_wait_time;
     std::vector<process> done_processes;
 

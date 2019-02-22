@@ -3,10 +3,12 @@
 #include <utility>
 #include <algorithm>
 
-#include "alg.hpp"
+#include "scheduler.hpp"
 #include "process.hpp"
 #include "screen.hpp"
 #include "pool.hpp"
+#include "dispatcher.hpp"
+#include "commons.hpp"
 
 const int scheduler::TIME_QUANTUM = 50;
 
@@ -54,10 +56,22 @@ void scheduler::sjf()
 void scheduler::round_rob()
 {
     average_wait_time = 0;
-    auto pit = pool::get().r_q().begin();
-    //std::thread ti(interrupt);
-    while (!pool::get().r_q().empty())
+    std::vector<process> ready_q = pool::get().r_q();
+    auto pit = ready_q.begin();
+    while (!ready_q.empty())
     {
+	for (int i = 1; i <= TIME_QUANTUM; i++)
+	{
+	    if (commons::gen_even_rand() <= 25)
+	    {
+		std::this_thread::sleep_for(std::chrono::milliseconds(i));
+		dispatcher::interrupt();
+	    }
+	    if (i == TIME_QUANTUM)
+	    {
+
+	    }
+	}
 	std::this_thread::sleep_for(std::chrono::milliseconds(TIME_QUANTUM));
 	int left_ttl = pit->get_ttl() - TIME_QUANTUM;
 	average_wait_time += left_ttl;
@@ -65,19 +79,13 @@ void scheduler::round_rob()
 	if (left_ttl < 1)
 	{
 	    done_processes.push_back(std::move(*pit));
-	    pit = pool::get().r_q().erase(pit);
+	    pit = ready_q.erase(pit);
 	}
 	else
 	{
-	    std::rotate(pool::get().r_q().begin(), pit + 1, pool::get().r_q().end());
+	    std::rotate(ready_q.begin(), pit + 1, ready_q.end());
 	}
 
 	PSAscreen::get().draw_process_exec(average_wait_time, *pit, done_processes);
     }
-    //ti.join();
-}
-
-void scheduler::interrupt()
-{
-
 }
