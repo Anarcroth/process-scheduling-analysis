@@ -9,11 +9,6 @@ namespace commons
     std::mt19937 rng {std::random_device()()};
     std::uniform_int_distribution<int> even_rand(0, std::numeric_limits<int>::max());
 
-    void init()
-    {
-	rng.seed(std::random_device()());
-    }
-
     int gen_even_rand()
     {
 	return even_rand(rng);

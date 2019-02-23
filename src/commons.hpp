@@ -7,8 +7,6 @@
 
 namespace commons
 {
-    void init();
-
     int gen_even_rand();
     int gen_gaus_rand(double mean, double stddev);
     std::string gen_hex();
