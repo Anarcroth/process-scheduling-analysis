@@ -194,7 +194,7 @@ void PSAscreen::push_prc_in(WINDOW* w, std::vector<process>& prcs)
 	wmove(w, height, width);
 	colorinprocess(w, p.get_prty());
 	waddstr(w, p.get_id().c_str());
-	wattron(w, COLOR_PAIR(6));
+	wattron(w, COLOR_PAIR(6)); // keeps the border of the window white
 
 	width += p.get_id().length() + 1;
     }
@@ -215,6 +215,9 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 	break;
     case priority::EXTREME:
 	wattron(w, COLOR_PAIR(5));
+	break;
+    case priority::NONE:
+	wattron(w, COLOR_PAIR(6));
 	break;
     }
 }

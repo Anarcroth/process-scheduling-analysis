@@ -18,7 +18,8 @@ enum class priority : unsigned short
     LOW,
     MEDIUM,
     HIGH,
-    EXTREME
+    EXTREME,
+    NONE
 };
 
 class process

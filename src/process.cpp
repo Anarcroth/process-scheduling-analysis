@@ -12,6 +12,7 @@ const double process::IO_TTL_MEAN = 1500.0;
 const double process::IO_TTL_STDDEV = 15.0;
 
 process::process() : stt(state::NEW),
+		     prty(priority::NONE),
 		     id(set_id()),
 		     ttl(set_ttl()),
 		     ioops(set_ioops()) {}

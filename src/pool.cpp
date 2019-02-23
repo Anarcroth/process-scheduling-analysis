@@ -19,7 +19,7 @@ void pool::make_pr(int ch)
 	ready_queue.push_back(process());
 	break;
     case 'l':;
-	ready_queue.push_back(process());
+	ready_queue.push_back(process(priority::LOW));
 	break;
     case 'm':
 	ready_queue.push_back(process(priority::MEDIUM));
