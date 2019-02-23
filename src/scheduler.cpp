@@ -60,19 +60,18 @@ void scheduler::round_rob()
     auto pit = ready_q.begin();
     while (!ready_q.empty())
     {
-	for (int i = 1; i <= TIME_QUANTUM; i++)
+	int next_cpu_burst = pit->get_ttl_passed() + TIME_QUANTUM;
+	if (next_cpu_burst >= pit->get_next_io())
 	{
-	    if (commons::gen_even_rand() <= 25)
-	    {
-		std::this_thread::sleep_for(std::chrono::milliseconds(i));
-		dispatcher::interrupt();
-	    }
-	    if (i == TIME_QUANTUM)
-	    {
-
-	    }
+	    int left_time_q = next_cpu_burst - pit->get_next_io();
+	    std::this_thread::sleep_for(std::chrono::milliseconds(left_time_q));
+	    dispatcher::interrupt();
 	}
-	std::this_thread::sleep_for(std::chrono::milliseconds(TIME_QUANTUM));
+	else
+	{
+	    std::this_thread::sleep_for(std::chrono::milliseconds(TIME_QUANTUM));
+	    dispatcher::context_switch(*pit, 19);
+	}
 	int left_ttl = pit->get_ttl() - TIME_QUANTUM;
 	average_wait_time += left_ttl;
 	pit->set_ttl(left_ttl);

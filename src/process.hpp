@@ -32,9 +32,13 @@ public:
     priority get_prty() const;
     std::string get_id() const;
     int get_ttl() const;
+    int get_next_io() const;
+    int get_ttl_passed() const;
     std::vector<int> get_ioops() const;
 
     void set_ttl(int _ttl);
+    void set_ttl_passed(int _ttl);
+    void set_nexi_io();
 
 private:
     void set_state(state _stt);
@@ -48,6 +52,9 @@ private:
     std::string id;
     int ttl;
     std::vector<int> ioops;
+
+    int next_io;
+    int ttl_passed;
 
     static const double PROCESS_TTL_MEAN;
     static const double PROCESS_TTL_STDDEV;
