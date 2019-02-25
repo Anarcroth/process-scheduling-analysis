@@ -10,7 +10,7 @@ public:
 
     int get_awt() const;
 
-    void exec(std::vector<process>::iterator pit);
+    void exec(std::vector<process>::iterator& pit);
 
     void fcfs();
     void sjf();
@@ -18,7 +18,6 @@ public:
 
 private:
     int average_wait_time;
-    std::vector<process> done_processes;
 
     static const int TIME_QUANTUM;
 };

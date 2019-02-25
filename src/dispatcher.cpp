@@ -1,31 +1,44 @@
 #include <thread>
+#include <vector>
 #include <chrono>
+#include <algorithm>
 
 #include "dispatcher.hpp"
 #include "scheduler.hpp"
 #include "process.hpp"
+#include "pool.hpp"
 
 namespace dispatcher
 {
     void interrupt()
     {
-	context_switch();
+	//context_switch();
     }
 
-    void context_switch(process& pr, int ttl)
+    std::vector<process>::iterator context_switch(std::vector<process>::iterator& pit, int ttl)
     {
-	save_state(pr, ttl);
-	restore_state();
+	save_state(pit, ttl);
+	auto prev_state = restore_state(pit);
+	return prev_state;
     }
 
-    void save_state(process& pr, int ttl_p)
+    void save_state(std::vector<process>::iterator& pit, int ttl_p)
     {
-	pr.set_ttl_passed(ttl_p);
-	pr.set_next_io();
+	pit->set_ttl_passed(ttl_p);
+	pit->incr_next_io();
     }
 
-    void restore_state()
+    std::vector<process>::iterator restore_state(std::vector<process>::iterator& pit)
     {
-
+	if (pit->get_ttl_passed() >= pit->get_ttl())
+	{
+	    pool::get().d_q().push_back(std::move(*pit));
+	    return pool::get().r_q().erase(pit);
+	}
+	else
+	{
+	    std::rotate(pool::get().r_q().begin(), pit + 1, pool::get().r_q().end());
+	    return pit;
+	}
     }
 }
