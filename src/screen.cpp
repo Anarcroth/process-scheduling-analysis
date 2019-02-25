@@ -194,7 +194,6 @@ void PSAscreen::push_prc_in(WINDOW* w, std::vector<process>& prcs)
 	wmove(w, height, width);
 	colorinprocess(w, p.get_prty());
 	waddstr(w, p.get_id().c_str());
-	wattron(w, COLOR_PAIR(6)); // keeps the border of the window white
 
 	width += p.get_id().length() + 1;
     }
@@ -257,6 +256,7 @@ void PSAscreen::draw_frame()
 
 void PSAscreen::draw_frame_of(WINDOW *w, std::string title)
 {
+    wattron(w, COLOR_PAIR(6)); // keeps the border of the window white
     box(w, 0, 0);
     wmove(w, 0, 1);
     waddstr(w, title.c_str());
