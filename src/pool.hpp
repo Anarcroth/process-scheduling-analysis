@@ -17,12 +17,15 @@ public:
     void push(process& pr);
 
     std::vector<process>& r_q();
+    std::vector<process>& w_q();
+    std::vector<process>& d_q();
 
 private:
     pool();
 
     std::vector<process> wait_queue;
     std::vector<process> ready_queue;
+    std::vector<process> done_processes;
 };
 
 #endif

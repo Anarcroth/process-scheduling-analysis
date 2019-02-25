@@ -5,19 +5,23 @@
 #include "commons.hpp"
 
 const double process::PROCESS_TTL_MEAN = 1000.0;
-const double process::PROCESS_TTL_STDDEV = 15.0;
+const double process::PROCESS_TTL_STDDEV = 270.0;
 const double process::PROCESS_IO_MEAN = 10.0;
 const double process::PROCESS_IO_STDDEV = 2.0;
 const double process::IO_TTL_MEAN = 1500.0;
 const double process::IO_TTL_STDDEV = 15.0;
 
-process::process() : stt(state::NEW),
+process::process() : next_io(0),
+		     ttl_passed(0),
+		     stt(state::NEW),
 		     prty(priority::NONE),
 		     id(set_id()),
 		     ttl(set_ttl()),
 		     ioops(set_ioops()) {}
 
-process::process(priority p) : stt(state::NEW),
+process::process(priority p) : next_io(0),
+			       ttl_passed(0),
+			       stt(state::NEW),
 			       prty(p),
 			       id(set_id()),
 			       ttl(set_ttl()),
@@ -57,10 +61,10 @@ void process::set_ttl(int _ttl)
 void process::set_ttl_passed(int _ttl)
 {
     if (_ttl > ttl) ttl_passed = ttl;
-    else ttl_passed = _ttl;
+    else ttl_passed += _ttl;
 }
 
-void process::set_nexi_io()
+void process::incr_next_io()
 {
     next_io *= 2;
 }
@@ -70,7 +74,9 @@ int process::set_ttl()
     // Guarantees no negative ttls
     int temp_ttl = 0;
     while (temp_ttl < 1)
+    {
 	temp_ttl = commons::gen_gaus_rand(PROCESS_TTL_MEAN, PROCESS_TTL_STDDEV);
+    }
 
     return temp_ttl;
 }
@@ -83,11 +89,15 @@ std::vector<int> process::set_ioops()
     int number_of_ios = ttl;
     // Guarantees number of ios between 0 and the ttl
     while (number_of_ios >= ttl && number_of_ios < 0)
-	number_of_ios = commons::gen_gaus_rand(PROCESS_IO_MEAN, PROCESS_IO_STDDEV);
+    {
+	int number_of_ios = commons::gen_gaus_rand(PROCESS_IO_MEAN, PROCESS_IO_STDDEV);
+    }
 
     std::vector<int> temp_ioops(number_of_ios);
     for (size_t i = 0; i < number_of_ios; i++)
+    {
 	temp_ioops.push_back(commons::gen_gaus_rand(IO_TTL_MEAN, IO_TTL_STDDEV));
+    }
 
     next_io = ttl / number_of_ios;
 

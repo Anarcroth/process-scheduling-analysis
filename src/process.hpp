@@ -38,7 +38,7 @@ public:
 
     void set_ttl(int _ttl);
     void set_ttl_passed(int _ttl);
-    void set_nexi_io();
+    void incr_next_io();
 
 private:
     void set_state(state _stt);
@@ -47,14 +47,13 @@ private:
     int set_ttl();
     std::vector<int> set_ioops();
 
+    int next_io;
+    int ttl_passed;
     state stt;
     priority prty;
     std::string id;
     int ttl;
     std::vector<int> ioops;
-
-    int next_io;
-    int ttl_passed;
 
     static const double PROCESS_TTL_MEAN;
     static const double PROCESS_TTL_STDDEV;

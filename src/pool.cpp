@@ -42,3 +42,13 @@ std::vector<process>& pool::r_q()
 {
     return ready_queue;
 }
+
+std::vector<process>& pool::w_q()
+{
+    return wait_queue;
+}
+
+std::vector<process>& pool::d_q()
+{
+    return done_processes;
+}
