@@ -55,6 +55,8 @@ void scheduler::sjf()
 
 void scheduler::round_rob()
 {
+    eval_pool();
+    pool::get().eval_prcs_prty();
     average_wait_time = 0;
     auto pit = pool::get().r_q().begin();
     while (!pool::get().r_q().empty())
@@ -65,14 +67,26 @@ void scheduler::round_rob()
 	    int left_time_q = next_cpu_burst - pit->get_next_io();
 	    std::this_thread::sleep_for(std::chrono::milliseconds(left_time_q));
 	    dispatcher::context_switch(pit, left_time_q);
+	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::get().r_q());
+	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
 	}
 	else
 	{
 	    std::this_thread::sleep_for(std::chrono::milliseconds(TIME_QUANTUM));
 	    dispatcher::context_switch(pit, TIME_QUANTUM);
+	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::get().d_q());
+	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 	}
 	average_wait_time += TIME_QUANTUM;
 
-	PSAscreen::get().draw_process_exec(average_wait_time, *pit, pool::get().d_q());
+	PSAscreen::get().show_awt(average_wait_time);
+	PSAscreen::get().show_process(*pit);
+
+	doupdate();
     }
+}
+
+void scheduler::eval_pool()
+{
+
 }

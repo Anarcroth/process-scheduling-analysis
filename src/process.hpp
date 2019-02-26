@@ -39,10 +39,10 @@ public:
     void set_ttl(int _ttl);
     void set_ttl_passed(int _ttl);
     void incr_next_io();
+    void set_prty(priority _prty);
 
 private:
     void set_state(state _stt);
-    void set_prty(priority _prty);
     std::string set_id();
     int set_ttl();
     std::vector<int> set_ioops();

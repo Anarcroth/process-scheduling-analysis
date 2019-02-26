@@ -15,6 +15,7 @@ public:
 
     void make_pr(int ch);
     void push(process& pr);
+    void eval_prcs_prty();
 
     std::vector<process>& r_q();
     std::vector<process>& w_q();

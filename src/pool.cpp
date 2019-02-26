@@ -1,4 +1,8 @@
+#include <algorithm>
+#include <thread>
+#include <chrono>
 #include "pool.hpp"
+#include "screen.hpp"
 
 pool::pool()
 {
@@ -36,6 +40,26 @@ void pool::make_pr(int ch)
 void pool::push(process &prcs)
 {
     ready_queue.push_back(prcs);
+}
+
+void pool::eval_prcs_prty()
+{
+    int sum_of_ttls = 0;
+    std::for_each(ready_queue.begin(),
+		  ready_queue.end(),
+		  [&] (process& p) {
+		      sum_of_ttls += p.get_ttl();
+		  });
+    int average_ttl = sum_of_ttls / ready_queue.size();
+    int quota = average_ttl / 4;
+    for (auto& p : ready_queue)
+    {
+	if (p.get_ttl() < 730) p.set_prty(priority::LOW);
+	else if (p.get_ttl() < 1000) p.set_prty(priority::MEDIUM);
+	else if (p.get_ttl() < 1270) p.set_prty(priority::HIGH);
+	else if (p.get_ttl() < 1540) p.set_prty(priority::EXTREME);
+	else p.set_prty(priority::EXTREME);
+    }
 }
 
 std::vector<process>& pool::r_q()
