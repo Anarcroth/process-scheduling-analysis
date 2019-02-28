@@ -5,28 +5,18 @@
 
 #include "process.hpp"
 
-class pool
+namespace pool
 {
-public:
-    static pool& get();
-
-    pool(pool const&)           = delete;
-    void operator=(pool const&) = delete;
-
     void make_pr(int ch);
-    void push(process& pr);
     void eval_prcs_prty();
 
-    std::vector<process>& r_q();
-    std::vector<process>& w_q();
-    std::vector<process>& d_q();
+    std::vector<process>& wait_queue();
+    std::vector<process>& ready_queue();
+    std::vector<process>& done_queue();
 
-private:
-    pool();
-
-    std::vector<process> wait_queue;
-    std::vector<process> ready_queue;
-    std::vector<process> done_processes;
-};
+    extern std::vector<process> wait_q;
+    extern std::vector<process> ready_q;
+    extern std::vector<process> done_q;
+}
 
 #endif

@@ -12,9 +12,9 @@ int main()
     int ch;
     while ((ch = getch()) != 'q')
     {
-	pool::get().make_pr(ch);
+	pool::make_pr(ch);
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(),
-				     pool::get().r_q());
+				     pool::ready_queue());
 
 	if (ch == 'f')
 	{
