@@ -6,9 +6,9 @@
 
 namespace pool
 {
-    std::vector<process> wait_q(0);
-    std::vector<process> ready_q(0);
-    std::vector<process> done_q(0);
+    std::vector<process> wait_queue(0);
+    std::vector<process> ready_queue(0);
+    std::vector<process> done_queue(0);
 
     void make_pr(int ch)
     {
@@ -16,19 +16,19 @@ namespace pool
 	switch (ch)
 	{
 	case 'r':
-	    ready_q.push_back(process());
+	    ready_queue.push_back(process());
 	    break;
 	case 'l':;
-	    ready_q.push_back(process(priority::LOW));
+	    ready_queue.push_back(process(priority::LOW));
 	    break;
 	case 'm':
-	    ready_q.push_back(process(priority::MEDIUM));
+	    ready_queue.push_back(process(priority::MEDIUM));
 	    break;
 	case 'h':
-	    ready_q.push_back(process(priority::HIGH));
+	    ready_queue.push_back(process(priority::HIGH));
 	    break;
 	case 'x':
-	    ready_q.push_back(process(priority::EXTREME));
+	    ready_queue.push_back(process(priority::EXTREME));
 	    break;
 	}
     }
@@ -36,14 +36,14 @@ namespace pool
     void eval_prcs_prty()
     {
 	int sum_of_ttls = 0;
-	std::for_each(ready_q.begin(),
-		      ready_q.end(),
+	std::for_each(ready_queue.begin(),
+		      ready_queue.end(),
 		      [&] (process& p) {
 			  sum_of_ttls += p.get_ttl();
 		      });
-	int average_ttl = sum_of_ttls / ready_q.size();
+	int average_ttl = sum_of_ttls / ready_queue.size();
 	int quota = average_ttl / 4;
-	for (auto& p : ready_q)
+	for (auto& p : ready_queue)
 	{
 	    if (p.get_ttl() < 730) p.set_prty(priority::LOW);
 	    else if (p.get_ttl() < 1000) p.set_prty(priority::MEDIUM);
@@ -51,20 +51,5 @@ namespace pool
 	    else if (p.get_ttl() < 1540) p.set_prty(priority::EXTREME);
 	    else p.set_prty(priority::EXTREME);
 	}
-    }
-
-    std::vector<process>& wait_queue()
-    {
-	return wait_q;
-    }
-
-    std::vector<process>& ready_queue()
-    {
-	return ready_q;
-    }
-
-    std::vector<process>& done_queue()
-    {
-	return done_q;
     }
 }

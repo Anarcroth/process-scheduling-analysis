@@ -32,12 +32,12 @@ namespace dispatcher
     {
 	if (pit->get_ttl_passed() >= pit->get_ttl())
 	{
-	    pool::done_queue().push_back(std::move(*pit));
-	    return pool::ready_queue().erase(pit);
+	    pool::done_queue.push_back(std::move(*pit));
+	    return pool::ready_queue.erase(pit);
 	}
 	else
 	{
-	    std::rotate(pool::ready_queue().begin(), pit + 1, pool::ready_queue().end());
+	    std::rotate(pool::ready_queue.begin(), pit + 1, pool::ready_queue.end());
 	    return pit;
 	}
     }

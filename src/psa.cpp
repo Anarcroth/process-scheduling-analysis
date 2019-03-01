@@ -14,7 +14,7 @@ int main()
     {
 	pool::make_pr(ch);
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(),
-				     pool::ready_queue());
+				     pool::ready_queue);
 
 	if (ch == 'f')
 	{

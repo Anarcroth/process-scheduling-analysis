@@ -170,7 +170,7 @@ void PSAscreen::draw_process_exec(int awt, process& pit, std::vector<process>& d
     push_prc_in(wdone, d_p);
     draw_frame_of(wdone, " DONE ");
 
-    push_prc_in(wprc, pool::ready_queue());
+    push_prc_in(wprc, pool::ready_queue);
     draw_frame_of(wprc, " PROCESS ");
 
     doupdate();
