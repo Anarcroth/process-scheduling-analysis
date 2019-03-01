@@ -17,8 +17,6 @@ public:
     void round_rob();
 
 private:
-    void eval_pool();
-
     int average_wait_time;
 
     static const int TIME_QUANTUM;
