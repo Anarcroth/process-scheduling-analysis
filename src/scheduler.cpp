@@ -63,9 +63,11 @@ void scheduler::round_rob()
 	int next_cpu_burst = pit->get_ttl_passed() + TIME_QUANTUM;
 	if (next_cpu_burst >= pit->get_next_io())
 	{
-	    int left_time_q = next_cpu_burst - pit->get_next_io();
+	    // TODO fix this because it is not doing what I want in to do
+	    int left_time_q = std::abs(next_cpu_burst - pit->get_next_io());
 	    std::this_thread::sleep_for(std::chrono::milliseconds(left_time_q));
 	    dispatcher::context_switch(pit, left_time_q);
+
 	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
 	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
 	}
@@ -73,6 +75,7 @@ void scheduler::round_rob()
 	{
 	    std::this_thread::sleep_for(std::chrono::milliseconds(TIME_QUANTUM));
 	    dispatcher::context_switch(pit, TIME_QUANTUM);
+
 	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
 	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 	}
