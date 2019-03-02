@@ -10,7 +10,7 @@ public:
 
     int get_awt() const;
 
-    void exec(std::vector<process>::iterator& pit);
+    void exec(std::vector<process>::iterator& pit, int awt);
 
     void fcfs();
     void sjf();
