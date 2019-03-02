@@ -36,10 +36,11 @@ public:
     int get_ttl_passed() const;
     std::vector<int> get_ioops() const;
 
-    void set_ttl(int _ttl);
     void set_ttl_passed(int _ttl);
-    void incr_next_io();
     void set_prty(priority _prty);
+
+    bool is_done();
+    bool has_io();
 
 private:
     void set_state(state _stt);
@@ -47,7 +48,6 @@ private:
     int set_ttl();
     std::vector<int> set_ioops();
 
-    int next_io;
     int ttl_passed;
     state stt;
     priority prty;
