@@ -4,6 +4,7 @@
 #include "dispatcher.hpp"
 #include "scheduler.hpp"
 #include "pool.hpp"
+#include "screen.hpp"
 
 namespace dispatcher
 {
@@ -27,6 +28,20 @@ namespace dispatcher
 
     void restore_state(std::vector<process>::iterator& pit)
     {
-	std::rotate(pool::ready_queue.begin(), pit + 1, pool::ready_queue.end());
+	if (pit->is_done())
+	{
+	    pool::done_queue.push_back(std::move(*pit));
+	    pit = pool::ready_queue.erase(pit);
+
+	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
+	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
+	}
+	else
+	{
+	    std::rotate(pool::ready_queue.begin(), pit + 1, pool::ready_queue.end());
+
+	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
+	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
+	}
     }
 }

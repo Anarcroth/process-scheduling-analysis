@@ -1,6 +1,5 @@
 #include <algorithm>
-#include <thread>
-#include <chrono>
+
 #include "pool.hpp"
 #include "screen.hpp"
 
