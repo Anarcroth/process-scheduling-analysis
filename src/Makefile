@@ -6,7 +6,7 @@ CC = clang++
 #  -std=c++11	use c++ 11 standard
 #  -Wall 	turns on most, but not all, compiler warnings
 #  -lncurses  	adds the ncurses library
-CPPFLAGS = -g -std=c++11 -Wall -lncurses
+CPPFLAGS = -g -std=c++11 -Wall -lncurses -lpthread
 
 # Invoke the first target entry:
 default: psa

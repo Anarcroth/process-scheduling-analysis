@@ -1,5 +1,6 @@
 #include <vector>
 #include <algorithm>
+#include <thread>
 
 #include "dispatcher.hpp"
 #include "scheduler.hpp"
@@ -12,7 +13,12 @@ namespace dispatcher
     {
 	// TODO create a thread to work on the IO
 	// remove one process io from pit
-	context_switch(pit, tq);
+	save_state(pit, tq);
+	pool::wait_queue.push_back(std::move(*pit));
+	pit = pool::ready_queue.erase(pit);
+	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
+	std::thread t1(dispatcher::exec_io, std::ref(pit));
     }
 
     void context_switch(std::vector<process>::iterator& pit, int tq)
@@ -43,5 +49,14 @@ namespace dispatcher
 	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
 	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
 	}
+    }
+
+    void exec_io(std::vector<process>::iterator& pit)
+    {
+	auto io_ttl = pit->get_ioops().begin();
+	std::this_thread::sleep_for(std::chrono::milliseconds(*io_ttl));
+	pit->get_ioops().erase(io_ttl);
+	pool::ready_queue.push_back(std::move(*pit));
+	pool::wait_queue.erase(pit);
     }
 }

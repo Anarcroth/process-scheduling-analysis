@@ -64,7 +64,8 @@ void scheduler::round_rob()
     pool::eval_prcs_prty();
     average_wait_time = 0;
     auto pit = pool::ready_queue.begin();
-    while (!pool::ready_queue.empty())
+    // TODO create pool::empty() method
+    while (!pool::ready_queue.empty() || !pool::wait_queue.empty())
     {
 	if (pit->has_io())
 	{
@@ -79,7 +80,5 @@ void scheduler::round_rob()
 
 	PSAscreen::get().show_awt(average_wait_time);
 	PSAscreen::get().show_process(*pit);
-
-	doupdate();
     }
 }
