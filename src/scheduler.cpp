@@ -64,8 +64,7 @@ void scheduler::round_rob()
     pool::eval_prcs_prty();
     average_wait_time = 0;
     auto pit = pool::ready_queue.begin();
-    // TODO create pool::empty() method
-    while (!pool::ready_queue.empty() || !pool::wait_queue.empty())
+    while (!pool::empty())
     {
 	if (pit->has_io())
 	{

@@ -51,4 +51,9 @@ namespace pool
 	    else p.set_prty(priority::EXTREME);
 	}
     }
+
+    bool empty()
+    {
+	return (ready_queue.empty() && wait_queue.empty()) ? true : false;
+    }
 }
