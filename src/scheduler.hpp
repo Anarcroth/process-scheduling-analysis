@@ -11,6 +11,7 @@ public:
     int get_awt() const;
 
     void exec(std::vector<process>::iterator& pit, int tq);
+    void take(std::vector<process>::iterator& pit, int tq);
 
     void fcfs();
     void sjf();

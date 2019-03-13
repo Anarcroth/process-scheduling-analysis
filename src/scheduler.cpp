@@ -30,13 +30,13 @@ void scheduler::fcfs()
     average_wait_time = 0;
     pool::eval_prcs_prty();
     auto pit = pool::ready_queue.begin();
-    while (pit != pool::ready_queue.end())
+    while (!pool::empty())
     {
-	exec(pit, pit->get_ttl());
+	take(pit, pit->get_ttl());
 
-	dispatcher::context_switch(pit, pit->get_ttl());
-
-	PSAscreen::get().draw_process_exec(average_wait_time, *pit, pool::done_queue);
+	PSAscreen::get().draw_process_exec(average_wait_time,
+					   *pit,
+					   pool::done_queue);
     }
 }
 
@@ -51,11 +51,13 @@ void scheduler::sjf()
     auto pit = pool::ready_queue.begin();
     while (pit != pool::ready_queue.end())
     {
-	exec(pit, pit->get_ttl());
+	take(pit, pit->get_ttl());
 
 	dispatcher::context_switch(pit, pit->get_ttl());
 
-	PSAscreen::get().draw_process_exec(average_wait_time, *pit, pool::done_queue);
+	PSAscreen::get().draw_process_exec(average_wait_time,
+					   *pit,
+					   pool::done_queue);
     }
 }
 
@@ -66,18 +68,23 @@ void scheduler::round_rob()
     auto pit = pool::ready_queue.begin();
     while (!pool::empty())
     {
-	if (pit->has_io())
-	{
-	    exec(pit, TIME_QUANTUM / 2);
-	    dispatcher::interrupt(pit, TIME_QUANTUM / 2);
-	}
-	else
-	{
-	    exec(pit, TIME_QUANTUM);
-	    dispatcher::context_switch(pit, TIME_QUANTUM);
-	}
+	take(pit, TIME_QUANTUM);
 
 	PSAscreen::get().show_awt(average_wait_time);
 	PSAscreen::get().show_process(*pit);
+    }
+}
+
+void scheduler::take(std::vector<process>::iterator& pit, int tq)
+{
+    if (pit->has_io())
+    {
+	exec(pit, tq / 2);
+	dispatcher::interrupt(pit, tq / 2);
+    }
+    else
+    {
+	exec(pit, tq);
+	dispatcher::context_switch(pit, tq);
     }
 }
