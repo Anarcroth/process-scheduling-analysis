@@ -20,7 +20,6 @@ public:
 
     void draw_small_arrows();
     void draw_legend_cont();
-    void draw_process_exec(int awt, process& pit, std::vector<process>& d_p);
 
     void show_awt(int awt);
     void show_process(process& pr);
@@ -66,6 +65,7 @@ private:
     static const std::string LEG_FCFS_ALG;
     static const std::string LEG_SJF_ALG;
     static const std::string LEG_RR_ALG;
+    static const std::string LEG_PJF_ALG;
 
     static const int COLOR_ORANGE;
 

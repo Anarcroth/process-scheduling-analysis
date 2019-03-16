@@ -83,14 +83,16 @@ void scheduler::pfj()
     std::sort(pool::ready_queue.begin(),
 	      pool::ready_queue.end(),
 	      [] (const process a, const process b) {
-		  return a.get_prty() < b.get_prty();
+		  return a.get_prty() > b.get_prty();
 	      });
 
     auto pit = pool::ready_queue.begin();
     while (!pool::empty())
     {
-	take(pit, TIME_QUANTUM);
+	take(pit, pit->get_ttl());
 
+	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
 	PSAscreen::get().show_awt(avg_wait_t);
 	PSAscreen::get().show_process(*pit);
     }

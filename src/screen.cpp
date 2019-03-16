@@ -33,6 +33,7 @@ const std::string PSAscreen::LEG_ALG = " Algorithm ";
 const std::string PSAscreen::LEG_FCFS_ALG = "First Come First Serve: FCFS (f)";
 const std::string PSAscreen::LEG_SJF_ALG = "Shortest Job First: SJF (s)";
 const std::string PSAscreen::LEG_RR_ALG = "Round Robbin: RR (o)";
+const std::string PSAscreen::LEG_PJF_ALG = "Priority Job First: PJF (p)";
 
 const int PSAscreen::COLOR_ORANGE = 100;
 
@@ -158,22 +159,10 @@ void PSAscreen::draw_legend_cont()
     waddstr(wlegend, LEG_SJF_ALG.c_str());
     wmove(wlegend, 16, 2);
     waddstr(wlegend, LEG_RR_ALG.c_str());
+    wmove(wlegend, 18, 2);
+    waddstr(wlegend, LEG_PJF_ALG.c_str());
 
     wnoutrefresh(wlegend);
-}
-
-void PSAscreen::draw_process_exec(int awt, process& pit, std::vector<process>& d_p)
-{
-    show_awt(awt);
-    show_process(pit);
-
-    push_prc_in(wdone, d_p);
-    draw_frame_of(wdone, " DONE ");
-
-    push_prc_in(wprc, pool::ready_queue);
-    draw_frame_of(wprc, " PROCESS ");
-
-    doupdate();
 }
 
 void PSAscreen::push_prc_in(WINDOW* w, std::vector<process>& prcs)

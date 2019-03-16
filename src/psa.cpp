@@ -28,6 +28,10 @@ int main()
 	{
 	    schedule.round_rob();
 	}
+	else if (ch == 'p')
+	{
+	    schedule.pfj();
+	}
 
 	PSAscreen::get().draw_frame();
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_walg(), " ALGORITHM ");
