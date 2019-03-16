@@ -16,9 +16,10 @@ public:
     void fcfs();
     void sjf();
     void round_rob();
+    void pfj();
 
 private:
-    int average_wait_time;
+    int avg_wait_t;
 
     static const int TIME_QUANTUM;
 };
