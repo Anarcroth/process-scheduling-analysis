@@ -67,7 +67,13 @@ private:
     static const std::string LEG_RR_ALG;
     static const std::string LEG_PJF_ALG;
 
-    static const int COLOR_ORANGE;
+    static const int PR0COLOR;
+    static const int PR1COLOR;
+    static const int PR2COLOR;
+    static const int PR3COLOR;
+    static const int PR4COLOR;
+    static const int PR5COLOR;
+    static const int PR6COLOR;
 
     WINDOW *walg;
     WINDOW *wprc;

@@ -35,7 +35,13 @@ const std::string PSAscreen::LEG_SJF_ALG = "Shortest Job First: SJF (s)";
 const std::string PSAscreen::LEG_RR_ALG = "Round Robbin: RR (o)";
 const std::string PSAscreen::LEG_PJF_ALG = "Priority Job First: PJF (p)";
 
-const int PSAscreen::COLOR_ORANGE = 100;
+const int PSAscreen::PR0COLOR = 100;
+const int PSAscreen::PR1COLOR = 101;
+const int PSAscreen::PR2COLOR = 102;
+const int PSAscreen::PR3COLOR = 103;
+const int PSAscreen::PR4COLOR = 104;
+const int PSAscreen::PR5COLOR = 105;
+const int PSAscreen::PR6COLOR = 106;
 
 PSAscreen::PSAscreen()
 {
@@ -68,13 +74,21 @@ void PSAscreen::init()
     }
 
     start_color();
-    init_color(COLOR_ORANGE, 1000, 647, 0);
-    init_pair(1, COLOR_BLUE, COLOR_BLACK);
-    init_pair(2, COLOR_GREEN, COLOR_BLACK);
-    init_pair(3, COLOR_YELLOW, COLOR_BLACK);
-    init_pair(4, COLOR_ORANGE, COLOR_BLACK);
-    init_pair(5, COLOR_RED, COLOR_BLACK);
-    init_pair(6, COLOR_WHITE, COLOR_BLACK);
+    init_color(PR0COLOR, 243, 1000, 50);
+    init_color(PR1COLOR, 819, 909, 47);
+    init_color(PR2COLOR, 1000, 831, 0);
+    init_color(PR3COLOR, 909, 588, 47);
+    init_color(PR4COLOR, 1000, 376, 27);
+    init_color(PR5COLOR, 909, 82, 15);
+    init_color(PR6COLOR, 1000, 50, 749);
+    init_pair(1, PR0COLOR, COLOR_BLACK);
+    init_pair(2, PR1COLOR, COLOR_BLACK);
+    init_pair(3, PR2COLOR, COLOR_BLACK);
+    init_pair(4, PR3COLOR, COLOR_BLACK);
+    init_pair(5, PR4COLOR, COLOR_BLACK);
+    init_pair(6, PR5COLOR, COLOR_BLACK);
+    init_pair(7, PR6COLOR, COLOR_BLACK);
+    init_pair(8, COLOR_WHITE, COLOR_BLACK);
 }
 
 PSAscreen& PSAscreen::get()
@@ -118,7 +132,7 @@ void PSAscreen::draw_small_arrows()
 void PSAscreen::draw_legend_cont()
 {
     // Creates the Process and Algorithm sub-windows
-    wattron(wlegend, COLOR_PAIR(6));
+    wattron(wlegend, COLOR_PAIR(8));
     wmove(wlegend, 2, 0);
     waddch(wlegend, ACS_LTEE);
     whline(wlegend, ACS_HLINE, W_W_LEGEND - 2);
@@ -137,19 +151,19 @@ void PSAscreen::draw_legend_cont()
 
     // Adds different Processes
     wmove(wlegend, 4, 2);
-    wattron(wlegend, COLOR_PAIR(2));
+    wattron(wlegend, COLOR_PAIR(1));
     waddstr(wlegend, (LEG_LPR + "\t").c_str());
-    wattron(wlegend, COLOR_PAIR(3));
+    wattron(wlegend, COLOR_PAIR(2));
     waddstr(wlegend, LEG_MPR.c_str());
 
     wmove(wlegend, 6, 2);
-    wattron(wlegend, COLOR_PAIR(4));
+    wattron(wlegend, COLOR_PAIR(3));
     waddstr(wlegend, (LEG_HPR + "\t").c_str());
-    wattron(wlegend, COLOR_PAIR(5));
+    wattron(wlegend, COLOR_PAIR(4));
     waddstr(wlegend, LEG_XPR.c_str());
 
     wmove(wlegend, 8, 2);
-    wattron(wlegend, COLOR_PAIR(6));
+    wattron(wlegend, COLOR_PAIR(8));
     waddstr(wlegend, (LEG_RPR + "\t").c_str());
 
     // Adds different Algorithms
@@ -193,19 +207,19 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
     switch (pr)
     {
     case priority::LOW:
-	wattron(w, COLOR_PAIR(2));
+	wattron(w, COLOR_PAIR(1));
 	break;
     case priority::MEDIUM:
-	wattron(w, COLOR_PAIR(3));
+	wattron(w, COLOR_PAIR(2));
 	break;
     case priority::HIGH:
-	wattron(w, COLOR_PAIR(4));
+	wattron(w, COLOR_PAIR(3));
 	break;
     case priority::EXTREME:
 	wattron(w, COLOR_PAIR(5));
 	break;
     case priority::NONE:
-	wattron(w, COLOR_PAIR(6));
+	wattron(w, COLOR_PAIR(8));
 	break;
     }
 }
@@ -245,7 +259,7 @@ void PSAscreen::draw_frame()
 
 void PSAscreen::draw_frame_of(WINDOW *w, std::string title)
 {
-    wattron(w, COLOR_PAIR(6)); // keeps the border of the window white
+    wattron(w, COLOR_PAIR(8)); // keeps the border of the window white
     box(w, 0, 0);
     wmove(w, 0, 1);
     waddstr(w, title.c_str());
