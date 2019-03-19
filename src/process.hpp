@@ -15,10 +15,13 @@ enum class state : unsigned short
 
 enum class priority : unsigned short
 {
-    LOW,
-    MEDIUM,
-    HIGH,
-    EXTREME,
+    PR0,
+    PR1,
+    PR2,
+    PR3,
+    PR4,
+    PR5,
+    PR6,
     NONE
 };
 
@@ -42,6 +45,13 @@ public:
     bool is_done();
     bool has_io();
 
+    static const double PROCESS_TTL_MEAN;
+    static const double PROCESS_TTL_STDDEV;
+    static const double PROCESS_IO_MEAN;
+    static const double PROCESS_IO_STDDEV;
+    static const double IO_TTL_MEAN;
+    static const double IO_TTL_STDDEV;
+
 private:
     void set_state(state _stt);
     std::string set_id();
@@ -54,13 +64,6 @@ private:
     std::string id;
     int ttl;
     std::vector<int> ioops;
-
-    static const double PROCESS_TTL_MEAN;
-    static const double PROCESS_TTL_STDDEV;
-    static const double PROCESS_IO_MEAN;
-    static const double PROCESS_IO_STDDEV;
-    static const double IO_TTL_MEAN;
-    static const double IO_TTL_STDDEV;
 };
 
 #endif

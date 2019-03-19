@@ -45,14 +45,22 @@ namespace commons
     {
 	switch(prty)
 	{
-	case priority::LOW:
-	    return "LOW";
-	case priority::MEDIUM:
-	    return "MEDIUM";
-	case priority::HIGH:
-	    return "HIGH";
+	case priority::PR0:
+	    return "PR0";
+	case priority::PR1:
+	    return "PR1";
+	case priority::PR2:
+	    return "PR2";
+	case priority::PR3:
+	    return "PR3";
+	case priority::PR4:
+	    return "PR4";
+	case priority::PR5:
+	    return "PR5";
+	case priority::PR6:
+	    return "PR6";
 	default:
-	    return "EXTREME";
+	    return "NONE";
 	}
     }
 }

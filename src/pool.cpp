@@ -11,44 +11,55 @@ namespace pool
 
     void make_pr(int ch)
     {
-	// TODO this maybe should create a random process since it would be evaluated before each algorithm
 	switch (ch)
 	{
 	case 'r':
 	    ready_queue.push_back(process());
 	    break;
-	case 'l':;
-	    ready_queue.push_back(process(priority::LOW));
+	case '0':
+	    ready_queue.push_back(process(priority::PR0));
 	    break;
-	case 'm':
-	    ready_queue.push_back(process(priority::MEDIUM));
+	case '1':;
+	    ready_queue.push_back(process(priority::PR1));
 	    break;
-	case 'h':
-	    ready_queue.push_back(process(priority::HIGH));
+	case '2':
+	    ready_queue.push_back(process(priority::PR2));
 	    break;
-	case 'x':
-	    ready_queue.push_back(process(priority::EXTREME));
+	case '3':
+	    ready_queue.push_back(process(priority::PR3));
+	    break;
+	case '4':
+	    ready_queue.push_back(process(priority::PR4));
+	    break;
+	case '5':
+	    ready_queue.push_back(process(priority::PR5));
+	    break;
+	case '6':
+	    ready_queue.push_back(process(priority::PR6));
 	    break;
 	}
     }
 
     void eval_prcs_prty()
     {
-	int sum_of_ttls = 0;
-	std::for_each(ready_queue.begin(),
-		      ready_queue.end(),
-		      [&] (process& p) {
-			  sum_of_ttls += p.get_ttl();
-		      });
-	int average_ttl = sum_of_ttls / ready_queue.size();
-	int quota = average_ttl / 4;
 	for (auto& p : ready_queue)
 	{
-	    if (p.get_ttl() < 730) p.set_prty(priority::LOW);
-	    else if (p.get_ttl() < 1000) p.set_prty(priority::MEDIUM);
-	    else if (p.get_ttl() < 1270) p.set_prty(priority::HIGH);
-	    else if (p.get_ttl() < 1540) p.set_prty(priority::EXTREME);
-	    else p.set_prty(priority::EXTREME);
+	    if (p.get_prty() != priority::NONE) // Skip already set priorities
+		continue;
+	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN - 3 * process::PROCESS_TTL_STDDEV)
+		p.set_prty(priority::PR0);
+	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN - 2 * process::PROCESS_TTL_STDDEV)
+		p.set_prty(priority::PR1);
+	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN - process::PROCESS_TTL_STDDEV)
+		p.set_prty(priority::PR2);
+	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN + process::PROCESS_TTL_STDDEV)
+		p.set_prty(priority::PR3);
+	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN + 2 * process::PROCESS_TTL_STDDEV)
+		p.set_prty(priority::PR4);
+	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN + 3 * process::PROCESS_TTL_STDDEV)
+		p.set_prty(priority::PR5);
+	    else
+		p.set_prty(priority::PR6);
 	}
     }
 

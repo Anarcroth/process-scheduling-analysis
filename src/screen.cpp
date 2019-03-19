@@ -24,11 +24,14 @@ const int PSAscreen::W_W_LEGEND = 65;
 const int PSAscreen::W_H_LEGEND = 51;
 
 const std::string PSAscreen::LEG_PR = " Processes ";
-const std::string PSAscreen::LEG_LPR = "Low Priority: (l)";
-const std::string PSAscreen::LEG_MPR = "Medium Priority: (m)";
-const std::string PSAscreen::LEG_HPR = "High Priority: (h)";
-const std::string PSAscreen::LEG_XPR = "Extreme Priority: (x)";
-const std::string PSAscreen::LEG_RPR = "Random: (r)";
+const std::string PSAscreen::LEG_PR0 = "Priority 0: (0)";
+const std::string PSAscreen::LEG_PR1 = "Priority 1: (1)";
+const std::string PSAscreen::LEG_PR2 = "Priority 2: (2)";
+const std::string PSAscreen::LEG_PR3 = "Priority 3: (3)";
+const std::string PSAscreen::LEG_PR4 = "Priority 4: (4)";
+const std::string PSAscreen::LEG_PR5 = "Priority 5: (5)";
+const std::string PSAscreen::LEG_PR6 = "Priority 6: (6)";
+const std::string PSAscreen::LEG_PRR = "Random Priority: (r)";
 const std::string PSAscreen::LEG_ALG = " Algorithm ";
 const std::string PSAscreen::LEG_FCFS_ALG = "First Come First Serve: FCFS (f)";
 const std::string PSAscreen::LEG_SJF_ALG = "Shortest Job First: SJF (s)";
@@ -152,19 +155,25 @@ void PSAscreen::draw_legend_cont()
     // Adds different Processes
     wmove(wlegend, 4, 2);
     wattron(wlegend, COLOR_PAIR(1));
-    waddstr(wlegend, (LEG_LPR + "\t").c_str());
+    waddstr(wlegend, (LEG_PR0 + "    ").c_str());
     wattron(wlegend, COLOR_PAIR(2));
-    waddstr(wlegend, LEG_MPR.c_str());
+    waddstr(wlegend, (LEG_PR1 + "    ").c_str());
+    wattron(wlegend, COLOR_PAIR(3));
+    waddstr(wlegend, LEG_PR2.c_str());
 
     wmove(wlegend, 6, 2);
-    wattron(wlegend, COLOR_PAIR(3));
-    waddstr(wlegend, (LEG_HPR + "\t").c_str());
     wattron(wlegend, COLOR_PAIR(4));
-    waddstr(wlegend, LEG_XPR.c_str());
+    waddstr(wlegend, (LEG_PR3 + "    ").c_str());
+    wattron(wlegend, COLOR_PAIR(5));
+    waddstr(wlegend, (LEG_PR4 + "    ").c_str());
+    wattron(wlegend, COLOR_PAIR(6));
+    waddstr(wlegend, LEG_PR5.c_str());
 
     wmove(wlegend, 8, 2);
+    wattron(wlegend, COLOR_PAIR(7));
+    waddstr(wlegend, (LEG_PR6 + "    ").c_str());
     wattron(wlegend, COLOR_PAIR(8));
-    waddstr(wlegend, (LEG_RPR + "\t").c_str());
+    waddstr(wlegend, LEG_PRR.c_str());
 
     // Adds different Algorithms
     wmove(wlegend, 12, 2);
@@ -206,17 +215,26 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 {
     switch (pr)
     {
-    case priority::LOW:
+    case priority::PR0:
 	wattron(w, COLOR_PAIR(1));
 	break;
-    case priority::MEDIUM:
+    case priority::PR1:
 	wattron(w, COLOR_PAIR(2));
 	break;
-    case priority::HIGH:
+    case priority::PR2:
 	wattron(w, COLOR_PAIR(3));
 	break;
-    case priority::EXTREME:
+    case priority::PR3:
+	wattron(w, COLOR_PAIR(4));
+	break;
+    case priority::PR4:
 	wattron(w, COLOR_PAIR(5));
+	break;
+    case priority::PR5:
+	wattron(w, COLOR_PAIR(6));
+	break;
+    case priority::PR6:
+	wattron(w, COLOR_PAIR(7));
 	break;
     case priority::NONE:
 	wattron(w, COLOR_PAIR(8));
@@ -226,6 +244,7 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 
 void PSAscreen::show_awt(int awt)
 {
+    wattron(walg, COLOR_PAIR(8));
     wmove(walg, 6, 2);
     waddstr(walg,  (commons::get_time(awt)).c_str());
 }

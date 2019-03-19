@@ -56,11 +56,14 @@ private:
     static const int W_H_LEGEND;
 
     static const std::string LEG_PR;
-    static const std::string LEG_LPR;
-    static const std::string LEG_MPR;
-    static const std::string LEG_HPR;
-    static const std::string LEG_XPR;
-    static const std::string LEG_RPR;
+    static const std::string LEG_PR0;
+    static const std::string LEG_PR1;
+    static const std::string LEG_PR2;
+    static const std::string LEG_PR3;
+    static const std::string LEG_PR4;
+    static const std::string LEG_PR5;
+    static const std::string LEG_PR6;
+    static const std::string LEG_PRR;
     static const std::string LEG_ALG;
     static const std::string LEG_FCFS_ALG;
     static const std::string LEG_SJF_ALG;
