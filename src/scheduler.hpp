@@ -18,12 +18,12 @@ public:
     void round_rob();
     void pfj();
 
-    static int tt;
+    static int tt; /* total time of execution*/
 
 private:
-    int avg_wait_t;
+    int avg_wait_t; /* waiting time */
 
-    static const int TIME_QUANTUM;
+    static const int TIME_QUANTUM; /* time quantum */
 };
 
 #endif

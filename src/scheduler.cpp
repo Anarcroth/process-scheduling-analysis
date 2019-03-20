@@ -33,8 +33,7 @@ void scheduler::fcfs()
     avg_wait_t = 0;
     pool::eval_prcs_prty();
     auto pit = pool::ready_queue.begin();
-    while (!pool::empty())
-    {
+    while (!pool::empty()) {
 	pit->set_tos(tt);
 	take(pit, pit->get_ttl());
 
@@ -56,8 +55,7 @@ void scheduler::sjf()
 
     avg_wait_t = 0;
     auto pit = pool::ready_queue.begin();
-    while (pit != pool::ready_queue.end())
-    {
+    while (pit != pool::ready_queue.end()) {
 	take(pit, pit->get_ttl());
 
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
@@ -72,8 +70,7 @@ void scheduler::round_rob()
     pool::eval_prcs_prty();
     avg_wait_t = 0;
     auto pit = pool::ready_queue.begin();
-    while (!pool::empty())
-    {
+    while (!pool::empty()) {
 	take(pit, TIME_QUANTUM);
 
 	PSAscreen::get().show_awt(avg_wait_t);
@@ -91,8 +88,7 @@ void scheduler::pfj()
 	      });
 
     auto pit = pool::ready_queue.begin();
-    while (!pool::empty())
-    {
+    while (!pool::empty()) {
 	take(pit, pit->get_ttl());
 
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
@@ -104,13 +100,11 @@ void scheduler::pfj()
 
 void scheduler::take(std::vector<process>::iterator& pit, int tq)
 {
-    if (pit->has_io())
-    {
+    if (pit->has_io()) {
 	exec(pit, tq / 2);
 	dispatcher::interrupt(pit, tq / 2);
     }
-    else
-    {
+    else {
 	exec(pit, tq);
 	dispatcher::context_switch(pit, tq);
     }

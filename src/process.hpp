@@ -25,6 +25,17 @@ enum class priority : unsigned short
     NONE
 };
 
+/*
+ * Description: The process class imitates a real process, but without
+ * the work of a process. Instead of creating `PCB` object and filling
+ * them with empty processes, which would cause lasagna code, this
+ * method makes things clearer and more concrete.
+ *
+ * The process class keeps track of its different statistics, which
+ * are then summarized in the end for the final evaluation.
+ * Each process can have a pre-defined priority, or it can be evaluated
+ * upon creation, based on a normal distribution.
+ */
 class process
 {
 public:
