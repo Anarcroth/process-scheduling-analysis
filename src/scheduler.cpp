@@ -11,6 +11,7 @@
 #include "commons.hpp"
 
 const int scheduler::TIME_QUANTUM = 50;
+int scheduler::tt = 0;
 
 scheduler::scheduler() : avg_wait_t(0) {}
 
@@ -21,17 +22,20 @@ int scheduler::get_awt() const
 
 void scheduler::exec(std::vector<process>::iterator& pit, int tq)
 {
+    tt += tq;
     std::this_thread::sleep_for(std::chrono::milliseconds(tq));
     avg_wait_t += tq;
 }
 
 void scheduler::fcfs()
 {
+    tt = 0;
     avg_wait_t = 0;
     pool::eval_prcs_prty();
     auto pit = pool::ready_queue.begin();
     while (!pool::empty())
     {
+	pit->set_tos(tt);
 	take(pit, pit->get_ttl());
 
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);

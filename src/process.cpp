@@ -11,30 +11,52 @@ const double process::PROCESS_IO_STDDEV = 2.0;
 const double process::IO_TTL_MEAN = 1500.0;
 const double process::IO_TTL_STDDEV = 15.0;
 
-process::process() : ttl_passed(0),
+process::process() : tat(0),
+		     tos(-1),
+		     toc(0),
+		     work_done(0),
 		     stt(state::NEW),
 		     prty(priority::NONE),
 		     id(set_id()),
 		     ttl(set_ttl()),
-		     ioops(set_ioops()) {}
+		     ioops(set_ioops()){}
 
-process::process(priority p) : ttl_passed(0),
+process::process(priority p) : tat(0),
+			       tos(-1),
+			       toc(0),
+			       work_done(0),
 			       stt(state::NEW),
 			       prty(p),
 			       id(set_id()),
 			       ttl(set_ttl()),
 			       ioops(set_ioops()) {}
 
+int process::get_tat() const { return tat; }
+int process::get_tos() const { return tos; }
+int process::get_toc() const { return toc; }
+int process::get_ttl() const { return ttl; }
+int process::get_work_done() const { return work_done; }
 state process::get_state() const { return stt; }
 priority process::get_prty() const { return prty; }
 std::string process::get_id() const { return id; }
-int process::get_ttl() const { return ttl; }
-int process::get_ttl_passed() const { return ttl_passed; }
 std::vector<int> process::get_ioops() const { return ioops; }
 
-void process::set_state(state _stt)
+void process::set_tos(int _tos)
 {
-    stt = _stt;
+    if (tos < 0)
+	tos = _tos;
+}
+
+void process::set_toc(int _toc)
+{
+    toc = _toc;
+}
+
+void process::set_work_done(int _ttl)
+{
+    // TODO Fix this bs
+    if (_ttl > ttl) work_done = ttl;
+    else work_done += _ttl;
 }
 
 void process::set_prty(priority _prty)
@@ -42,9 +64,14 @@ void process::set_prty(priority _prty)
     prty = _prty;
 }
 
+void process::add_tat(int _tat)
+{
+    tat += _tat;
+}
+
 bool process::is_done()
 {
-    return (ttl_passed >= ttl) ? true : false;
+    return (work_done >= ttl) ? true : false;
 }
 
 bool process::has_io()
@@ -52,16 +79,15 @@ bool process::has_io()
     return (commons::gen_even_rand() % 2 == 1) ? true : false;
 }
 
+void process::set_state(state _stt)
+{
+    stt = _stt;
+}
+
 std::string process::set_id()
 {
     std::string temp_id = commons::gen_hex().substr(1, 4);
     return temp_id;
-}
-
-void process::set_ttl_passed(int _ttl)
-{
-    if (_ttl > ttl) ttl_passed = ttl;
-    else ttl_passed += _ttl;
 }
 
 int process::set_ttl()

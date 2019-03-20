@@ -35,7 +35,7 @@ namespace commons
 	long sec = t / 1000;
 	t = t - 1000 * sec;
 	std::ostringstream os;
-	os << "Average waiting time -> minutes: "
+	os << "minutes: "
 	   << min << ", seconds: "
 	   << sec << ", milliseconds: " << t;
 	return os.str();

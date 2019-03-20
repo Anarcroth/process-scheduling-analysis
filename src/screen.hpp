@@ -22,6 +22,7 @@ public:
     void draw_legend_cont();
 
     void show_awt(int awt);
+    void show_tat(int tat);
     void show_process(process& pr);
 
     void push_prc_in(WINDOW* w, std::vector<process>& pcbs);

@@ -18,6 +18,8 @@ public:
     void round_rob();
     void pfj();
 
+    static int tt;
+
 private:
     int avg_wait_t;
 

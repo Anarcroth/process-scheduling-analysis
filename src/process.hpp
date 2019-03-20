@@ -31,16 +31,22 @@ public:
     process();
     process(priority prty);
 
+    int get_tat() const;
+    int get_tos() const;
+    int get_toc() const;
+    int get_ttl() const;
+    int get_work_done() const;
     state get_state() const;
     priority get_prty() const;
     std::string get_id() const;
-    int get_ttl() const;
-    int get_next_io() const;
-    int get_ttl_passed() const;
     std::vector<int> get_ioops() const;
 
-    void set_ttl_passed(int _ttl);
+    void set_tos(int _tos);
+    void set_toc(int _toc);
+    void set_work_done(int _ttl);
     void set_prty(priority _prty);
+
+    void add_tat(int _tat);
 
     bool is_done();
     bool has_io();
@@ -58,12 +64,15 @@ private:
     int set_ttl();
     std::vector<int> set_ioops();
 
-    int ttl_passed;
-    state stt;
-    priority prty;
-    std::string id;
-    int ttl;
-    std::vector<int> ioops;
+    int tat;                /* turnaround time */
+    int tos;                /* time of submission */
+    int toc;                /* time of completion */
+    int work_done;          /* work done in time units */
+    state stt;              /* process state */
+    priority prty;          /* process priority */
+    std::string id;         /* process id */
+    int ttl;                /* time to live */
+    std::vector<int> ioops; /* set of IO operations */
 };
 
 #endif
