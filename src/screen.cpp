@@ -242,20 +242,31 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
     }
 }
 
-void PSAscreen::show_awt(int awt)
+void PSAscreen::show_awt(int wt)
 {
     wattron(walg, COLOR_PAIR(8));
     wmove(walg, 6, 2);
-    waddstr(walg,  ("Average Wait time: " +
-		    std::to_string(awt) + "    ").c_str());
+    waddstr(walg, ("Average Wait time: " +
+		   std::to_string(wt) + "    ").c_str());
 }
 
 void PSAscreen::show_tat(int tat)
 {
     wattron(walg, COLOR_PAIR(8));
     wmove(walg, 8, 2);
-    waddstr(walg,  ("Average Turnaround time: " +
-		    std::to_string(tat) + "    ").c_str());
+    waddstr(walg, ("Average Turnaround time: " +
+		   std::to_string(tat) + "    ").c_str());
+}
+
+void PSAscreen::show_statistics(int avg_wt, int avg_tat)
+{
+    for (auto& p : pool::done_queue) {
+	avg_tat += p.get_tat();
+	avg_wt += p.get_wait_t();
+    }
+    PSAscreen::get().show_tat(avg_tat / pool::done_queue.size());
+    PSAscreen::get().show_awt(avg_wt / pool::done_queue.size());
+    wrefresh(PSAscreen::get().get_walg());
 }
 
 void PSAscreen::show_process(process& pr)

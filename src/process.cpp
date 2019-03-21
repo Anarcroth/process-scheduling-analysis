@@ -15,6 +15,8 @@ process::process() : tat(0),
 		     tos(-1),
 		     toc(0),
 		     work_done(0),
+		     prev_exec_t(0),
+		     wait_t(0),
 		     stt(state::NEW),
 		     prty(priority::NONE),
 		     id(set_id()),
@@ -25,6 +27,8 @@ process::process(priority p) : tat(0),
 			       tos(-1),
 			       toc(0),
 			       work_done(0),
+			       prev_exec_t(0),
+			       wait_t(0),
 			       stt(state::NEW),
 			       prty(p),
 			       id(set_id()),
@@ -36,6 +40,8 @@ int process::get_tos() const { return tos; }
 int process::get_toc() const { return toc; }
 int process::get_ttl() const { return ttl; }
 int process::get_work_done() const { return work_done; }
+int process::get_prev_exec_t() const { return prev_exec_t; }
+int process::get_wait_t() const { return wait_t; }
 state process::get_state() const { return stt; }
 priority process::get_prty() const { return prty; }
 std::string process::get_id() const { return id; }
@@ -59,6 +65,11 @@ void process::set_work_done(int _ttl)
     else work_done += _ttl;
 }
 
+void process::set_prev_exec_time(int _pet)
+{
+    prev_exec_t = _pet;
+}
+
 void process::set_prty(priority _prty)
 {
     prty = _prty;
@@ -67,6 +78,13 @@ void process::set_prty(priority _prty)
 void process::add_tat(int _tat)
 {
     tat += _tat;
+}
+
+void process::add_wait_t(int curr_t)
+{
+    if (curr_t != prev_exec_t) {
+	wait_t += curr_t - prev_exec_t;
+    }
 }
 
 bool process::is_done()

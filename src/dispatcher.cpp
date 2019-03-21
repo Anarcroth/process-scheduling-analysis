@@ -30,14 +30,14 @@ namespace dispatcher
 
     void save_state(std::vector<process>::iterator& pit, int ttl_p)
     {
+	pit->set_prev_exec_time(scheduler::total_t);
 	pit->set_work_done(ttl_p);
     }
 
     void restore_state(std::vector<process>::iterator& pit)
     {
 	if (pit->is_done()) {
-
-	    pit->set_toc(scheduler::tt);
+	    pit->set_toc(scheduler::total_t);
 	    pit->add_tat(pit->get_toc() - pit->get_tos());
 
 	    pool::done_queue.push_back(std::move(*pit));
@@ -46,7 +46,6 @@ namespace dispatcher
 	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
 	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 	} else {
-
 	    std::rotate(pool::ready_queue.begin(), pit + 1, pool::ready_queue.end());
 
 	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);

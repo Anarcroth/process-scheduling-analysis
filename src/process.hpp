@@ -47,6 +47,8 @@ public:
     int get_toc() const;
     int get_ttl() const;
     int get_work_done() const;
+    int get_prev_exec_t() const;
+    int get_wait_t() const;
     state get_state() const;
     priority get_prty() const;
     std::string get_id() const;
@@ -55,9 +57,11 @@ public:
     void set_tos(int _tos);
     void set_toc(int _toc);
     void set_work_done(int _ttl);
+    void set_prev_exec_time(int _pet);
     void set_prty(priority _prty);
 
     void add_tat(int _tat);
+    void add_wait_t(int curr_t);
 
     bool is_done();
     bool has_io();
@@ -79,6 +83,8 @@ private:
     int tos;                /* time of submission */
     int toc;                /* time of completion */
     int work_done;          /* work done in time units */
+    int prev_exec_t;        /* previous execution time */
+    int wait_t;             /* waiting time in ready queue */
     state stt;              /* process state */
     priority prty;          /* process priority */
     std::string id;         /* process id */

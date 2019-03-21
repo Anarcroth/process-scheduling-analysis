@@ -21,8 +21,10 @@ public:
     void draw_small_arrows();
     void draw_legend_cont();
 
-    void show_awt(int awt);
+    void show_awt(int wt);
     void show_tat(int tat);
+    void show_statistics(int avg_wt, int avg_tat);
+
     void show_process(process& pr);
 
     void push_prc_in(WINDOW* w, std::vector<process>& pcbs);
