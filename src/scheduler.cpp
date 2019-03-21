@@ -18,6 +18,13 @@ int scheduler::total_t = 0;
 
 scheduler::scheduler() {}
 
+void scheduler::reset()
+{
+    avg_wt = 0;
+    avg_tat = 0;
+    total_t = 0;
+}
+
 void scheduler::exec(std::vector<process>::iterator& pit, int tq)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(tq));
@@ -44,6 +51,7 @@ void scheduler::fcfs()
     pool::eval_prcs_prty();
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
+	// first show the process, then execute it
 	PSAscreen::get().show_process(*pit);
 	take(pit, pit->get_ttl());
 
@@ -64,13 +72,14 @@ void scheduler::sjf()
 	      });
     auto pit = pool::ready_queue.begin();
     while (pit != pool::ready_queue.end()) {
-
+	// first show the process, then execute it
+	PSAscreen::get().show_process(*pit);
 	take(pit, pit->get_ttl());
 
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
-	PSAscreen::get().show_process(*pit);
     }
+    PSAscreen::get().show_statistics(avg_wt, avg_tat);
 }
 
 void scheduler::round_rob()
@@ -79,11 +88,11 @@ void scheduler::round_rob()
     pool::eval_prcs_prty();
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
-
-	take(pit, TIME_QUANTUM);
-
+	// first show the process, then execute it
 	PSAscreen::get().show_process(*pit);
+	take(pit, TIME_QUANTUM);
     }
+    PSAscreen::get().show_statistics(avg_wt, avg_tat);
 }
 
 void scheduler::pfj()
@@ -98,18 +107,12 @@ void scheduler::pfj()
 
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
-
+	// first show the process, then execute it
+	PSAscreen::get().show_process(*pit);
 	take(pit, pit->get_ttl());
 
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
-	PSAscreen::get().show_process(*pit);
     }
-}
-
-void scheduler::reset()
-{
-    avg_wt = 0;
-    avg_tat = 0;
-    total_t = 0;
+    PSAscreen::get().show_process(*pit);
 }
