@@ -21,6 +21,8 @@ public:
     static int tt; /* total time of execution*/
 
 private:
+    void reset();
+
     int avg_wait_t; /* waiting time */
 
     static const int TIME_QUANTUM; /* time quantum */

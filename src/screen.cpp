@@ -246,14 +246,16 @@ void PSAscreen::show_awt(int awt)
 {
     wattron(walg, COLOR_PAIR(8));
     wmove(walg, 6, 2);
-    waddstr(walg,  (commons::get_time(awt)).c_str());
+    waddstr(walg,  ("Average Wait time: " +
+		    std::to_string(awt) + "    ").c_str());
 }
 
 void PSAscreen::show_tat(int tat)
 {
     wattron(walg, COLOR_PAIR(8));
     wmove(walg, 8, 2);
-    waddstr(walg,  (commons::get_time(tat)).c_str());
+    waddstr(walg,  ("Average Turnaround time: " +
+		    std::to_string(tat) + "    ").c_str());
 }
 
 void PSAscreen::show_process(process& pr)
@@ -272,7 +274,6 @@ void PSAscreen::show_process(process& pr)
     wmove(walg, 4, 2);
     waddstr(walg, (std::to_string(pr.get_ttl()) + "    ").c_str());
 
-    wattron(walg, COLOR_PAIR(6));
     wrefresh(walg);
 }
 

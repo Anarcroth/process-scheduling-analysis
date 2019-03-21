@@ -35,18 +35,18 @@ namespace dispatcher
 
     void restore_state(std::vector<process>::iterator& pit)
     {
-	if (pit->is_done())
-	{
-	    pit->set_toc(scheduler::tt - pit->get_tos());
-	    PSAscreen::get().show_tat(pit->get_toc());
+	if (pit->is_done()) {
+
+	    pit->set_toc(scheduler::tt);
+	    pit->add_tat(pit->get_toc() - pit->get_tos());
+
 	    pool::done_queue.push_back(std::move(*pit));
 	    pit = pool::ready_queue.erase(pit);
 
 	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
 	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
-	}
-	else
-	{
+	} else {
+
 	    std::rotate(pool::ready_queue.begin(), pit + 1, pool::ready_queue.end());
 
 	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
@@ -61,7 +61,7 @@ namespace dispatcher
 	auto io_ttl = pit->get_ioops().begin();
 	std::this_thread::sleep_for(std::chrono::milliseconds(*io_ttl));
 	pit->add_tat(*io_ttl);
-	io_ttl = pit->get_ioops().erase(io_ttl);
+	pit->get_ioops().erase(io_ttl);
 
 	pool::ready_queue.push_back(std::move(*pit));
 	pool::wait_queue.erase(pit);

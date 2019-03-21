@@ -29,12 +29,11 @@ void scheduler::exec(std::vector<process>::iterator& pit, int tq)
 
 void scheduler::fcfs()
 {
-    tt = 0;
-    avg_wait_t = 0;
+    reset();
     pool::eval_prcs_prty();
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
-	pit->set_tos(tt);
+
 	take(pit, pit->get_ttl());
 
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
@@ -42,20 +41,26 @@ void scheduler::fcfs()
 	PSAscreen::get().show_awt(avg_wait_t);
 	PSAscreen::get().show_process(*pit);
     }
+    int avg_tat = 0;
+    for (auto& p : pool::done_queue) {
+	avg_tat += p.get_tat();
+    }
+    PSAscreen::get().show_tat(avg_tat / pool::done_queue.size());
+    wrefresh(PSAscreen::get().get_walg());
 }
 
 void scheduler::sjf()
 {
+    reset();
     pool::eval_prcs_prty();
     std::sort(pool::ready_queue.begin(),
 	      pool::ready_queue.end(),
 	      [] (const process a, const process b) {
 		  return a.get_ttl() < b.get_ttl();
 	      });
-
-    avg_wait_t = 0;
     auto pit = pool::ready_queue.begin();
     while (pit != pool::ready_queue.end()) {
+
 	take(pit, pit->get_ttl());
 
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
@@ -67,8 +72,8 @@ void scheduler::sjf()
 
 void scheduler::round_rob()
 {
+    reset();
     pool::eval_prcs_prty();
-    avg_wait_t = 0;
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
 	take(pit, TIME_QUANTUM);
@@ -80,6 +85,7 @@ void scheduler::round_rob()
 
 void scheduler::pfj()
 {
+    reset();
     pool::eval_prcs_prty();
     std::sort(pool::ready_queue.begin(),
 	      pool::ready_queue.end(),
@@ -100,6 +106,8 @@ void scheduler::pfj()
 
 void scheduler::take(std::vector<process>::iterator& pit, int tq)
 {
+    pit->set_tos(tt);
+
     if (pit->has_io()) {
 	exec(pit, tq / 2);
 	dispatcher::interrupt(pit, tq / 2);
@@ -108,4 +116,10 @@ void scheduler::take(std::vector<process>::iterator& pit, int tq)
 	exec(pit, tq);
 	dispatcher::context_switch(pit, tq);
     }
+}
+
+void scheduler::reset()
+{
+    tt = 0;
+    avg_wait_t = 0;
 }
