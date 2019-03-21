@@ -31,19 +31,33 @@ There are several process scheduling algorithms that are used in batch, interact
 
 The purpose of this project is to analyze and compare these different algorithms, to show their strengths and weaknesses.
 
-Another thing to consider is the type of the system that lies under the processes. In general, we can either consider a \textit{real-time} system, or an \textit{interactive} one. \textit{Real-time} systems are such that take into consideration time as an essential role. Typically, one or more devices can stimulate the system and it has to react accordingly in a certain amount of time. \textit{Interactive} systems, much like the 'real-time' ones, can and are stimulated by other programs, but don't have such a strict time constraint.
+Another thing to consider is the type of the system that lies under the processes. In general, we can either consider a \textit{Real-Time} system, or an \textit{interactive} one. \textit{Real-time} systems are such that take into consideration time as an essential role. Typically, one or more devices can stimulate the system and it has to react accordingly in a certain amount of time. \textit{Interactive} systems, much like the 'real-time' ones, can and are stimulated by other programs, but don't have such a strict time constraint.
 
 \section{Specification and Analysis of the Software Requirements}
 
 \section{Design of the Software solution}
 
-This software uses several algorithms and data-structures that play a key role in the whole inner-workings. Because the purpose of the project is to show how different algorithms affect the process execution of real-time systems, we have to talk about each used algorithm and the accompanying data-structures used.
+This software uses several algorithms and data-structures that play a key role in the whole inner-workings. Because the purpose of the project is to show how different algorithms affect the process execution of \textit{Real-Time} systems, we have to talk about each used algorithm and the accompanying data-structures.
+
+But before we do that, we have to cover several structural decisions that have been made in order for the algorithm explanations to make sense.
+
+Usually, in scheduling algorithms we have \code{PCB} blocks which hold references to the actual process, and through those blocks, we make decisions on which process should be executed next. Instead of doing this, because it adds another layer of complexity, not needed in this case, the role of a process and a PCB block is substituted with just a \code{process} class. It holds both the metadata found in PCBs and has the workings of processes. Thus, when in the text a reference is made to a process, a mental note should be made that it has a duality in it, for it holds two structures.
+
+Another aspect that should be considered is that this project tries to imitate a \textit{Real-Time} system. This means that the scheduler has the notion of preemptive tasks and of \textit{IO} operations. Some of algorithms used are non-primitive and have been used in old \textit{batch systems} and \textit{interactive systems}. Thus, these algorithms have been tailored in order to work with a modern approach of building schedulers. When we refer to preemptive systems, it is meant that the OS decides when a process should be forced into a context-switch and when it should be taken from the \code{ready\_queue}. Also, Real Time systems do not wait for IO to end, thus they switch to the next ready process. For instance, the \textbf{FCFS} algorithm originally was used in non-preemptive batch systems, but in this project, each process is preempted upon requesting IO operations. Then, while waiting for that process to finish with IO, the next ready one is taken from the queue.
+
+Having these distinctions made, we can then proceed to the algorithms and data-structures used.
 
 \subsection{Algorithms and Data-structures}
 
 \textbf{FCFS}
 
-The \textbf{F}irst \textbf{C}ome \textbf{F}irst \textbf{S}erve algorithm is one of the easiest to understand and implement. It can be looked at from many different angles. \textbf{FCFS} can be seen as a \code{linked-list} or a \code{queue}, which just serves each incoming process to the CPU for execution.
+The \textbf{F}irst \textbf{C}ome \textbf{F}irst \textbf{S}erve algorithm is one of the easiest to understand and implement. It can be looked at from many different angles. \textbf{FCFS} can be seen as a \code{linked-list} or a \code{queue}, which just serves each incoming process to the CPU for execution. When a new process is created, it is put at the back of the \code{ready\_queue}. Then each process, one by one, is taken from the head of the queue and is given to the CPU for execution. It really depends on what type of system is running this scheduler, but in general, this algorithm, although easy, is not the most effective one to have. Because each process can take any time to finish, it can stall the whole system with its execution. For instance, if we were to have several processes and one is to be long in execution time, depending on their time of arrival, we can either quickly go through all of them, or we can wait for a long time.
+
+In this project, the \textbf{FCFS} algorithm is created using a \code{vector} to hold all of the processes in sequential manner. At the start of the algorithm, we just take each next process for execution, wait for its time to live (\code{ttl}) and then we proceed to the next one in line. Because this project tries to imitate a \textit{Real-Time} system, we also check if each process will do an \textit{IO} operation. If so, the process is then sent to an \code{exec\_io} routine, and the next process is then taken. This means that the \code{done\_queue} will not be populated in the exact same order as the processes have been created in the \code{ready\_queue}, because of these \textit{IO} operations. Regardless, this still follows the \textbf{FCFS} pattern, and we can see that indeed, each process is taken from the head of the queue.
+
+\textbf{SJF}
+
+The \textbf{S}hortest \textbf{J}ob \textbf{F}irst algorithm is another easy to understand, easy to implement.
 
 \section{Implementation}
 
