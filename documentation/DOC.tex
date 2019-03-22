@@ -8,6 +8,8 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{relsize}
+\usepackage{epigraph}
+\usepackage{parskip}
 
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -38,13 +40,19 @@
 
 \section{Introduction}
 
-Every Operating System has some type of process handling capabilities, be that in the form of simple queue structure, or in some complex algorithm. This is also specific to the different types of systems that are handling the jobs. Some embedded systems do not have the capacity to handle complex operations, which forces them to have simple scheduling algorithms. One such example would be preemptive OSes.
+Every Operating System has some type of process handling capabilities, be that in the form of simple queue structure, or in some complex algorithm. This is also specific to the different types of systems that are handling the jobs. Some embedded systems do not have the capacity to handle complex operations, which forces them to have simple schedulers. One such example would be preemptive OS's, running on batch jobs.
 
-There are several process scheduling algorithms that are used in batch, interactive, and real-time systems. These include, but are not limited to, First Come First Serve (\textbf{FCFS}), Shortest Job First (\textbf{SJF}), Priority Scheduling, Round-Robbin Scheduling, Guaranteed Scheduling, Lottery Scheduling, and Multilevel Queue Scheduling. All of them have their advantages and weaknesses. Some are simpler and work for small sequential systems, while others are more complex, but distribute the workload better.
+There are several process scheduling algorithms that are used in batch, interactive, and real-time systems. These include, but are not limited to, First Come First Serve (\textbf{FCFS}), Shortest Job First (\textbf{SJF}), Priority Job First (\textbf{PJF}), \textbf{Round-Robin} Scheduling, Guaranteed Scheduling, Lottery Scheduling, \textbf{Multilevel Queue} Scheduling, etc. All of them have their advantages and weaknesses. Some are simpler and work for small systems, while others are more complex, but distribute the workload better. The purpose of this project is to analyze and compare these different algorithms, to show where they flourish and where they fall.
 
-The purpose of this project is to analyze and compare these different algorithms, to show their strengths and weaknesses.
+Another thing to consider is the type of the system that lies under the processes. In general, we can either consider a \textit{Real-time} system, or an \textit{Interactive} one. We are all together omitting \textit{Batch} systems, as they are no longer viable and interesting. \textit{Real-time} systems are such that take into consideration time as an essential goal. Typically, one or more devices can stimulate the system and it has to react accordingly in a certain amount of time. \textit{Interactive} systems, much like the 'Real-time' ones, can and are stimulated by other programs, but don't have such a strict time constraints.
 
-Another thing to consider is the type of the system that lies under the processes. In general, we can either consider a \textit{Real-Time} system, or an \textit{interactive} one. \textit{Real-time} systems are such that take into consideration time as an essential role. Typically, one or more devices can stimulate the system and it has to react accordingly in a certain amount of time. \textit{Interactive} systems, much like the 'real-time' ones, can and are stimulated by other programs, but don't have such a strict time constraint.
+I personally find the topic of these intricate systems fascinating. All of these schedulers have something to teach us about optimization and managing complex systems. Being able to control an entire Operating Systems is no joke, so a good handle on \textit{Process Scheduling Algorithms} is vital for any Computer Scientist. As I aspire to one day write kernel code, this project closely relates to my interests and is a good preparation for any further advancements in the fields of \textit{System programming}. Although this project is big in size and complexity, the desire to learn proves to justify any means to achieve the goal.
+
+\epigraph{He who has a why to live can bear almost any how}{\textit{Friedrich Nietzsche}}
+
+The application is created by using \code{C++} and the \code{ncurses} library. The reason to pick \textit{C++} is due to its high granularity and fine tuning capabilities. With C++, I can control every aspect of the program with high accuracy, which is needed for scheduling algorithms. The \textit{ncurses} library provides a nice platform for building \textit{terminal-based} applications. It allows for easy interaction with terminals, controlling text output, color output, \textit{IO} operations, etc. It also provides a clean and pretty \textit{user-interface}, which is always a welcome benefit, especially if the work is done in C++. The \textit{UI} will have several panels, indicating the different algorithms and processes that can be selected, and also what are the contents of the different \code{queues}. There would be information for each algorithm and statistical summaries after each round of execution. The UI aims at being both easy to use, but at the same time, be clear and helping people evaluate the different algorithms.
+
+As a final goal, this project is to be shared and extended with anyone who is interested in learning the mechanics of process scheduling. It can be used as a learning and pedagogical tool. Future plans hold that the project be tailored for introductory courses on Operating Systems, where students will have a first hand experience of seeing how these algorithms work and what kind of outputs they produce.
 
 \section{Specification and Analysis of the Software Requirements}
 
@@ -165,13 +173,21 @@ Of course this is a fairly simple example, because the processes do not take as 
 
 \subsubsection{SJF}
 
-The \textbf{S}hortest \textbf{J}ob \textbf{F}irst algorithm is another easy to understand, easy to implement. What it does is that it looks in the \code{ready\_queue} and arranges the processes by their execution time in increasing manner. The shortest job will run first, then the second shortest one, and so on. Each job has a pre-defined execution time, which we take as a given, and then based on that value, we sort the queue. It is important to note that this algorithm is a special case for a \textbf{PFJ} (Priority First Job) algorithm.
+The \textbf{S}hortest \textbf{J}ob \textbf{F}irst is another easy to understand, not so easy to implement algorithm. The SJF is an optimal algorithm, because it takes the greedy approach. It tries to finish all of the shortest processes first, which would cause the whole set of processes to finish as quick as possible. But there is a downside to this. This algorithm is not practically applicable, because it either relies on information beforehand for each process, or it has to do estimations for each upcoming process. Usually there is no way to know for how long a process will execute. In general, depending on what information we have, there are two ways to approach this algorithm.
 
-Much like the FCFS, we also take into account the fact that we might have IO operations and we also preempt every process that does such actions.
+\textbf{Note:} much like the FCFS, we also take into account the fact that we might have IO operations and we also preempt every process that does such actions.
 
-The SJF is an optimal algorithm, because it takes the greedy approach. But there is a downside to this. This algorithm is not practically applicable, because we do not know before-hand what is the \textit{actual} time of execution for each process by guessing it. This is done by predicting the next job execution time on the basis of the previous jobs. This so called \textit{exponential average} of the measured lengths of the previous jobs will provide a good guess as to what to pick.
+\
 
-The \textit{exponential average} can be defined as follows: Let \scalebox{1.1}{\(t_{n}\)} be the length of the nth CPU burst. Let \scalebox{1.1}{\(\tau_{n+1}\)} be our prediction for the next CPU burst. Then \scalebox{1.1}{\(\forall \alpha,  0 \leq \alpha \leq 1\)}, we define
+\textbullet \ Method 1
+
+In a perfect world, we would be graced with the knowledge of how long each job would. Thus, one way is to look in the \code{ready\_queue} and arrange the processes by their execution time in increasing manner (from smallest to largest). The shortest job will run first, then the second shortest one, and so on. Because each job has a \textit{pre-defined} execution time, which we take as a \textit{given}, based on that value, we sort the queue. This is the simpler approach because it only relies on information that is already given to us. It is important to note that this algorithm is a special case for a \textbf{PFJ} (Priority First Job) algorithm, because we are organizing the processes based on their execution time, which would be a form of a priority measurement.
+
+\
+
+\textbullet \ Method 2
+
+Continuing from \textit{Method 1}, we do not live in a perfect world and as we mentioned earlier, because we do not know before-hand what is the \textit{actual} time of execution for each process, we try to \textit{guess it}. This is done by predicting the next job execution time on the basis of the previous jobs. This so called \textit{exponential average} of the measured lengths of the previous jobs will provide a good guess as to what to expect. The \textit{exponential average} can be defined as follows: Let \scalebox{1.1}{\(t_{n}\)} be the length of the nth CPU burst. Let \scalebox{1.1}{\(\tau_{n+1}\)} be our prediction for the next CPU burst. Then \scalebox{1.1}{\(\forall \alpha,  0 \leq \alpha \leq 1\)}, we define
 
 \
 
@@ -181,7 +197,7 @@ The \textit{exponential average} can be defined as follows: Let \scalebox{1.1}{\
 
 \
 
-Where \scalebox{1.1}{\(t_{n}\)} is the most recent information we have, \scalebox{1.1}{\(\tau_{n+1}\)} is the previous prediction, and \scalebox{1.1}{\(\alpha\)} is the weight of our past predictions. If \scalebox{1.1}{\(\alpha = 0 \rightarrow \tau_{n+1} = \tau_{n}\)}, which means that the previous history does not matter. If \scalebox{1.1}{\(\alpha = 1 \rightarrow \tau_{n+1} = t_{n}\)}, which means that only the most recent history matters. A good middle value (quite literally) can be to put \scalebox{1.1}{\(\alpha = ^1\_2\)}. This way, both recent and past history have equal weight on the next \textit{exponential average}.
+Where \scalebox{1.1}{\(t_{n}\)} is the most recent information we have, \scalebox{1.1}{\(\tau_{n}\)} is the previous prediction, and \scalebox{1.1}{\(\alpha\)} is the weight of our past predictions. If \scalebox{1.1}{\(\alpha = 0 \rightarrow \tau_{n+1} = \tau_{n}\)}, which means that the previous history does not matter. If \scalebox{1.1}{\(\alpha = 1 \rightarrow \tau_{n+1} = t_{n}\)}, which means that only the most recent history matters. A good middle value (quite literally) can be to put \scalebox{1.1}{\(\alpha = {{}^{1}\!/_{2}}\)}. This way, both recent and past history have equal weight on the next \textit{exponential average}.
 
 The expanded \textit{exponential average} formula looks like this
 
@@ -195,7 +211,7 @@ The expanded \textit{exponential average} formula looks like this
 
 Usually, \scalebox{1.1}{\(\alpha\)} is less than 1, thus each successive term has less and less weight than the previous one. By using this formula, we can then make an informed decision on how to execute each incoming process.
 
-One thing that arises in this algorithm is why we must make a guess as to which process should be executed? Why is this happening? This type of guessing is done only here, while anywhere else, we do not need to make presumptions. The reason is that for all other algorithms, we either have a constant \code{TIME\_QUANTUM}, which is used to define each CPU burst (used in \textbf{Round-Robbing Scheduling}), or we wait for the process to tell us if it's done or not (such as the case with \textbf{FCFS}). Here, however, we have to \textit{dynamically} specify the CPU burst time on each new process execution. This forces us to keep track of each execution time.
+One thing that arises in this algorithm is why we must make a guess as to which process should be executed? Why is this happening? This type of guessing is done only here, while anywhere else, we do not need to make presumptions. The reason is that for all other algorithms, we either have a constant \code{TIME\_QUANTUM}, which is used to define each CPU burst (used in \textbf{Round-Robin Scheduling}), or we wait for the process to tell us if it's done or not (such as the case with \textbf{FCFS}). Here, however, we have to \textit{dynamically} specify the CPU burst time on each new process execution. This forces us to keep track of each execution time.
 
 \
 
@@ -288,7 +304,7 @@ Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround t
   \end{center}
 \end{table}
 
-\subsubsection{Round-Robbin}
+\subsubsection{Round-Robin}
 
 
 
