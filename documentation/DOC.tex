@@ -4,14 +4,27 @@
 \usepackage{amsmath}
 \usepackage{color}
 \usepackage{fullpage}
+\usepackage{pgfgantt}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{relsize}
 
 \renewcommand{\familydefault}{\sfdefault}
 
-\definecolor{codegray}{gray}{0.9}
-\newcommand{\code}[1]{\colorbox{codegray}{\texttt{#1}}}
+\definecolor{pr0}{RGB}{61, 255, 12}
+\definecolor{pr1}{RGB}{208, 231, 11}
+\definecolor{pr2}{RGB}{255, 190, 0}
+\definecolor{pr3}{RGB}{231, 149, 11}
+\definecolor{pr4}{RGB}{255, 95, 6}
+\definecolor{pr5}{RGB}{231, 20, 3}
+\definecolor{pr6}{RGB}{255, 12, 190}
+
+\definecolor{codebg}{gray}{0.9}
+\definecolor{codehl}{RGB}{82, 139, 255}
+\newcommand{\code}[1]{\colorbox{codebg}{{\color{black}\texttt{#1}}}}
 
 \title{Senior Project Thesis\\
-       \large Process scheduling - comparison and contrast}
+  \large Process scheduling - comparison and contrast}
 \date{\today}
 \author{Martin Nestorov}
 \linespread{1}
@@ -41,7 +54,7 @@ This software uses several algorithms and data-structures that play a key role i
 
 But before we do that, we have to cover several structural decisions that have been made in order for the algorithm explanations to make sense.
 
-Usually, in scheduling algorithms we have \code{PCB} blocks which hold references to the actual process, and through those blocks, we make decisions on which process should be executed next. Instead of doing this, because it adds another layer of complexity, not needed in this case, the role of a process and a PCB block is substituted with just a \code{process} class. It holds both the metadata found in PCBs and has the workings of processes. Thus, when in the text a reference is made to a process, a mental note should be made that it has a duality in it, for it holds two structures.
+Usually, in scheduling algorithms we have \code{PCB} blocks which hold references to the actual process, and through those blocks, we make decisions on which process should be executed next. Instead of doing this, because it adds another layer of complexity, not needed in this case, the role of a process and a PCB block is substituted with just a \code{process} class. It holds both the metadata found in PCBs and has the workings of processes. Thus, when in the text a reference is made to a process, a mental note should be made that it has a duality in it, for it holds two structures. The explanation of the \code{process} structure, as well as the other classes, can be found further down.
 
 Another aspect that should be considered is that this project tries to imitate a \textit{Real-Time} system. This means that the scheduler has the notion of preemptive tasks and of \textit{IO} operations. Some of algorithms used are non-primitive and have been used in old \textit{batch systems} and \textit{interactive systems}. Thus, these algorithms have been tailored in order to work with a modern approach of building schedulers. When we refer to preemptive systems, it is meant that the OS decides when a process should be forced into a context-switch and when it should be taken from the \code{ready\_queue}. Also, Real Time systems do not wait for IO to end, thus they switch to the next ready process. For instance, the \textbf{FCFS} algorithm originally was used in non-preemptive batch systems, but in this project, each process is preempted upon requesting IO operations. Then, while waiting for that process to finish with IO, the next ready one is taken from the queue.
 
@@ -49,15 +62,235 @@ Having these distinctions made, we can then proceed to the algorithms and data-s
 
 \subsection{Algorithms and Data-structures}
 
-\textbf{FCFS}
+\subsubsection{FCFS}
 
 The \textbf{F}irst \textbf{C}ome \textbf{F}irst \textbf{S}erve algorithm is one of the easiest to understand and implement. It can be looked at from many different angles. \textbf{FCFS} can be seen as a \code{linked-list} or a \code{queue}, which just serves each incoming process to the CPU for execution. When a new process is created, it is put at the back of the \code{ready\_queue}. Then each process, one by one, is taken from the head of the queue and is given to the CPU for execution. It really depends on what type of system is running this scheduler, but in general, this algorithm, although easy, is not the most effective one to have. Because each process can take any time to finish, it can stall the whole system with its execution. For instance, if we were to have several processes and one is to be long in execution time, depending on their time of arrival, we can either quickly go through all of them, or we can wait for a long time.
 
-In this project, the \textbf{FCFS} algorithm is created using a \code{vector} to hold all of the processes in sequential manner. At the start of the algorithm, we just take each next process for execution, wait for its time to live (\code{ttl}) and then we proceed to the next one in line. Because this project tries to imitate a \textit{Real-Time} system, we also check if each process will do an \textit{IO} operation. If so, the process is then sent to an \code{exec\_io} routine, and the next process is then taken. This means that the \code{done\_queue} will not be populated in the exact same order as the processes have been created in the \code{ready\_queue}, because of these \textit{IO} operations. Regardless, this still follows the \textbf{FCFS} pattern, and we can see that indeed, each process is taken from the head of the queue.
+In this project, the \textbf{FCFS} algorithm is created using a \code{vector} to hold all of the processes in sequential manner. At the start of the algorithm, we just take each next process for execution, wait for its time to live (\code{ttl}) and then we proceed to the next one in line. Because this project tries to imitate a \textit{Real-Time} system, we also check if each process will do an \textit{IO} operation. If so, the process is then sent to an \code{exec\_io} routine, and the next process is then taken. This means that the \code{done\_queue} will not be populated in the exact same order as the processes have been created in the \code{ready\_queue}, because of these \textit{IO} operations. Regardless, this still follows the \textbf{FCFS} pattern, and we can see that indeed, each process is taken from the head of the queue (technically vector).
 
-\textbf{SJF}
+\
 
-The \textbf{S}hortest \textbf{J}ob \textbf{F}irst algorithm is another easy to understand, easy to implement.
+\textbf{Evaluation}
+
+\
+
+\textbf{FCFS} gives us a few benefits. First, it is very simple to implement and understand. From this standpoint, it's a great algorithm for small batch systems. But on the other hand, it doesn't scale well. It can stall if there is \textbf{no} preemption and a \textbf{convoy effect} might occur, which means that all other processes wait for the currently running one to finish. To summarize:
+
+\begin{table}[h!]
+  \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
+    \toprule
+    \hfil\bfseries Pros & \hfil\bfseries Cons \\
+    \cmidrule(r{3\tabcolsep}){1-1}\cmidrule(l{-\tabcolsep}){2-2}
+
+    Easy to implement\par
+    Easy to understand\par
+    Works good for simple systems and batch systems\par
+
+    &
+
+    Can be slow\par
+    Doesn't scale\par
+    High risk of convoy effect\par
+    System can stall if not preemptive\par
+    Bad prediction for \textit{Waiting time} and \textit{Turnaround time} \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Pros and Cons of FCFS}
+\end{table}
+
+\
+
+\textit{Example}
+
+Let's take a set of processes and see how they would hold under this algorithm. We generate 5 random processes.
+
+\begin{table}[h!]
+  \begin{center}
+    \label{tab:FCFS processes}
+    \begin{tabular}{c|c}
+      \toprule
+      \textbf{Process ID} & \textbf{Time To Live} \\
+      \midrule
+      c37f & 2 \\
+      e2fc & 5 \\
+      792d & 3 \\
+      0a35 & 5 \\
+      3207 & 5 \\
+      \bottomrule
+    \end{tabular}
+    \caption{FCFS processes table}
+  \end{center}
+\end{table}
+
+From this, we can create the following \textbf{Gantt chart}.
+
+\
+
+\begin{ganttchart}[
+  expand chart=\textwidth,
+  hgrid={black}
+  ]{1}{20}
+  \gantttitle{FCFS}{20} \\
+  \gantttitlelist{1,...,20}{1} \\
+  \ganttbar[bar/.append style={fill=pr2}]{c37f}{1}{2} \\
+  \ganttbar[bar/.append style={fill=pr3}]{e2fc}{3}{7} \\
+  \ganttbar[bar/.append style={fill=pr2}]{792d}{8}{10} \\
+  \ganttbar[bar/.append style={fill=pr3}]{0a35}{11}{15} \\
+  \ganttbar[bar/.append style={fill=pr3}]{3207}{16}{20} \\
+\end{ganttchart}
+
+Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround time}.
+
+\begin{table}[h!]
+  \begin{center}
+    \label{tab:FCFS times}
+    \begin{tabular}{c|c|c}
+      \toprule
+      \textbf{Process ID} & \textbf{Waiting time} & \textbf{Turnaround time} \\
+      \midrule
+      c37f & 0 & 2 \\
+      e2fc & 2 & 5 \\
+      792d & 7 & 3 \\
+      0a35 & 10 & 5 \\
+      3207 & 15 & 5 \\
+      \bottomrule
+      \toprule
+      \textbf{Average} & \textbf{6.8} & \textbf{4} \\
+    \end{tabular}
+    \caption{FCFS times table}
+  \end{center}
+\end{table}
+
+Of course this is a fairly simple example, because the processes do not take as long to execute, and we are also not taking into consideration the fact that these processes \textit{might} have some IO to do.
+
+\subsubsection{SJF}
+
+The \textbf{S}hortest \textbf{J}ob \textbf{F}irst algorithm is another easy to understand, easy to implement. What it does is that it looks in the \code{ready\_queue} and arranges the processes by their execution time in increasing manner. The shortest job will run first, then the second shortest one, and so on. Each job has a pre-defined execution time, which we take as a given, and then based on that value, we sort the queue. It is important to note that this algorithm is a special case for a \textbf{PFJ} (Priority First Job) algorithm.
+
+Much like the FCFS, we also take into account the fact that we might have IO operations and we also preempt every process that does such actions.
+
+The SJF is an optimal algorithm, because it takes the greedy approach. But there is a downside to this. This algorithm is not practically applicable, because we do not know before-hand what is the \textit{actual} time of execution for each process by guessing it. This is done by predicting the next job execution time on the basis of the previous jobs. This so called \textit{exponential average} of the measured lengths of the previous jobs will provide a good guess as to what to pick.
+
+The \textit{exponential average} can be defined as follows: Let \scalebox{1.1}{\(t_{n}\)} be the length of the nth CPU burst. Let \scalebox{1.1}{\(\tau_{n+1}\)} be our prediction for the next CPU burst. Then \scalebox{1.1}{\(\forall \alpha,  0 \leq \alpha \leq 1\)}, we define
+
+\
+
+\begin{equation}
+  \mathlarger{\tau_{n+1} = \alpha t_{n} + (1 - \alpha)\tau_{n}}
+\end{equation}
+
+\
+
+Where \scalebox{1.1}{\(t_{n}\)} is the most recent information we have, \scalebox{1.1}{\(\tau_{n+1}\)} is the previous prediction, and \scalebox{1.1}{\(\alpha\)} is the weight of our past predictions. If \scalebox{1.1}{\(\alpha = 0 \rightarrow \tau_{n+1} = \tau_{n}\)}, which means that the previous history does not matter. If \scalebox{1.1}{\(\alpha = 1 \rightarrow \tau_{n+1} = t_{n}\)}, which means that only the most recent history matters. A good middle value (quite literally) can be to put \scalebox{1.1}{\(\alpha = ^1\_2\)}. This way, both recent and past history have equal weight on the next \textit{exponential average}.
+
+The expanded \textit{exponential average} formula looks like this
+
+\
+
+\begin{equation}
+  \mathlarger{\tau_{n+1} = \alpha t_{n} + (1 - \alpha)\alpha t_{n - 1} + \dots + (1 - \alpha)^{j} \alpha t_{n - j} + \dots + (1 - \alpha)^{n + 1} \tau_{0}}
+\end{equation}
+
+\
+
+Usually, \scalebox{1.1}{\(\alpha\)} is less than 1, thus each successive term has less and less weight than the previous one. By using this formula, we can then make an informed decision on how to execute each incoming process.
+
+One thing that arises in this algorithm is why we must make a guess as to which process should be executed? Why is this happening? This type of guessing is done only here, while anywhere else, we do not need to make presumptions. The reason is that for all other algorithms, we either have a constant \code{TIME\_QUANTUM}, which is used to define each CPU burst (used in \textbf{Round-Robbing Scheduling}), or we wait for the process to tell us if it's done or not (such as the case with \textbf{FCFS}). Here, however, we have to \textit{dynamically} specify the CPU burst time on each new process execution. This forces us to keep track of each execution time.
+
+\
+
+\textbf{Evaluation}
+
+\
+
+\begin{table}[h!]
+  \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
+    \toprule
+    \hfil\bfseries Pros & \hfil\bfseries Cons \\
+    \cmidrule(r{3\tabcolsep}){1-1}\cmidrule(l{-\tabcolsep}){2-2}
+
+    Optimal\par
+    A good academic exercise\par
+    Can produce fast results\par
+
+    &
+
+    Somewhat difficult to implement\par
+    Cannot be used in a real system\par
+    Still might have a process that stalls \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Pros and Cons of FCFS}
+\end{table}
+
+In this case we might think that FCFS is the better algorithm, since at least it has some real life value to it, but that's not the immediate case. Although we are dealing with a hypothetical algorithm here, it is still worth it to check what are the times for SJF. If we run an example, we would see that SJF has better waiting time for each process, where the turnaround time doesn't change. Thus, SJF yields better results on average that FCFS.
+
+\
+
+\textit{Example}
+
+Let's take again a set of processes and see how they would work. Then we can create the \textbf{Gantt chart}.
+
+\begin{table}[h!]
+  \begin{center}
+    \label{tab:SJF processes}
+    \begin{tabular}{c|c}
+      \toprule
+      \textbf{Process ID} & \textbf{Time To Live} \\
+      \midrule
+      9479 & 2 \\
+      7470 & 3 \\
+      2b62 & 4 \\
+      047c & 4 \\
+      d19c & 7 \\
+      \bottomrule
+    \end{tabular}
+    \caption{SJF processes table}
+  \end{center}
+\end{table}
+
+\
+
+\begin{ganttchart}[
+  expand chart=\textwidth,
+  hgrid={black}
+  ]{1}{20}
+  \gantttitle{SJF}{20} \\
+  \gantttitlelist{1,...,20}{1} \\
+  \ganttbar[bar/.append style={fill=pr1}]{9479}{1}{2} \\
+  \ganttbar[bar/.append style={fill=pr3}]{7470}{3}{5} \\
+  \ganttbar[bar/.append style={fill=pr3}]{2b62}{6}{9} \\
+  \ganttbar[bar/.append style={fill=pr3}]{047c}{10}{13} \\
+  \ganttbar[bar/.append style={fill=pr4}]{d19c}{14}{20} \\
+\end{ganttchart}
+
+\
+
+Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround time}.
+
+\begin{table}[h!]
+  \begin{center}
+    \label{tab:SJF times}
+    \begin{tabular}{c|c|c}
+      \toprule
+      \textbf{Process ID} & \textbf{Waiting time} & \textbf{Turnaround time} \\
+      \midrule
+      9479 & 0 & 2 \\
+      7470 & 2 & 3 \\
+      2b62 & 5 & 4 \\
+      047c & 9 & 4 \\
+      d19c & 13 & 7 \\
+      \bottomrule
+      \toprule
+      \textbf{Average} & \textbf{5.8} & \textbf{4} \\
+    \end{tabular}
+    \caption{SJF times table}
+  \end{center}
+\end{table}
+
+\subsubsection{Round-Robbin}
+
+
 
 \section{Implementation}
 
