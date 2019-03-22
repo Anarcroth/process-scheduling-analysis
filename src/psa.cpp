@@ -30,7 +30,7 @@ int main()
 	}
 	else if (ch == 'p')
 	{
-	    schedule.pfj();
+	    schedule.pjf();
 	}
 
 	PSAscreen::get().draw_frame();

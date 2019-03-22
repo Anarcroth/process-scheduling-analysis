@@ -20,19 +20,36 @@ int scheduler::prev_pr_burst = 1000;
 
 scheduler::scheduler() {}
 
+/*
+ * Description: resets all of the global
+ * variables used across every algorithm.
+ */
 void scheduler::reset()
 {
     avg_wt = 0;
     avg_tat = 0;
     total_t = 0;
+    prev_pr_burst = 0;
 }
 
+/*
+ * Description: executes the passed time quantum
+ * `tq` and increments the total time of execution.
+ *
+ * By execution it is meant that the main program
+ * sleeps for the `tq` amount.
+ */
 void scheduler::exec(int tq)
 {
     std::this_thread::sleep_for(std::chrono::milliseconds(tq));
     total_t += tq;
 }
 
+/*
+ * Description: takes each process, sets it up and
+ * checks for IO. Then it sends the process to be
+ * executed.
+ */
 void scheduler::take(std::vector<process>::iterator& pit, int tq)
 {
     pit->set_tos(total_t);
@@ -47,6 +64,15 @@ void scheduler::take(std::vector<process>::iterator& pit, int tq)
     }
 }
 
+/*
+ * Description: first come first serve algorithm.
+ *
+ * Each process has its priority evaluated, then
+ * is taken from the start of the queue and is
+ * executed sequentially. Each process _can_
+ * have IO and be pushed to the ready queue again.
+ * At the end, the statistics of execution are shown.
+ */
 void scheduler::fcfs()
 {
     reset();
@@ -63,6 +89,16 @@ void scheduler::fcfs()
     PSAscreen::get().show_statistics(avg_wt, avg_tat);
 }
 
+/*
+ * Description: shortest job first.
+ *
+ * Each process has its priority evaluated. Then
+ * an execution estimation is made as to how long
+ * should that process execute. This prediction is
+ * updated on every that comes next. Each process _can_
+ * have IO and be pushed to the ready queue again.
+ * At the end, the statistics of execution are shown.
+ */
 void scheduler::sjf()
 {
     reset();
@@ -85,12 +121,25 @@ void scheduler::sjf()
     PSAscreen::get().show_statistics(avg_wt, avg_tat);
 }
 
+/*
+ * Description: calculates the next expected duration
+ * of a process CPU burst and returns it as a recommendation.
+ */
 int scheduler::exponential_average(int prev_pr_ttl)
 {
     prev_pr_burst = ALPHA * prev_pr_ttl + (1 - ALPHA) * prev_pr_burst;
     return prev_pr_burst;
 }
 
+/*
+ * Description: round-robin.
+ *
+ * Each process has its priority evaluated. Each
+ * sequential process is taken and is executed for
+ * a constant `TIME_QUANTUM`. Each process _can_
+ * have IO and be pushed to the ready queue again.
+ * At the end, the statistics of execution are shown.
+ */
 void scheduler::round_rob()
 {
     reset();
@@ -104,7 +153,16 @@ void scheduler::round_rob()
     PSAscreen::get().show_statistics(avg_wt, avg_tat);
 }
 
-void scheduler::pfj()
+/*
+ * Description: priority job first.
+ *
+ * Each process has its priority evaluated. The processes
+ * are ordered based on their labeled priority and
+ * are executed. Each process _can_ have IO and be
+ * pushed to the ready queue again. At the end, the
+ * statistics of execution are shown.
+ */
+void scheduler::pjf()
 {
     reset();
     pool::eval_prcs_prty();

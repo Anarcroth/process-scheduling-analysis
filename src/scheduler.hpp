@@ -11,10 +11,10 @@ public:
     void exec(int tq);
     void take(std::vector<process>::iterator& pit, int tq);
 
-    void fcfs();
-    void sjf();
-    void round_rob();
-    void pfj();
+    void fcfs();      /* first come first served */
+    void sjf();       /* shortest job first */
+    void round_rob(); /* round-robin */
+    void pjf();       /* priority job first */
 
     static int avg_wt;        /* average waiting time in ready queue */
     static int avg_tat;       /* average turnaround time */
@@ -22,7 +22,7 @@ public:
     static int prev_pr_burst; /* previous process burst */
 
 private:
-    void reset();
+    void reset(); /* reset global variables */
 
     int exponential_average(int prev_pr_ttl);
 
