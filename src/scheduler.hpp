@@ -22,9 +22,12 @@ public:
     static int prev_pr_burst; /* previous process burst */
 
 private:
-    void reset(); /* reset global variables */
+    void reset();            /* reset global variables */
+    void add_to_summaries(); /* add newest execution stats */
 
     int exponential_average(int prev_pr_ttl);
+
+    std::vector<std::string> summaries; /* summaries of executions */
 
     static const double ALPHA;      /* weight of previous process execution */
     static const int TIME_QUANTUM;  /* time quantum */

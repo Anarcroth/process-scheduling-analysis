@@ -71,7 +71,7 @@ void scheduler::take(std::vector<process>::iterator& pit, int tq)
  * is taken from the start of the queue and is
  * executed sequentially. Each process _can_
  * have IO and be pushed to the ready queue again.
- * At the end, the statistics of execution are shown.
+ * At the end, the statistics of executions are shown.
  */
 void scheduler::fcfs()
 {
@@ -86,7 +86,7 @@ void scheduler::fcfs()
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
     }
-    PSAscreen::get().show_statistics(avg_wt, avg_tat);
+    PSAscreen::get().show_statistics(summaries);
 }
 
 /*
@@ -97,7 +97,7 @@ void scheduler::fcfs()
  * should that process execute. This prediction is
  * updated on every that comes next. Each process _can_
  * have IO and be pushed to the ready queue again.
- * At the end, the statistics of execution are shown.
+ * At the end, the statistics of executions are shown.
  */
 void scheduler::sjf()
 {
@@ -118,7 +118,7 @@ void scheduler::sjf()
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
     }
-    PSAscreen::get().show_statistics(avg_wt, avg_tat);
+    PSAscreen::get().show_statistics(summaries);
 }
 
 /*
@@ -138,7 +138,7 @@ int scheduler::exponential_average(int prev_pr_ttl)
  * sequential process is taken and is executed for
  * a constant `TIME_QUANTUM`. Each process _can_
  * have IO and be pushed to the ready queue again.
- * At the end, the statistics of execution are shown.
+ * At the end, the statistics of executions are shown.
  */
 void scheduler::round_rob()
 {
@@ -150,7 +150,7 @@ void scheduler::round_rob()
 	PSAscreen::get().show_process(*pit);
 	take(pit, TIME_QUANTUM);
     }
-    PSAscreen::get().show_statistics(avg_wt, avg_tat);
+    PSAscreen::get().show_statistics(summaries);
 }
 
 /*
@@ -160,7 +160,7 @@ void scheduler::round_rob()
  * are ordered based on their labeled priority and
  * are executed. Each process _can_ have IO and be
  * pushed to the ready queue again. At the end, the
- * statistics of execution are shown.
+ * statistics of executions are shown.
  */
 void scheduler::pjf()
 {
@@ -181,5 +181,18 @@ void scheduler::pjf()
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
     }
-    PSAscreen::get().show_process(*pit);
+    PSAscreen::get().show_statistics(summaries);
+}
+
+void scheduler::add_to_summaries()
+{
+    for (auto& p : pool::done_queue) {
+	avg_tat += p.get_tat();
+	avg_wt += p.get_wait_t();
+    }
+    avg_tat /= pool::done_queue.size();
+    avg_wt /= pool::done_queue.size();
+    std::string sumr = "Average Waiting Time: " + std::to_string(avg_wt) +
+	"\nAverage Turnaround Time: " + std::to_string(avg_tat);
+    summaries.push_back(sumr);
 }

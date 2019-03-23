@@ -23,7 +23,7 @@ public:
 
     void show_awt(int wt);
     void show_tat(int tat);
-    void show_statistics(int avg_wt, int avg_tat);
+    void show_statistics(std::vector<std::string> summaries);
 
     void show_process(process& pr);
 
