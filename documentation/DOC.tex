@@ -38,7 +38,7 @@
 
 \newpage
 
-\section{Introduction}
+\section{\underline{Introduction}}
 
 Every Operating System has some type of process handling capabilities, be that in the form of simple queue structure, or in some complex algorithm. This is also specific to the different types of systems that are handling the jobs. Some embedded systems do not have the capacity to handle complex operations, which forces them to have simple schedulers. One such example would be preemptive OS's, running on batch jobs.
 
@@ -52,11 +52,51 @@ I personally find the topic of these intricate systems fascinating. All of these
 
 The application is created by using \code{C++} and the \code{ncurses} library. The reason to pick \textit{C++} is due to its high granularity and fine tuning capabilities. With C++, I can control every aspect of the program with high accuracy, which is needed for scheduling algorithms. The \textit{ncurses} library provides a nice platform for building \textit{terminal-based} applications. It allows for easy interaction with terminals, controlling text output, color output, \textit{IO} operations, etc. It also provides a clean and pretty \textit{user-interface}, which is always a welcome benefit, especially if the work is done in C++. The \textit{UI} will have several panels, indicating the different algorithms and processes that can be selected, and also what are the contents of the different \code{queues}. There would be information for each algorithm and statistical summaries after each round of execution. The UI aims at being both easy to use, but at the same time, be clear and helping people evaluate the different algorithms.
 
-As a final goal, this project is to be shared and extended with anyone who is interested in learning the mechanics of process scheduling. It can be used as a learning and pedagogical tool. Future plans hold that the project be tailored for introductory courses on Operating Systems, where students will have a first hand experience of seeing how these algorithms work and what kind of outputs they produce.
+As a final goal, this project is to be shared and extended with anyone who is interested in learning the mechanics of process scheduling. It can be used as a learning and pedagogical tool. Future plans hold that the project be tailored for introductory courses on Operating Systems, where students will have a first hand experience of seeing how these algorithms work and what kind of outputs they produce. This means that the project should be able to compile on multiple machines, which are at least capable of supporting \code{C++ 11} and \code{ncurses}.
 
-\section{Specification and Analysis of the Software Requirements}
+\section{\underline{Specification and Analysis of the Software Requirements}}
 
-\section{Design of the Software solution}
+\subsection{Requirements}
+
+This software has a set of requirements that have to be met and covered in order to be held as working and complete, before it can be released for any pedagogical or personal usage. These specifications are separated into \textit{functional} and \textit{non-functional} requirements. The aim of the functional requirements is to describe what the software \textbf{should do}. Most of them aim at simplicity and ease of use of the application. The non-functional, on the other hand, try to provide a fast, extensible and stable experience to the user.
+
+First, let's start with the analysis of the functional requirements. The software \textit{should}:
+
+\begin{itemize}
+\item \textit{Having a simple and readable user interface}. This means that all of the panels in the program should be easy to understand and differentiate between one another. Things like clear panel headlines, obvious execution patters, proper color coding of processes and commands, are a \textbf{must}. Each process should and will be assigned a priority either manually or automatically, but regardless, for each one, there should be a corresponding color that would give a general indication as to what that process's priority is. This goes hand in hand with how each process will be displayed in the different panels during execution. Because there will be commands that will create processes manually, each one should be clear, both with text and with color, what type of process is about to be created. In addition to the readability of the project, appropriate textual information should be given for each algorithm that is currently running. In the panel \textbf{Legend}, where all of this information will be held, a brief description of each action should be given, so that anyone who is executing an algorithm knows what is happening. Because this project will also be dynamically executing processes, it should also inform the user at each step what is happening. This means that the project should have a stable state at each moment and that the user knows it. This can be achieved through either labels or headings clearly shown in color at every moment.
+
+\item \textit{Respond to all types of inputs}. One of the more complicated software aspects of this project is the responsiveness. Each process can executed for varying times, which means that the user might wait for one second or more, and although this is the normal behavior of the application, it should be made clear to the user that this is happening. With that, the user should be restricted to the commands and inputs he/she can do at any moment. The application is build to be light and fast, but it also has to handle every response from the \textit{UI}. This means that when an invalid character is submitted from the keyboard, the program should not be affected by it and should continue working. When a valid character is sent, the affects of that should also be made clear and responsive. Thus robustness is ensured for all users.
+
+\item \textit{Be able to compare and analyze produced data}. Because this project has a purpose to evaluate and compare different algorithms, it should be made easy to have a set of saved \textit{already executed} processes and what their evaluation is. Thus, for each execution, every time and algorithm is executed, it should be saved for further evaluation and should be made easily readable by anyone. Then the last 10 executions and their summaries should be put on the screen when the user enters the appropriate command and wants to see and compare them. Finally, these summaries should be saved to a text file so that they can be separately analyzed if needed. Although only the last 10 executions will be shown, all of the previously run algorithms should be saved no matter what.
+\end{itemize}
+
+And here are some of the non-functional requirements. They focus on usability, efficiency, quality, speed, etc. These things focus on \textbf{how} the software \textit{should}:
+
+\begin{itemize}
+\item \textit{Create completely random processes}. Each process can either be created with a \textit{pre-defined} priority, or with an automatically set one (i.e. on a random principle). The processes that are randomly generated should be properly distributed and should not follow a pattern in any way. The need for such a requirement ensures that there are no hidden rules or patterns that would disrupt the evaluations and comparisons later on. That is why there has to be a proper distribution of processes with their values. For each process, the \code{ID} should be randomly generated to be a hexadecimal number with an even distribution between all processes, the \code{ttl} (time to live) should correspond to a \textit{Gaussian Distribution} with a predefined mean and standard deviation. The same should also apply to every \textit{IO} operation and their quantity.
+
+\item \textit{Have high code quality}. Software craftsmanship is highly valued. It's expected that after the end of the project, maintenance and further improvements will be continually made, especially if the project is to be used for teaching purposes. If the code is not structured and prepared in such a way, that allows for further expansions and easy bug-fixing, then that would provide for a poor project life. This means that the code base should have correct comment sections, code documentation above each method, perfect separation of concerns, a valid architectural model that is followed to the end, diagrams that help understand the project and a list of future works to be done. If this is not met, then neither the original creator, nor any following contributor would want to maintain this software and any piece of code that is not regularly maintained, falls of the market and becomes useless.
+
+\item \textit{Non-intrusive help from the User Interface}. It is very important that any form of help that comes from the system to be as inconspicuous as possible. User friendliness is achieved when the user thinks he/she have discovered something on their own. This should be done through layered error messages, that are generated on each step of processing, allowing for a decoupled, yet understandable explanation of the situation. In addition to this, all of the helper functions should have hints as to how to make the functionality of the project more approachable.
+\end{itemize}
+
+\underline{\textbf{Constraints}}
+
+The application should not try to implement every algorithm for scheduling and have a \(1:1\) correspondence with real-life systems used in production. It should try to get as possible in order to do proper analysis and evaluation, without falling into the pit of meticulous pedantic, which are not worth implementing. This does not mean to restrict the number of algorithms, or to limit it to the most simple ones, but to put a realistic boundary on what should be expected from this product. A good mixture of complexity and quantity would fit the bill perfectly.
+
+\subsection{Use cases}
+
+The use cases for this project are people who are interested in seeing how different process scheduling algorithms work underneath the hood and want to compare their abilities. For people who want to learn or get a better idea as to why systems are working the way they are, through running the application and looking at the source code, this project is a great place for research and learning.
+
+usecase diagram
+
+narrative diagram
+
+pipeline diagram
+
+activity diagram
+
+\section{\underline{Design of the Software solution}}
 
 This software uses several algorithms and data-structures that play a key role in the whole inner-workings. Because the purpose of the project is to show how different algorithms affect the process execution of \textit{Real-Time} systems, we have to talk about each used algorithm and the accompanying data-structures.
 
@@ -68,19 +108,15 @@ Another aspect that should be considered is that this project tries to imitate a
 
 Having these distinctions made, we can then proceed to the algorithms and data-structures used.
 
-\subsection{Algorithms and Data-structures}
+\subsection{\underline{Algorithms and Data-structures}}
 
-\subsubsection{FCFS}
+\subsubsection{\underline{FCFS}}
 
 The \textbf{F}irst \textbf{C}ome \textbf{F}irst \textbf{S}erve algorithm is one of the easiest to understand and implement. It can be looked at from many different angles. \textbf{FCFS} can be seen as a \code{linked-list} or a \code{queue}, which just serves each incoming process to the CPU for execution. When a new process is created, it is put at the back of the \code{ready\_queue}. Then each process, one by one, is taken from the head of the queue and is given to the CPU for execution. It really depends on what type of system is running this scheduler, but in general, this algorithm, although easy, is not the most effective one to have. Because each process can take any time to finish, it can stall the whole system with its execution. For instance, if we were to have several processes and one is to be long in execution time, depending on their time of arrival, we can either quickly go through all of them, or we can wait for a long time.
 
 In this project, the \textbf{FCFS} algorithm is created using a \code{vector} to hold all of the processes in sequential manner. At the start of the algorithm, we just take each next process for execution, wait for its time to live (\code{ttl}) and then we proceed to the next one in line. Because this project tries to imitate a \textit{Real-Time} system, we also check if each process will do an \textit{IO} operation. If so, the process is then sent to an \code{exec\_io} routine, and the next process is then taken. This means that the \code{done\_queue} will not be populated in the exact same order as the processes have been created in the \code{ready\_queue}, because of these \textit{IO} operations. Regardless, this still follows the \textbf{FCFS} pattern, and we can see that indeed, each process is taken from the head of the queue (technically vector).
 
-\
-
-\textbf{Evaluation}
-
-\
+\underline{\textbf{Evaluation}}
 
 \textbf{FCFS} gives us a few benefits. First, it is very simple to implement and understand. From this standpoint, it's a great algorithm for small batch systems. But on the other hand, it doesn't scale well. It can stall if there is \textbf{no} preemption and a \textbf{convoy effect} might occur, which means that all other processes wait for the currently running one to finish. To summarize:
 
@@ -108,7 +144,7 @@ In this project, the \textbf{FCFS} algorithm is created using a \code{vector} to
 
 \
 
-\textit{Example}
+\underline{\textit{Example}}
 
 Let's take a set of processes and see how they would hold under this algorithm. We generate 5 random processes.
 
@@ -131,8 +167,6 @@ Let's take a set of processes and see how they would hold under this algorithm. 
 \end{table}
 
 From this, we can create the following \textbf{Gantt chart}.
-
-\
 
 \begin{ganttchart}[
   expand chart=\textwidth,
@@ -171,53 +205,40 @@ Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround t
 
 Of course this is a fairly simple example, because the processes do not take as long to execute, and we are also not taking into consideration the fact that these processes \textit{might} have some IO to do.
 
-\subsubsection{SJF}
+\subsubsection{\underline{SJF}}
 
 The \textbf{S}hortest \textbf{J}ob \textbf{F}irst is another easy to understand, not so easy to implement algorithm. The SJF is an optimal algorithm, because it takes the greedy approach. It tries to finish all of the shortest processes first, which would cause the whole set of processes to finish as quick as possible. But there is a downside to this. This algorithm is not practically applicable, because it either relies on information beforehand for each process, or it has to do estimations for each upcoming process. Usually there is no way to know for how long a process will execute. In general, depending on what information we have, there are two ways to approach this algorithm.
 
 \textbf{Note:} much like the FCFS, we also take into account the fact that we might have IO operations and we also preempt every process that does such actions.
 
-\
 
-\textbullet \ Method 1
+\begin{itemize}
+\item Method 1
 
 In a perfect world, we would be graced with the knowledge of how long each job would. Thus, one way is to look in the \code{ready\_queue} and arrange the processes by their execution time in increasing manner (from smallest to largest). The shortest job will run first, then the second shortest one, and so on. Because each job has a \textit{pre-defined} execution time, which we take as a \textit{given}, based on that value, we sort the queue. This is the simpler approach because it only relies on information that is already given to us. It is important to note that this algorithm is a special case for a \textbf{PFJ} (Priority First Job) algorithm, because we are organizing the processes based on their execution time, which would be a form of a priority measurement.
 
-\
-
-\textbullet \ Method 2
+\item Method 2
 
 Continuing from \textit{Method 1}, we do not live in a perfect world and as we mentioned earlier, because we do not know before-hand what is the \textit{actual} time of execution for each process, we try to \textit{guess it}. This is done by predicting the next job execution time on the basis of the previous jobs. This so called \textit{exponential average} of the measured lengths of the previous jobs will provide a good guess as to what to expect. The \textit{exponential average} can be defined as follows: Let \scalebox{1.1}{\(t_{n}\)} be the length of the nth CPU burst. Let \scalebox{1.1}{\(\tau_{n+1}\)} be our prediction for the next CPU burst. Then \scalebox{1.1}{\(\forall \alpha,  0 \leq \alpha \leq 1\)}, we define
-
-\
+\end{itemize}
 
 \begin{equation}
   \mathlarger{\tau_{n+1} = \alpha t_{n} + (1 - \alpha)\tau_{n}}
 \end{equation}
 
-\
-
 Where \scalebox{1.1}{\(t_{n}\)} is the most recent information we have, \scalebox{1.1}{\(\tau_{n}\)} is the previous prediction, and \scalebox{1.1}{\(\alpha\)} is the weight of our past predictions. If \scalebox{1.1}{\(\alpha = 0 \rightarrow \tau_{n+1} = \tau_{n}\)}, which means that the previous history does not matter. If \scalebox{1.1}{\(\alpha = 1 \rightarrow \tau_{n+1} = t_{n}\)}, which means that only the most recent history matters. A good middle value (quite literally) can be to put \scalebox{1.1}{\(\alpha = {{}^{1}\!/_{2}}\)}. This way, both recent and past history have equal weight on the next \textit{exponential average}.
 
 The expanded \textit{exponential average} formula looks like this
-
-\
 
 \begin{equation}
   \mathlarger{\tau_{n+1} = \alpha t_{n} + (1 - \alpha)\alpha t_{n - 1} + \dots + (1 - \alpha)^{j} \alpha t_{n - j} + \dots + (1 - \alpha)^{n + 1} \tau_{0}}
 \end{equation}
 
-\
-
 Usually, \scalebox{1.1}{\(\alpha\)} is less than 1, thus each successive term has less and less weight than the previous one. By using this formula, we can then make an informed decision on how to execute each incoming process.
 
 One thing that arises in this algorithm is why we must make a guess as to which process should be executed? Why is this happening? This type of guessing is done only here, while anywhere else, we do not need to make presumptions. The reason is that for all other algorithms, we either have a constant \code{TIME\_QUANTUM}, which is used to define each CPU burst (used in \textbf{Round-Robin Scheduling}), or we wait for the process to tell us if it's done or not (such as the case with \textbf{FCFS}). Here, however, we have to \textit{dynamically} specify the CPU burst time on each new process execution. This forces us to keep track of each execution time.
 
-\
-
-\textbf{Evaluation}
-
-\
+\underline{\textbf{Evaluation}}
 
 \begin{table}[h!]
   \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
@@ -236,14 +257,12 @@ One thing that arises in this algorithm is why we must make a guess as to which 
     Still might have a process that stalls \\
     \bottomrule
   \end{tabularx}
-  \caption{Pros and Cons of FCFS}
+  \caption{Pros and Cons of SJF}
 \end{table}
 
 In this case we might think that FCFS is the better algorithm, since at least it has some real life value to it, but that's not the immediate case. Although we are dealing with a hypothetical algorithm here, it is still worth it to check what are the times for SJF. If we run an example, we would see that SJF has better waiting time for each process, where the turnaround time doesn't change. Thus, SJF yields better results on average that FCFS.
 
-\
-
-\textit{Example}
+\underline{\textit{Example}}
 
 Let's take again a set of processes and see how they would work. Then we can create the \textbf{Gantt chart}.
 
@@ -265,8 +284,6 @@ Let's take again a set of processes and see how they would work. Then we can cre
   \end{center}
 \end{table}
 
-\
-
 \begin{ganttchart}[
   expand chart=\textwidth,
   hgrid={black}
@@ -279,8 +296,6 @@ Let's take again a set of processes and see how they would work. Then we can cre
   \ganttbar[bar/.append style={fill=pr3}]{047c}{10}{13} \\
   \ganttbar[bar/.append style={fill=pr4}]{d19c}{14}{20} \\
 \end{ganttchart}
-
-\
 
 Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround time}.
 
@@ -304,11 +319,9 @@ Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround t
   \end{center}
 \end{table}
 
-\subsubsection{Round-Robin}
+\subsubsection{\underline{Round-Robin}}
 
-
-
-\section{Implementation}
+\section{\underline{Implementation}}
 
 This software is developed entirely with the \code{C++} programming language. All of the implementation uses the \code{C++ 11} standard (and up). The \code{C++ 11} standard and all of its follow-up additions, all the way up to \code{C++ 20}, have great benefits to creating modern, safe, and easy to manage software. Many functionalities introduced since \code{C++ 11} have been used to create this project. Most noticeably, the use of lambda functions, collection manipulators, threads and mutexes, and many more, play a key role.
 
@@ -316,10 +329,10 @@ In addition to this, the famous library \code{ncurses} is used in order to make 
 
 The operating system used to create the software is \code{Arch Linux}, with additional testing environment under \code{Fedora 29}.
 
-\section{Testing}
+\section{\underline{Testing}}
 
-\section{Result and Conclusion}
+\section{\underline{Result and Conclusion}}
 
-\section{References}
+\section{\underline{References}}
 
 \end{document}
