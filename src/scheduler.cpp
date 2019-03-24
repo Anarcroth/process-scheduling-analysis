@@ -23,6 +23,7 @@ scheduler::scheduler() {}
 /*
  * Description: resets all of the global
  * variables used across every algorithm.
+ * Clear the DONE panel and done queue.
  */
 void scheduler::reset()
 {
@@ -30,6 +31,9 @@ void scheduler::reset()
     avg_tat = 0;
     total_t = 0;
     prev_pr_burst = 0;
+    pool::clear();
+    PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
+    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 }
 
 /*
@@ -86,6 +90,7 @@ void scheduler::fcfs()
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
     }
+    add_summary();
     PSAscreen::get().show_statistics(summaries);
 }
 
@@ -118,6 +123,7 @@ void scheduler::sjf()
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
     }
+    add_summary();
     PSAscreen::get().show_statistics(summaries);
 }
 
@@ -150,6 +156,7 @@ void scheduler::round_rob()
 	PSAscreen::get().show_process(*pit);
 	take(pit, TIME_QUANTUM);
     }
+    add_summary();
     PSAscreen::get().show_statistics(summaries);
 }
 
@@ -181,10 +188,11 @@ void scheduler::pjf()
 	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
     }
+    add_summary();
     PSAscreen::get().show_statistics(summaries);
 }
 
-void scheduler::add_to_summaries()
+void scheduler::add_summary()
 {
     for (auto& p : pool::done_queue) {
 	avg_tat += p.get_tat();
@@ -193,6 +201,6 @@ void scheduler::add_to_summaries()
     avg_tat /= pool::done_queue.size();
     avg_wt /= pool::done_queue.size();
     std::string sumr = "Average Waiting Time: " + std::to_string(avg_wt) +
-	"\nAverage Turnaround Time: " + std::to_string(avg_tat);
+	"\tAverage Turnaround Time: " + std::to_string(avg_tat);
     summaries.push_back(sumr);
 }

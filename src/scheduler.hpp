@@ -23,7 +23,7 @@ public:
 
 private:
     void reset();            /* reset global variables */
-    void add_to_summaries(); /* add newest execution stats */
+    void add_summary();      /* add newest execution stats */
 
     int exponential_average(int prev_pr_ttl);
 

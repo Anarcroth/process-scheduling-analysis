@@ -258,20 +258,20 @@ void PSAscreen::show_tat(int tat)
 		   std::to_string(tat) + "    ").c_str());
 }
 
-void PSAscreen::show_statistics(std::vector<std::string> summaries)
+void PSAscreen::show_statistics(std::vector<std::string>& summaries)
 {
-//    for (auto& p : pool::done_queue) {
-//	avg_tat += p.get_tat();
-//	avg_wt += p.get_wait_t();
-//    }
-//    PSAscreen::get().show_tat(avg_tat / pool::done_queue.size());
-//    PSAscreen::get().show_awt(avg_wt / pool::done_queue.size());
-//    wrefresh(PSAscreen::get().get_walg());
-    std::string sumr = "Average Waiting Time: " + std::to_string(41234) +
-	"    Average Turnaround Time: " + std::to_string(123123);
     wattron(walg, COLOR_PAIR(8));
-    wmove(walg, 8, 2);
-    waddstr(walg, sumr.c_str());
+    short int curr_summary_size = 0;
+    if (summaries.size() > 10)
+	curr_summary_size = 10;
+    else
+	curr_summary_size = summaries.size();
+
+    for (size_t i = curr_summary_size; i > 0; i--) {
+	wmove(walg, 8 + curr_summary_size - i, 2);
+	waddstr(walg, summaries.at(curr_summary_size - i).c_str());
+    }
+    wrefresh(walg);
 }
 
 void PSAscreen::show_process(process& pr)

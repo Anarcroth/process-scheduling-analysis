@@ -1,7 +1,6 @@
 #include <algorithm>
 
 #include "pool.hpp"
-#include "screen.hpp"
 
 namespace pool
 {
@@ -61,6 +60,11 @@ namespace pool
 	    else
 		p.set_prty(priority::PR6);
 	}
+    }
+
+    void clear()
+    {
+	done_queue.clear();
     }
 
     bool empty()

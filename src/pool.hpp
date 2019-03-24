@@ -9,6 +9,7 @@ namespace pool
 {
     void make_pr(int ch);
     void eval_prcs_prty();
+    void clear();
 
     bool empty();
 
