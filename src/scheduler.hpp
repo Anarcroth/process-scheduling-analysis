@@ -22,11 +22,15 @@ public:
     static int total_t;       /* total time of execution*/
     static int prev_pr_burst; /* previous process burst */
 
+    static int current_awt;   /* current average waiting time */
+
 private:
     void reset();            /* reset global variables */
     void add_summary();      /* add newest execution stats */
 
     int exponential_average(int prev_pr_ttl);
+
+    void calc_current_awt();
 
     std::vector<std::string> summaries; /* summaries of executions */
 

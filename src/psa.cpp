@@ -42,6 +42,8 @@ int main()
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wlegend(), " LEGEND ");
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wwt(), " Waiting Time ");
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wtat(), " Turnaround Time ");
 	PSAscreen::get().draw_legend_cont();
 	doupdate();
     }

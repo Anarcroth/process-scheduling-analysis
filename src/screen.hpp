@@ -35,6 +35,8 @@ public:
     WINDOW* get_wprc() const;
     WINDOW* get_wdone() const;
     WINDOW* get_wlegend() const;
+    WINDOW* get_wwt() const;
+    WINDOW* get_wtat() const;
 
 private:
     PSAscreen();
@@ -59,6 +61,16 @@ private:
     static const int W_Y_LEGEND;
     static const int W_W_LEGEND;
     static const int W_H_LEGEND;
+
+    static const int W_X_WT;
+    static const int W_Y_WT;
+    static const int W_W_WT;
+    static const int W_H_WT;
+
+    static const int W_X_TAT;
+    static const int W_Y_TAT;
+    static const int W_W_TAT;
+    static const int W_H_TAT;
 
     static const std::string LEG_PR;
     static const std::string LEG_PR0;
@@ -88,6 +100,8 @@ private:
     WINDOW *wprc;
     WINDOW *wdone;
     WINDOW *wlegend;
+    WINDOW *wwt;
+    WINDOW *wtat;
 };
 
 #endif

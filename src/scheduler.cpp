@@ -17,6 +17,7 @@ int scheduler::avg_wt = 0;
 int scheduler::avg_tat = 0;
 int scheduler::total_t = 0;
 int scheduler::prev_pr_burst = 1000;
+int scheduler::current_awt = 0;
 
 scheduler::scheduler() {}
 
@@ -86,6 +87,8 @@ void scheduler::fcfs()
 	PSAscreen::get().update_process_scr(*pit);
 
 	take(pit, pit->get_ttl());
+	calc_current_awt();
+	PSAscreen::get().show_awt(current_awt);
     }
     add_summary();
     PSAscreen::get().show_statistics(summaries);
@@ -222,4 +225,16 @@ void scheduler::add_summary()
     std::string sumr = "Average Waiting Time: " + std::to_string(avg_wt) +
 	"\tAverage Turnaround Time: " + std::to_string(avg_tat);
     summaries.push_back(sumr);
+}
+
+void scheduler::calc_current_awt()
+{
+    int n = 0;
+    for (auto& p : pool::done_queue) {
+	if (p.get_tos() != -1) {
+	    current_awt += p.get_wait_t();
+	    n += 1;
+	}
+    }
+    current_awt = std::round(current_awt / n);
 }

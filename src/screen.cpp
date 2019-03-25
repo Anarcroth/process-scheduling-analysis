@@ -23,6 +23,16 @@ const int PSAscreen::W_X_LEGEND = 123;
 const int PSAscreen::W_W_LEGEND = 65;
 const int PSAscreen::W_H_LEGEND = 51;
 
+const int PSAscreen::W_Y_WT = 24;
+const int PSAscreen::W_X_WT = 5;
+const int PSAscreen::W_W_WT = 45;
+const int PSAscreen::W_H_WT = 15;
+
+const int PSAscreen::W_Y_TAT = 24;
+const int PSAscreen::W_X_TAT = 55;
+const int PSAscreen::W_W_TAT = 45;
+const int PSAscreen::W_H_TAT = 15;
+
 const std::string PSAscreen::LEG_PR = " Processes ";
 const std::string PSAscreen::LEG_PR0 = "Priority 0: (0)";
 const std::string PSAscreen::LEG_PR1 = "Priority 1: (1)";
@@ -47,6 +57,9 @@ const int PSAscreen::PR4COLOR = 104;
 const int PSAscreen::PR5COLOR = 105;
 const int PSAscreen::PR6COLOR = 106;
 
+// TODO add two more screens, one for the waiting time and one for the tat time
+// as graphs changing with each turn of execution
+
 PSAscreen::PSAscreen()
 {
     // Makes basic setup and starts colors
@@ -56,11 +69,15 @@ PSAscreen::PSAscreen()
     wprc = newwin(W_H_PRC_DONE, W_W_PRC_DONE, W_Y_PRC, W_X_PRC);
     wdone = newwin(W_H_PRC_DONE, W_W_PRC_DONE, W_Y_DONE, W_X_DONE);
     wlegend = newwin(W_H_LEGEND, W_W_LEGEND, W_Y_LEGEND, W_X_LEGEND);
+    wwt = newwin(W_H_WT, W_W_WT, W_Y_WT, W_X_WT);
+    wtat = newwin(W_H_TAT, W_W_TAT, W_Y_TAT, W_X_TAT);
 
     wattron(walg, A_BOLD);
     wattron(wprc, A_BOLD);
     wattron(wdone, A_BOLD);
     wattron(wlegend, A_BOLD);
+    wattron(wwt, A_BOLD);
+    wattron(wtat, A_BOLD);
 }
 
 void PSAscreen::init()
@@ -119,6 +136,16 @@ WINDOW* PSAscreen::get_wdone() const
 WINDOW* PSAscreen::get_wlegend() const
 {
     return wlegend;
+}
+
+WINDOW* PSAscreen::get_wwt() const
+{
+    return wwt;
+}
+
+WINDOW* PSAscreen::get_wtat() const
+{
+    return wtat;
 }
 
 void PSAscreen::draw_small_arrows()
@@ -254,10 +281,16 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 
 void PSAscreen::show_awt(int wt)
 {
-    wattron(walg, COLOR_PAIR(8));
-    wmove(walg, 6, 2);
-    waddstr(walg, ("Average Wait time: " +
-		   std::to_string(wt) + "    ").c_str());
+    wattron(wwt, COLOR_PAIR(1));
+    //wmove(walg, 6, 2);
+    //waddstr(walg, ("Average Wait time: " +
+		    //	   std::to_string(wt) + "    ").c_str());
+
+    //int partition = pool::ready_queue.size() / W_W_WT;
+    //int height = 5000000 / wt;
+    wmove(wwt, std::round(wt % 14), 1);
+    waddstr(wwt, "*");
+    wnoutrefresh(wwt);
 }
 
 void PSAscreen::show_tat(int tat)
