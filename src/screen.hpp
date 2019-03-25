@@ -21,6 +21,8 @@ public:
     void draw_small_arrows();
     void draw_legend_cont();
 
+    void update_process_scr(process& pr);
+
     void show_awt(int wt);
     void show_tat(int tat);
     void show_statistics(std::vector<std::string>& summaries);

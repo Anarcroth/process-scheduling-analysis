@@ -83,12 +83,9 @@ void scheduler::fcfs()
     pool::eval_prcs_prty();
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
-	// first show the process, then execute it
-	PSAscreen::get().show_process(*pit);
-	take(pit, pit->get_ttl());
+	PSAscreen::get().update_process_scr(*pit);
 
-	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
-	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
+	take(pit, pit->get_ttl());
     }
     add_summary();
     PSAscreen::get().show_statistics(summaries);
@@ -115,13 +112,9 @@ void scheduler::sjf_v1()
 	      });
     auto pit = pool::ready_queue.begin();
     while (pit != pool::ready_queue.end()) {
-	// first show the process, then execute it
-	PSAscreen::get().show_process(*pit);
+	PSAscreen::get().update_process_scr(*pit);
 
 	take(pit, pit->get_ttl());
-
-	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
-	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
     }
     add_summary();
     PSAscreen::get().show_statistics(summaries);
@@ -145,16 +138,12 @@ void scheduler::sjf_v2()
     int prediction = prev_pr_burst;
     auto pit = pool::ready_queue.begin();
     while (pit != pool::ready_queue.end()) {
-	// first show the process, then execute it
-	PSAscreen::get().show_process(*pit);
+	PSAscreen::get().update_process_scr(*pit);
 
 	// must be saved before the next process comes
 	int prev_pr_ttl = pit->get_ttl();
 	take(pit, prediction);
 	prediction = exponential_average(prev_pr_ttl);
-
-	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
-	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
     }
     add_summary();
     PSAscreen::get().show_statistics(summaries);
@@ -185,9 +174,9 @@ void scheduler::round_rob()
     pool::eval_prcs_prty();
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
-	// first show the process, then execute it
 	PSAscreen::get().show_process(*pit);
 	take(pit, TIME_QUANTUM);
+
     }
     add_summary();
     PSAscreen::get().show_statistics(summaries);
@@ -214,12 +203,9 @@ void scheduler::pjf()
 
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
-	// first show the process, then execute it
-	PSAscreen::get().show_process(*pit);
-	take(pit, pit->get_ttl());
+	PSAscreen::get().update_process_scr(*pit);
 
-	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
-	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
+	take(pit, pit->get_ttl());
     }
     add_summary();
     PSAscreen::get().show_statistics(summaries);

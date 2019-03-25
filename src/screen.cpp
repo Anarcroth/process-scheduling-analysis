@@ -191,6 +191,13 @@ void PSAscreen::draw_legend_cont()
     wnoutrefresh(wlegend);
 }
 
+void PSAscreen::update_process_scr(process& pr)
+{
+    show_process(pr);
+    push_prc_in(wprc, pool::ready_queue);
+    draw_frame_of(wprc, " PROCESS ");
+}
+
 void PSAscreen::push_prc_in(WINDOW* w, std::vector<process>& prcs)
 {
     wclear(w);
