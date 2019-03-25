@@ -12,7 +12,8 @@ public:
     void take(std::vector<process>::iterator& pit, int tq);
 
     void fcfs();      /* first come first served */
-    void sjf();       /* shortest job first */
+    void sjf_v1();    /* shortest job first basic version */
+    void sjf_v2();    /* shortest job first approximation version */
     void round_rob(); /* round-robin */
     void pjf();       /* priority job first */
 

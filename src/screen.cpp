@@ -34,7 +34,8 @@ const std::string PSAscreen::LEG_PR6 = "Priority 6: (6)";
 const std::string PSAscreen::LEG_PRR = "Random Priority: (r)";
 const std::string PSAscreen::LEG_ALG = " Algorithm ";
 const std::string PSAscreen::LEG_FCFS_ALG = "First Come First Serve: FCFS (f)";
-const std::string PSAscreen::LEG_SJF_ALG = "Shortest Job First: SJF (s)";
+const std::string PSAscreen::LEG_SJFV1_ALG = "Shortest Job First (V1): SJF1 (h)";
+const std::string PSAscreen::LEG_SJFV2_ALG = "Shortest Job First (V2): SJF2 (s)";
 const std::string PSAscreen::LEG_RR_ALG = "Round Robbin: RR (o)";
 const std::string PSAscreen::LEG_PJF_ALG = "Priority Job First: PJF (p)";
 
@@ -179,10 +180,12 @@ void PSAscreen::draw_legend_cont()
     wmove(wlegend, 12, 2);
     waddstr(wlegend, LEG_FCFS_ALG.c_str());
     wmove(wlegend, 14, 2);
-    waddstr(wlegend, LEG_SJF_ALG.c_str());
+    waddstr(wlegend, LEG_SJFV1_ALG.c_str());
     wmove(wlegend, 16, 2);
-    waddstr(wlegend, LEG_RR_ALG.c_str());
+    waddstr(wlegend, LEG_SJFV2_ALG.c_str());
     wmove(wlegend, 18, 2);
+    waddstr(wlegend, LEG_RR_ALG.c_str());
+    wmove(wlegend, 20, 2);
     waddstr(wlegend, LEG_PJF_ALG.c_str());
 
     wnoutrefresh(wlegend);

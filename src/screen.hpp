@@ -69,7 +69,8 @@ private:
     static const std::string LEG_PRR;
     static const std::string LEG_ALG;
     static const std::string LEG_FCFS_ALG;
-    static const std::string LEG_SJF_ALG;
+    static const std::string LEG_SJFV1_ALG;
+    static const std::string LEG_SJFV2_ALG;
     static const std::string LEG_RR_ALG;
     static const std::string LEG_PJF_ALG;
 

@@ -95,6 +95,39 @@ void scheduler::fcfs()
 }
 
 /*
+ * Description: shortest job first (basic version).
+ *
+ * Each process has its priority evaluated. Then the
+ * pool of processes are evaluated based on their
+ * `ttl`, starting from the shortest to the longest.
+ * Each process _can_ have IO and be pushed to the
+ * ready queue again. At the end, the statistics of
+ * executions are shown.
+ */
+void scheduler::sjf_v1()
+{
+    reset();
+    pool::eval_prcs_prty();
+    std::sort(pool::ready_queue.begin(),
+	      pool::ready_queue.end(),
+	      [] (const process a, const process b) {
+		  return a.get_ttl() < b.get_ttl();
+	      });
+    auto pit = pool::ready_queue.begin();
+    while (pit != pool::ready_queue.end()) {
+	// first show the process, then execute it
+	PSAscreen::get().show_process(*pit);
+
+	take(pit, pit->get_ttl());
+
+	PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
+	PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
+    }
+    add_summary();
+    PSAscreen::get().show_statistics(summaries);
+}
+
+/*
  * Description: shortest job first.
  *
  * Each process has its priority evaluated. Then
@@ -104,7 +137,7 @@ void scheduler::fcfs()
  * have IO and be pushed to the ready queue again.
  * At the end, the statistics of executions are shown.
  */
-void scheduler::sjf()
+void scheduler::sjf_v2()
 {
     reset();
     pool::eval_prcs_prty();

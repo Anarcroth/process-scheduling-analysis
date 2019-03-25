@@ -20,9 +20,13 @@ int main()
 	{
 	    schedule.fcfs();
 	}
+	else if (ch == 'h')
+	{
+	    schedule.sjf_v1();
+	}
 	else if (ch == 's')
 	{
-	    schedule.sjf();
+	    schedule.sjf_v2();
 	}
 	else if (ch == 'o')
 	{
