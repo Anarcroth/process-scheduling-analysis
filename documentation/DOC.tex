@@ -10,6 +10,7 @@
 \usepackage{relsize}
 \usepackage{epigraph}
 \usepackage{parskip}
+\usepackage{float}
 
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -53,6 +54,14 @@ I personally find the topic of these intricate systems fascinating. All of these
 The application is created by using \code{C++} and the \code{ncurses} library. The reason to pick \textit{C++} is due to its high granularity and fine tuning capabilities. With C++, I can control every aspect of the program with high accuracy, which is needed for scheduling algorithms. The \textit{ncurses} library provides a nice platform for building \textit{terminal-based} applications. It allows for easy interaction with terminals, controlling text output, color output, \textit{IO} operations, etc. It also provides a clean and pretty \textit{user-interface}, which is always a welcome benefit, especially if the work is done in C++. The \textit{UI} will have several panels, indicating the different algorithms and processes that can be selected, and also what are the contents of the different \code{queues}. There would be information for each algorithm and statistical summaries after each round of execution. The UI aims at being both easy to use, but at the same time, be clear and helping people evaluate the different algorithms.
 
 As a final goal, this project is to be shared and extended with anyone who is interested in learning the mechanics of process scheduling. It can be used as a learning and pedagogical tool. Future plans hold that the project be tailored for introductory courses on Operating Systems, where students will have a first hand experience of seeing how these algorithms work and what kind of outputs they produce. This means that the project should be able to compile on multiple machines, which are at least capable of supporting \code{C++ 11} and \code{ncurses}.
+
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{./pics/thread_pool.png}
+  \caption{Thread Pool}
+  \label{fig:Thread Pool}
+\end{figure}
+
+This diagram shows us the most basic and fundamental way to treat a process scheduling system. It's just a queue with tasks, inserted into a Thread Pool, which then picks one of the many tasks (or jobs), executes them, and sends them to the Complete Queue. Rinse and repeat.
 
 \section{\underline{Specification and Analysis of the Software Requirements}}
 
@@ -120,7 +129,7 @@ In this project, the \textbf{FCFS} algorithm is created using a \code{vector} to
 
 \textbf{FCFS} gives us a few benefits. First, it is very simple to implement and understand. From this standpoint, it's a great algorithm for small batch systems. But on the other hand, it doesn't scale well. It can stall if there is \textbf{no} preemption and a \textbf{convoy effect} might occur, which means that all other processes wait for the currently running one to finish. To summarize:
 
-\begin{table}[h!]
+\begin{table}[H]
   \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
     \toprule
     \hfil\bfseries Pros & \hfil\bfseries Cons \\
@@ -148,7 +157,7 @@ In this project, the \textbf{FCFS} algorithm is created using a \code{vector} to
 
 Let's take a set of processes and see how they would hold under this algorithm. We generate 5 random processes.
 
-\begin{table}[h!]
+\begin{table}[H]
   \begin{center}
     \label{tab:FCFS processes}
     \begin{tabular}{c|c}
@@ -183,7 +192,7 @@ From this, we can create the following \textbf{Gantt chart}.
 
 Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround time}.
 
-\begin{table}[h!]
+\begin{table}[H]
   \begin{center}
     \label{tab:FCFS times}
     \begin{tabular}{c|c|c}
@@ -240,7 +249,7 @@ One thing that arises in this algorithm is why we must make a guess as to which 
 
 \underline{\textbf{Evaluation}}
 
-\begin{table}[h!]
+\begin{table}[H]
   \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
     \toprule
     \hfil\bfseries Pros & \hfil\bfseries Cons \\
@@ -266,7 +275,7 @@ In this case we might think that FCFS is the better algorithm, since at least it
 
 Let's take again a set of processes and see how they would work. Then we can create the \textbf{Gantt chart}.
 
-\begin{table}[h!]
+\begin{table}[H]
   \begin{center}
     \label{tab:SJF processes}
     \begin{tabular}{c|c}
@@ -299,7 +308,7 @@ Let's take again a set of processes and see how they would work. Then we can cre
 
 Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround time}.
 
-\begin{table}[h!]
+\begin{table}[H]
   \begin{center}
     \label{tab:SJF times}
     \begin{tabular}{c|c|c}
@@ -325,9 +334,15 @@ Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround t
 
 \subsubsection{\underline{Completely Fair Scheduling}}
 
+\subsubsection{\underline{Data-structures}}
+
+Because we are working with a lot of different types of classes, which interact heavily during every procedure, it's a good idea to see what each object does and in what type of structure does it integrate with.
+
 \subsubsection{\underline{User Interface}}
 
 \subsubsection{\underline{Software Architecture}}
+
+The Software Architecture of the project can be seen as one of the following: \textit{Monolithic}, \textit{Event-driven}, or \textit{Procedural}. If we look at the project as a \textit{Monolithic}, we can say that it encapsulates itself into a \textit{single-tiered} software application in which the user interface and data access code are combined into a single program from a single platform. A monolithic application is self-contained, and independent from other computing applications. The design philosophy is that the application is responsible not just for a particular task, but can perform every step needed to complete a particular function. On the other hand, were we to look at it through the perspective of the \textit{Event-driven} design, we can see how it follows a pattern promoting the production, detection, consumption of, and reaction to events. An \textit{event} can be defined as \textit{"a significant change in state"}. For example, when a \textbf{process} \code{ttl} is completely done, it changes state from \code{RUNNING} to \code{DONE}. And again, if we are to look at the project from the standpoint of a \textit{Procedural} system, we would see that it follows a certain set of rules, which in the end, produce an output that can be interpreted and evaluated for further work. As an example, we would be able to see how the \textbf{SJF} algorithm performs under long processes.
 
 \subsubsection{\underline{Security Features}}
 
