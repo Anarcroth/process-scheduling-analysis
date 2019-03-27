@@ -11,6 +11,8 @@
 \usepackage{epigraph}
 \usepackage{parskip}
 \usepackage{float}
+\usepackage{listings}
+\usepackage{tcolorbox}
 
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -22,9 +24,35 @@
 \definecolor{pr5}{RGB}{231, 20, 3}
 \definecolor{pr6}{RGB}{255, 12, 190}
 
-\definecolor{codebg}{gray}{0.9}
-\definecolor{codehl}{RGB}{82, 139, 255}
-\newcommand{\code}[1]{\colorbox{codebg}{{\color{black}\texttt{#1}}}}
+\definecolor{codeblue}{HTML}{528bff}
+\definecolor{codegreen}{HTML}{98C379}
+\definecolor{codepurple}{HTML}{C678DD}
+\definecolor{codebg}{gray}{0.92}
+
+\newtcbox{\codeinline}{nobeforeafter,colframe=codebg,colback=codebg,arc=1pt,boxrule=0.5pt, left=0.5pt,right=0.5pt,top=0.5pt,bottom=0.5pt,tcbox raise base}
+
+\newcommand{\code}[1]{\codeinline{\texttt{#1}}}
+
+\lstdefinestyle{cpp}{
+  language=C++,
+  basicstyle=\ttfamily,
+  backgroundcolor=\color{codebg},
+  numberstyle=\color{black},
+  keywordstyle=\color{codeblue},
+  commentstyle=\color{codegreen},
+  stringstyle=\color{codepurple},
+  breakatwhitespace=false,
+  breaklines=true,
+  columns=flexible,
+  keepspaces=true,
+  firstnumber=1,
+  numbers=left,
+  numbersep=3pt,
+  tabsize=4,
+  title=\lstname
+}
+
+\lstset{escapechar=@,style=cpp}
 
 \title{Senior Project Thesis\\
   \large Process scheduling - comparison and contrast}
@@ -334,9 +362,42 @@ Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround t
 
 \subsubsection{\underline{Completely Fair Scheduling}}
 
+\subsubsection{\underline{Normal and Even Distributions for Processes}}
+
 \subsubsection{\underline{Data-structures}}
 
-Because we are working with a lot of different types of classes, which interact heavily during every procedure, it's a good idea to see what each object does and in what type of structure does it integrate with.
+Because we are working with a lot of different types of classes, which interact heavily during every procedure, it's a good idea to see what each object does and in what type of structure does it integrate with. The classes that are involved with the process scheduling algorithms are as follows:
+
+\begin{itemize}
+\item \code{process} \\
+  This class holds the data for each process. Instead of using a separate \code{PCB} block, which points to another \code{process} object, the project has been simplified for ease of use, thus it incorporates both these classes into one. The \code{process} class keeps track of its different statistics, which are then summarized in the end for the final evaluation. Each process has \textit{pre-defined} priority, or it can be evaluated upon creation, based on a normal distribution. Each process holds
+  \begin{itemize}
+  \item \textit{time to live} - \code{ttl}. The time each process it takes to execute completely.
+  \item \textit{time of submission} - \code{tos}. The time at which the process starts executing.
+  \item \textit{time of completion} - \code{toc}. The time at which the process finishes executing.
+  \item \textit{turnaround time} - \code{tat}. The time between the time of submission and time of completion plus any \textit{IO} execution.
+  \item \textit{waiting time} - \code{wait\_t}. The time a process spends in the \code{read\_queue} and is \textbf{not} executing.
+  \item \textit{priority} - \code{prty}. The priority each process is assigned based on its execution time, or predefined from the start.
+  \item \textit{IO operations} - \code{ioops}. The set of IO operations each process has.
+  \item \textit{process id} - \code{id}. The unique ID that each process has.
+  \end{itemize}
+  In addition, this class also holds the data about its distribution, as specified in the previous section, in the for of constants.
+\item \code{pool} \\
+  This class used as a global pool, holding all of the different processes in their different states. Thus, there are \textit{queues} for \textbf{waiting processes}, \textbf{ready processes} and \textbf{done processes}. The pool itself is used as a general interface towards each process and its current structure. Because of this, it is much easier to perform operations on these queues, such as checking if they are empty, or clearing them, or even evaluating each process in a specific queue.
+\item \code{scheduler}
+  The scheduler is the structure that is responsible for controlling each executing algorithm. It interacts with the pool of processes, and executes them on the specified procedure. In addition to this, the scheduler also calculates \textit{both} the current and final \textbf{average waiting time} and \textbf{average turnaround time} of each algorithm, based on the passed processes. The class also specifies additional constants, like an \code{ALPHA} value for future predictions, and \code{TIME\_QUANTUM} for equal process execution. \\
+  The general steps of execution are like this:
+  \begin{center}
+    \begin{lstlisting}
+START:
+    take_first_process
+    check for io
+    dispetcher:
+    \end{lstlisting}
+  \end{center}
+\item \code{dispatcher}
+\item \code{scheduler}
+\end{itemize}
 
 \subsubsection{\underline{User Interface}}
 
