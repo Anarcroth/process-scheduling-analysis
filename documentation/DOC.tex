@@ -13,6 +13,8 @@
 \usepackage{float}
 \usepackage{listings}
 \usepackage{tcolorbox}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -387,14 +389,25 @@ Because we are working with a lot of different types of classes, which interact 
 \item \code{scheduler}
   The scheduler is the structure that is responsible for controlling each executing algorithm. It interacts with the pool of processes, and executes them on the specified procedure. In addition to this, the scheduler also calculates \textit{both} the current and final \textbf{average waiting time} and \textbf{average turnaround time} of each algorithm, based on the passed processes. The class also specifies additional constants, like an \code{ALPHA} value for future predictions, and \code{TIME\_QUANTUM} for equal process execution. \\
   The general steps of execution are like this:
-  \begin{center}
-    \begin{lstlisting}
-START:
-    take_first_process
-    check for io
-    dispetcher:
-    \end{lstlisting}
-  \end{center}
+  \begin{algorithm}[H]
+    \caption{Generic Scheduling}\label{generic sched}
+    \begin{algorithmic}[1]
+      \Ensure $globals:=reset()$
+      \Ensure $processes \gets evaluated()$
+      \While {$pool \ne empty$}
+      \State $screen.update()$
+      \If {$process \gets IO$}
+      \State \Call{execute}{$\frac{time\_q}{2}$}
+      \State $dispatcher::interrupt$
+      \Else
+      \State \Call{execute}{$time\_q$}
+      \State $dispatcher::context\_switch$
+      \EndIf
+      \State $awt \gets calculate()$
+      \EndWhile
+      \State $screen.show\_summary()$
+    \end{algorithmic}
+  \end{algorithm}
 \item \code{dispatcher}
 \item \code{scheduler}
 \end{itemize}
