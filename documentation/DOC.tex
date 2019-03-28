@@ -408,9 +408,13 @@ Because we are working with a lot of different types of classes, which interact 
       \State $screen.show\_summary()$
     \end{algorithmic}
   \end{algorithm}
-\item \code{dispatcher}
-\item \code{scheduler}
+\item \code{dispatcher} \\
+  The dispatcher structure is used to work on the \code{context\_switch}-es and \code{interrupt}s. Thus, it takes every process that has finished executing its designated time and performs either one of the two operations. When it does a \code{context\_switch}, it goes through the procedure of \(save\_state() \rightarrow restore\_state()\). When the state is saved, the current process is updated and then goes to the restore step. If the process is done, it is finalized and pushed to the \code{done\_queue}, then the screen is updated and the reference to the next process is taken. If there is an interrupt, which occurs on any \textit{IO}, then a separate \code{thread} is created and \textit{detached} from the \textbf{parent process}. The new thread then takes the specific process and executes the next IO operation that it's waiting. After its completion, the process is returned back to the \textbf{end} of the \code{ready\_queue}.
 \end{itemize}
+
+Having this general idea of how all these classes are constructed and what they do, we can have a clearer picture of the created data-structures that arise.
+
+There are three vector, treated as queue, working on the basis of \textbf{FIFO}. The queues are the \code{ready\_queue}, the \code{waiting\_queue}, and the \code{done\_queue}. The \code{ready} vector holds all of the processes that are in the \code{READY} state, which means that they are ready to execute their next CPU Burst(s). The \code{wait} vector is for processes that have interrupted the algorithm and have been sent to do IO. Generally, a process can interrupt the system because its part of its natural life span, but it can also do that when it wants to request IO and has to be sent to do that operation. In this project, only IO operations are considered to raise such interrupts, due to the fact that the rest of the operations would not matter so much to the general performance. These processes are thus labeled as being in \code{WAITING} state and will return to the back of the \code{ready\_queue} once they are done with their other procedure(s). The \code{done} vector is the one that holds all of the processes that have \textit{completely} finished their execution time and don't have any more work to do. These vectors are not parallel, but rather hold the same process, just in different times and quantities. The whole pool of processes is the sum of the processes found in the \code{ready\_queue} and the \code{waiting\_queue}. The pool is considered empty when \textbf{both} these queues do not have any process in them. This means that the \code{waiting\_queue} can have a size of $0$, while the ready one has all of the processes in it. And vise versa, the \code{ready\_queue} can be completely empty while all of the processes are doing some sort of IO (although this situation is highly unlikely).
 
 \subsubsection{\underline{User Interface}}
 
