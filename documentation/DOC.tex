@@ -15,6 +15,7 @@
 \usepackage{tcolorbox}
 \usepackage{algorithm}
 \usepackage{algpseudocode}
+\usepackage{pgfplots}
 
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -365,6 +366,90 @@ Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround t
 \subsubsection{\underline{Completely Fair Scheduling}}
 
 \subsubsection{\underline{Normal and Even Distributions for Processes}}
+
+One very important aspect of the project is the decision on how to exactly generate processes. This seems like a strange problem, since processes are just processes, they don't even do anything in this project, but they play a key role. These jobs still have an impact on the overall performance of the program and it is not arbitrary how they are generated.
+
+For instance, if all of the processes were the same, that would pose no variety in the global pool and thus every algorithm would have the same final output. True, each algorithm would be different, but with only one final result to show for it. This means that there must be a proper distribution made for the processes that are created, so that a real-life system is imitated as closely as possible. The question is, what type of distribution is most appropriate.
+
+By first instinct, we would head towards a uniform distribution. Why? Because we want to treat every process as equal and reduce the algorithms being biased towards them. For instance, we don't want the \textbf{FCFS} procedure to outperform the other ones because it is having more short processes to execute, we want things to be evenly spread out. And although our intuition is heading for the right track, there is a problem. This approach is not realistic, as things in nature \textbf{do not} tend towards an even distribution. That is why we must have a good and realistic distribution in order to evaluate all of the processes properly in the end.
+
+But, there is a special use for a even distribution nonetheless. Namely, each process ID has to be unique and here we can create a generation algorithm that labels every process with a name that (probably) won't come twice.
+
+Having said all of that, here is what the \textbf{Gaussian Distribution} is used for.
+
+\begin{itemize}
+\item Process Time to Live.
+\item Process Number of IO Operations.
+\item Process IO Operation duration.
+\end{itemize}
+
+From this, we can then pick the magic numbers which would go into each distribution. Because at this point, there isn't such a big deal as to how long (or short), each variable would be, a general estimate has been done. In the following table, we can see how the \textit{Mean} and \textit{Standard Deviation} play a role.
+
+\begin{table}[H]
+  \begin{center}
+    \label{tab:Distributions of Process variables}
+    \begin{tabular}{l|r|c}
+      \toprule
+       \textbf{Type} & \textbf{Mean} & \textbf{Standard Deviation} \\
+      \midrule
+      Process TTL & 1000 ms & 270 ms \\
+      Process IO number & 10 & 2 \\
+      IO TTL & 1500 ms & 150 ms \\
+      \bottomrule
+    \end{tabular}
+    \caption{Distributions of Process variables}
+  \end{center}
+\end{table}
+
+From this table we can see how the processes would be created and what to expect at each algorithm run. Each new process would most probably have a \code{time\_to\_live} somewhere between $730$ and $1270$ milliseconds, with about 10 \textit{IO} operations, each one taking about $1500$ milliseconds to execute. Thus the Gaussian plot will be like so:
+
+\pgfmathdeclarefunction{gauss}{3}{%
+  \pgfmathparse{1/(#3*sqrt(2*pi))*exp(-((#1-#2)^2)/(2*#3^2))}%
+}
+
+\begin{center}
+\begin{tikzpicture}
+\begin{axis}[
+  domain=0:6,
+  samples=100,
+  ymin=0,
+  axis lines*=left,
+  xlabel=$process\_ttl_{ms}$,
+  every axis y label/.style={at=(current axis.above origin),anchor=south},
+  every axis x label/.style={at=(current axis.right of origin),anchor=west},
+  height=5cm,
+  width=16cm,
+  xtick=\empty,
+  ytick=\empty,
+  enlargelimits=false,
+  clip=false,
+  axis on top,
+  grid = major,
+  hide y axis
+  ]
+  \addplot [very thick, codeblue] {gauss(x, 3, 1)};
+\pgfmathsetmacro\valueA{gauss(1,3,1)}
+\pgfmathsetmacro\valueB{gauss(2,3,1)}
+\pgfmathsetmacro\valueC{gauss(3,3,1)}
+\draw [gray] (axis cs:1,0) -- (axis cs:1,\valueA)
+(axis cs:5,0) -- (axis cs:5,\valueA);
+\draw [gray] (axis cs:2,0) -- (axis cs:2,\valueB)
+(axis cs:4,0) -- (axis cs:4,\valueB);
+\draw [gray] (axis cs:3,0)
+(axis cs:3,0) -- (axis cs:3,\valueC);
+\draw [yshift=1.4cm, latex-latex](axis cs:2, 0) -- node [fill=white] {$68\%$} (axis cs:4, 0);
+\draw [yshift=0.3cm, latex-latex](axis cs:1, 0) -- node [fill=white] {$95\%$} (axis cs:5, 0);
+
+\node[below] at (axis cs:1, 0)  {$460$};
+\node[below] at (axis cs:2, 0)  {$730$};
+\node[below] at (axis cs:3, 0)  {$\mu = 1000$};
+\node[below] at (axis cs:4, 0)  {$1270$};
+\node[below] at (axis cs:5, 0)  {$1540$};
+\end{axis}
+\end{tikzpicture}
+\end{center}
+
+The same would also be true for the other two variables in the table, just with different numbers.
 
 \subsubsection{\underline{Data-structures}}
 
