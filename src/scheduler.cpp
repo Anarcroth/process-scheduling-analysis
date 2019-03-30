@@ -225,7 +225,8 @@ void scheduler::add_summary(std::string algname)
     std::string sumr = algname +
 	" (" + std::to_string(pool::done_queue.size()) + ") >" +
 	" Average Waiting Time: " + std::to_string(avg_wt) +
-	" Average Turnaround Time: " + std::to_string(avg_tat);
+	" Average Turnaround Time: " + std::to_string(avg_tat) +
+	"                ";
 
     summaries.insert(summaries.begin(), sumr);
 }

@@ -56,6 +56,7 @@ const int PSAscreen::PR3COLOR = 103;
 const int PSAscreen::PR4COLOR = 104;
 const int PSAscreen::PR5COLOR = 105;
 const int PSAscreen::PR6COLOR = 106;
+const int PSAscreen::PR7COLOR = 107;
 
 // TODO add two more screens, one for the waiting time and one for the tat time
 // as graphs changing with each turn of execution
@@ -102,6 +103,7 @@ void PSAscreen::init()
     init_color(PR4COLOR, 1000, 376, 27);
     init_color(PR5COLOR, 909, 82, 15);
     init_color(PR6COLOR, 1000, 50, 749);
+    init_color(PR7COLOR, 321, 545, 1000);
     init_pair(1, PR0COLOR, COLOR_BLACK);
     init_pair(2, PR1COLOR, COLOR_BLACK);
     init_pair(3, PR2COLOR, COLOR_BLACK);
@@ -109,7 +111,8 @@ void PSAscreen::init()
     init_pair(5, PR4COLOR, COLOR_BLACK);
     init_pair(6, PR5COLOR, COLOR_BLACK);
     init_pair(7, PR6COLOR, COLOR_BLACK);
-    init_pair(8, COLOR_WHITE, COLOR_BLACK);
+    init_pair(8, PR7COLOR, COLOR_BLACK);
+    init_pair(9, COLOR_WHITE, COLOR_BLACK);
 }
 
 PSAscreen& PSAscreen::get()
@@ -163,7 +166,7 @@ void PSAscreen::draw_small_arrows()
 void PSAscreen::draw_legend_cont()
 {
     // Creates the Process and Algorithm sub-windows
-    wattron(wlegend, COLOR_PAIR(8));
+    wattron(wlegend, COLOR_PAIR(9));
     wmove(wlegend, 2, 0);
     waddch(wlegend, ACS_LTEE);
     whline(wlegend, ACS_HLINE, W_W_LEGEND - 2);
@@ -200,7 +203,7 @@ void PSAscreen::draw_legend_cont()
     wmove(wlegend, 8, 2);
     wattron(wlegend, COLOR_PAIR(7));
     waddstr(wlegend, (LEG_PR6 + "    ").c_str());
-    wattron(wlegend, COLOR_PAIR(8));
+    wattron(wlegend, COLOR_PAIR(9));
     waddstr(wlegend, LEG_PRR.c_str());
 
     // Adds different Algorithms
@@ -274,7 +277,7 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 	wattron(w, COLOR_PAIR(7));
 	break;
     case priority::NONE:
-	wattron(w, COLOR_PAIR(8));
+	wattron(w, COLOR_PAIR(9));
 	break;
     }
 }
@@ -295,7 +298,7 @@ void PSAscreen::show_awt(int wt)
 
 void PSAscreen::show_tat(int tat)
 {
-    wattron(walg, COLOR_PAIR(8));
+    wattron(walg, COLOR_PAIR(9));
     wmove(walg, 8, 2);
     waddstr(walg, ("Average Turnaround time: " +
 		   std::to_string(tat) + "    ").c_str());
@@ -303,16 +306,20 @@ void PSAscreen::show_tat(int tat)
 
 void PSAscreen::show_statistics(std::vector<std::string>& summaries)
 {
-    wattron(walg, COLOR_PAIR(8));
     short int curr_summary_size = 0;
     if (summaries.size() > 10)
 	curr_summary_size = 10;
     else
 	curr_summary_size = summaries.size();
 
-    for (size_t i = curr_summary_size; i > 0; i--) {
-	wmove(walg, 8 + curr_summary_size - i, 2);
-	waddstr(walg, summaries.at(curr_summary_size - i).c_str());
+    wattron(walg, COLOR_PAIR(8));
+    wmove(walg, 8, 2);
+    waddstr(walg, summaries.at(0).c_str());
+
+    wattron(walg, COLOR_PAIR(9));
+    for (size_t i = 1; i < curr_summary_size; i++) {
+	wmove(walg, 8 + i, 2);
+	waddstr(walg, summaries.at(i).c_str());
     }
     wrefresh(walg);
 }
@@ -345,7 +352,7 @@ void PSAscreen::draw_frame()
 
 void PSAscreen::draw_frame_of(WINDOW *w, std::string title)
 {
-    wattron(w, COLOR_PAIR(8)); // keeps the border of the window white
+    wattron(w, COLOR_PAIR(9)); // keeps the border of the window white
     box(w, 0, 0);
     wmove(w, 0, 1);
     waddstr(w, title.c_str());

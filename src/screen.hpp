@@ -95,6 +95,7 @@ private:
     static const int PR4COLOR;
     static const int PR5COLOR;
     static const int PR6COLOR;
+    static const int PR7COLOR;
 
     WINDOW *walg;
     WINDOW *wprc;
