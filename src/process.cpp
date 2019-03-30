@@ -9,7 +9,7 @@ const double process::PROCESS_TTL_STDDEV = 270.0;
 const double process::PROCESS_IO_MEAN = 10.0;
 const double process::PROCESS_IO_STDDEV = 2.0;
 const double process::IO_TTL_MEAN = 1500.0;
-const double process::IO_TTL_STDDEV = 15.0;
+const double process::IO_TTL_STDDEV = 150.0;
 
 process::process() : tat(0),
 		     tos(-1),
