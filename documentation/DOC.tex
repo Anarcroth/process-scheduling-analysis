@@ -1,5 +1,6 @@
 \documentclass{article}
 
+\usepackage{subcaption}
 \usepackage{graphicx}
 \usepackage{amsmath}
 \usepackage{color}
@@ -390,11 +391,11 @@ From this, we can then pick the magic numbers which would go into each distribut
     \label{tab:Distributions of Process variables}
     \begin{tabular}{l|r|c}
       \toprule
-       \textbf{Type} & \textbf{Mean} & \textbf{Standard Deviation} \\
+       \textbf{Type} & \textbf{Mean $\mu$} & \textbf{Standard Deviation$\sigma$} \\
       \midrule
       Process TTL & 1000 ms & 270 ms \\
-      Process IO number & 10 & 2 \\
       IO TTL & 1500 ms & 150 ms \\
+      Process-IO count & 10 & 2 \\
       \bottomrule
     \end{tabular}
     \caption{Distributions of Process variables}
@@ -408,48 +409,157 @@ From this table we can see how the processes would be created and what to expect
 }
 
 \begin{center}
-\begin{tikzpicture}
-\begin{axis}[
-  domain=0:6,
-  samples=100,
-  ymin=0,
-  axis lines*=left,
-  xlabel=$process\_ttl_{ms}$,
-  every axis y label/.style={at=(current axis.above origin),anchor=south},
-  every axis x label/.style={at=(current axis.right of origin),anchor=west},
-  height=5cm,
-  width=16cm,
-  xtick=\empty,
-  ytick=\empty,
-  enlargelimits=false,
-  clip=false,
-  axis on top,
-  grid = major,
-  hide y axis
-  ]
-  \addplot [very thick, codeblue] {gauss(x, 3, 1)};
-\pgfmathsetmacro\valueA{gauss(1,3,1)}
-\pgfmathsetmacro\valueB{gauss(2,3,1)}
-\pgfmathsetmacro\valueC{gauss(3,3,1)}
-\draw [gray] (axis cs:1,0) -- (axis cs:1,\valueA)
-(axis cs:5,0) -- (axis cs:5,\valueA);
-\draw [gray] (axis cs:2,0) -- (axis cs:2,\valueB)
-(axis cs:4,0) -- (axis cs:4,\valueB);
-\draw [gray] (axis cs:3,0)
-(axis cs:3,0) -- (axis cs:3,\valueC);
-\draw [yshift=1.4cm, latex-latex](axis cs:2, 0) -- node [fill=white] {$68\%$} (axis cs:4, 0);
-\draw [yshift=0.3cm, latex-latex](axis cs:1, 0) -- node [fill=white] {$95\%$} (axis cs:5, 0);
+  \begin{figure}[H]
+    \begin{subfigure}[b]{1\textwidth}
+      \begin{tikzpicture}
+        \begin{axis}[
+          domain=0:6,
+          samples=100,
+          ymin=0,
+          axis lines*=left,
+          xlabel=$process\_ttl_{ms}$,
+          every axis y label/.style={at=(current axis.above origin),anchor=south},
+          every axis x label/.style={at=(current axis.right of origin),anchor=north},
+          height=5cm,
+          width=16cm,
+          xtick=\empty,
+          ytick=\empty,
+          enlargelimits=false,
+          clip=false,
+          axis on top,
+          grid = major,
+          hide y axis
+          ]
+          \addplot [very thick, codeblue] {gauss(x, 3, 1)};
+          \pgfmathsetmacro\valueA{gauss(1,3,1)}
+          \pgfmathsetmacro\valueB{gauss(2,3,1)}
+          \pgfmathsetmacro\valueC{gauss(3,3,1)}
+          \draw [gray] (axis cs:1,0) -- (axis cs:1,\valueA)
+          (axis cs:5,0) -- (axis cs:5,\valueA);
+          \draw [gray] (axis cs:2,0) -- (axis cs:2,\valueB)
+          (axis cs:4,0) -- (axis cs:4,\valueB);
+          \draw [gray] (axis cs:3,0)
+          (axis cs:3,0) -- (axis cs:3,\valueC);
+          \draw [yshift=1.4cm, latex-latex](axis cs:2, 0) -- node [fill=white] {$68\%$} (axis cs:4, 0);
+          \draw [yshift=0.3cm, latex-latex](axis cs:1, 0) -- node [fill=white] {$95\%$} (axis cs:5, 0);
 
-\node[below] at (axis cs:1, 0)  {$460$};
-\node[below] at (axis cs:2, 0)  {$730$};
-\node[below] at (axis cs:3, 0)  {$\mu = 1000$};
-\node[below] at (axis cs:4, 0)  {$1270$};
-\node[below] at (axis cs:5, 0)  {$1540$};
-\end{axis}
-\end{tikzpicture}
+          \node[below] at (axis cs:1, 0)  {$460$};
+          \node[below] at (axis cs:2, 0)  {$730$};
+          \node[below] at (axis cs:3, 0)  {$\mu = 1000$};
+          \node[below] at (axis cs:4, 0)  {$1270$};
+          \node[below] at (axis cs:5, 0)  {$1540$};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{Process TTL Distribution}
+    \end{subfigure}
+  \end{figure}
 \end{center}
 
 The same would also be true for the other two variables in the table, just with different numbers.
+
+\begin{figure}[H]
+    \begin{subfigure}[b]{0.5\textwidth}
+      \begin{tikzpicture}
+        \begin{axis}[
+          domain=0:6,
+          samples=100,
+          ymin=0,
+          axis lines*=left,
+          xlabel=$io\_ttl_{ms}$,
+          every axis y label/.style={at=(current axis.above origin),anchor=south},
+          every axis x label/.style={at=(current axis.right of origin),anchor=north},
+          height=4cm,
+          width=9cm,
+          xtick=\empty,
+          ytick=\empty,
+          enlargelimits=false,
+          clip=false,
+          axis on top,
+          grid = major,
+          hide y axis
+          ]
+          \addplot [very thick, codeblue] {gauss(x, 3, 1)};
+          \pgfmathsetmacro\valueA{gauss(1,3,1)}
+          \pgfmathsetmacro\valueB{gauss(2,3,1)}
+          \pgfmathsetmacro\valueC{gauss(3,3,1)}
+          \draw [gray] (axis cs:1,0) -- (axis cs:1,\valueA)
+          (axis cs:5,0) -- (axis cs:5,\valueA);
+          \draw [gray] (axis cs:2,0) -- (axis cs:2,\valueB)
+          (axis cs:4,0) -- (axis cs:4,\valueB);
+          \draw [gray] (axis cs:3,0)
+          (axis cs:3,0) -- (axis cs:3,\valueC);
+          \draw [yshift=1.4cm, latex-latex](axis cs:2, 0) -- node [fill=white] {$68\%$} (axis cs:4, 0);
+          \draw [yshift=0.3cm, latex-latex](axis cs:1, 0) -- node [fill=white] {$95\%$} (axis cs:5, 0);
+
+          \node[below] at (axis cs:1, 0)  {$1200$};
+          \node[below] at (axis cs:3, 0)  {$\mu = 1500$};
+          \node[below] at (axis cs:5, 0)  {$1800$};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{IO TTL Distribution}
+    \end{subfigure}
+    %
+    \begin{subfigure}[b]{0.5\textwidth}
+      \begin{tikzpicture}
+        \begin{axis}[
+          domain=0:6,
+          samples=100,
+          ymin=0,
+          axis lines*=left,
+          xlabel=$\ \ \ \ \ io\_count$,
+          every axis y label/.style={at=(current axis.above origin),anchor=south},
+          every axis x label/.style={at=(current axis.right of origin),anchor=north},
+          height=3cm,
+          width=8cm,
+          xtick=\empty,
+          ytick=\empty,
+          enlargelimits=false,
+          clip=false,
+          axis on top,
+          grid = major,
+          hide y axis
+          ]
+          \addplot [very thick, codeblue] {gauss(x, 3, 1)};
+          \pgfmathsetmacro\valueA{gauss(1,3,1)}
+          \pgfmathsetmacro\valueB{gauss(2,3,1)}
+          \pgfmathsetmacro\valueC{gauss(3,3,1)}
+          \draw [gray] (axis cs:1,0) -- (axis cs:1,\valueA)
+          (axis cs:5,0) -- (axis cs:5,\valueA);
+          \draw [gray] (axis cs:2,0) -- (axis cs:2,\valueB)
+          (axis cs:4,0) -- (axis cs:4,\valueB);
+          \draw [gray] (axis cs:3,0)
+          (axis cs:3,0) -- (axis cs:3,\valueC);
+          \draw [yshift=.83cm, latex-latex](axis cs:2, 0) -- node [fill=white] {$68\%$} (axis cs:4, 0);
+
+          \node[below] at (axis cs:1, 0)  {$6$};
+          \node[below] at (axis cs:3, 0)  {$\mu = 10$};
+          \node[below] at (axis cs:5, 0)  {$14$};
+        \end{axis}
+      \end{tikzpicture}
+      \caption{IO count per Process}
+    \end{subfigure}
+\end{figure}
+
+The place where we can use a \textbf{Uniform Distribution} is for the generation of IDs. Each process is named with a random \textit{hexadecimal} value. The reason for doing this is because it simulates real processes in that each one is abstracted from what and where it came from. We care about what it does and how it is scheduled, an giving it a random name would be easiest to work with. This is done by generating a completely even number from $0 \rightarrow INT::MAX$ and then putting that number into a converter for \textit{hex} values. We get as an output a string that represents a unique name. The converter dose nothing more than converting that number int a hexadecimal value. The final output would look something like this.
+
+\begin{table}[H]
+  \begin{center}
+    \label{tab:Process ID generation}
+    \begin{tabular}{|c|}
+      \toprule
+       \textbf{Process ID} \\
+      \midrule
+      4b40 2e61 b88c 479c 831c d10e 9b54 bcfe a5f7 53f5 4d28 \\
+      b5b2 73cd babd c920 5894 00a5 9bc8 5c6e 657c f561 ecd7 \\
+      80ab 7d9b 7385 c52e 6d8a 242e 99ce fb27 0e9b f9d7 2a18 \\
+      fa5b 3879 29df 2c15 9f48 3c6e 18cb cee3 d553 e15f 8dfe \\
+      \bottomrule
+    \end{tabular}
+    \caption{Process ID generation}
+  \end{center}
+\end{table}
+
+Of course there randomly generated processes hold the above-mentioned distributions for \textit{io/ttl/io-ttl}. They also have a priority, which is evaluated on each start for the different algorithms. This is shown by the colors they receive upon the start of execution.
 
 \subsubsection{\underline{Data-structures}}
 
@@ -503,9 +613,20 @@ There are three vector, treated as queue, working on the basis of \textbf{FIFO}.
 
 \subsubsection{\underline{User Interface}}
 
+The \textit{UI} of this project takes an alternative approach. Because the main focus of the application is towards algorithm execution, the interface tries to be as simple as possible and to convey the idea on what is happening in the easiest manner possible. For this reason, all of the UI is created inside of a \textit{terminal emulator}, with additional graphics added. With the help of the \code{ncurses} library, used for graphics in the terminal, the final product looks nice and easy to understand without being too flashy.
+
+The structure of \textit{UI} is as follows: 4 main panels, each one holding information for the processes and the currently executing algorithm. Let's go through them one by one:
+
+\begin{itemize}
+\item \textbf{ALGORITHM} panel - This panel is used to display the currently running process and its different data. Things like its priority, \code{ttl}, and ID, are shown at the top. Upon each algorithm completion, a summary is displayed below, indicating the \textit{Average Waiting Time} and \textit{Average Turnaround Time} for that algorithm. In addition to this, the name of the used algorithm together with the number of processes is displayed as well. On the very bottom of this panel, there are two miniature windows. Both of them depict the graph of the \textit{Waiting Time} and \textit{Turnaround Time} in terms of \textbf{amount of time} (on the $y-axis$) and number of processes (on the $x-axis$). That is, at each CPU Burst rotation, the graph shows what are the current averages. This gives an idea on how the algorithm is performing over time. When it comes to comparing, these graphs will make it easier for further evaluation and records keeping.
+\item \textbf{PROCESS} panel - This panel holds all of the processes that are in the \code{ready\_queue}. When a job jumps from doing CPU Bursts to doing IO operations, it jumps out of this panel, does its thing, and comes back inside again an the end of queue. When each CPU Burst finish, all of the processes do a rotation with one to the left, where the leftmost process will be the next one to execute. If a process is done, however, then it is popped out of the panel and inserted into the next one.
+\item \textbf{DONE} panel - As mentioned above, this is the place where all of the done processes are held. The inserted processes are in the order of their completion.
+\item \textbf{LEGEND} panel - This is the final panel and it holds information for all of the commands the user can send to the program. This makes working with the application easier. On the top, the different priorities are shown, together with the key that will spawn a process with that priority. There are 7 in total, starting form 0, all the way up to priority 6. There is an additional key that creates random processes, that will not have a priority, but that will be evaluated by the algorithm at execution time. Below this, the legend also shows each of the implemented processes in the system plus the key that will start executing it. When a procedure is started, below it, a text will appear which will explain what are its features and what it does. That way, the learning and evaluation process is made easier on the user.
+\end{itemize}
+
 \subsubsection{\underline{Software Architecture}}
 
-The Software Architecture of the project can be seen as one of the following: \textit{Monolithic}, \textit{Event-driven}, or \textit{Procedural}. If we look at the project as a \textit{Monolithic}, we can say that it encapsulates itself into a \textit{single-tiered} software application in which the user interface and data access code are combined into a single program from a single platform. A monolithic application is self-contained, and independent from other computing applications. The design philosophy is that the application is responsible not just for a particular task, but can perform every step needed to complete a particular function. On the other hand, were we to look at it through the perspective of the \textit{Event-driven} design, we can see how it follows a pattern promoting the production, detection, consumption of, and reaction to events. An \textit{event} can be defined as \textit{"a significant change in state"}. For example, when a \textbf{process} \code{ttl} is completely done, it changes state from \code{RUNNING} to \code{DONE}. And again, if we are to look at the project from the standpoint of a \textit{Procedural} system, we would see that it follows a certain set of rules, which in the end, produce an output that can be interpreted and evaluated for further work. As an example, we would be able to see how the \textbf{SJF} algorithm performs under long processes.
+The Software Architecture of the project can be seen as one of the following: \textit{Monolithic}, \textit{Event-driven}, or \textit{Procedural}. If we look at the project as a \textit{Monolithic}, we can say that it encapsulates itself into a \textit{single-tiered} software application in which the user interface and data access code are combined into a single program from a single platform. A monolithic application is self-contained, and independent from other computing applications. The design philosophy is that the application is responsible not just for a particular task, but can perform every step needed to complete a particular function. On the other hand, were we to look at it through the perspective of the \textit{Event-driven} design, we can see how it follows a pattern promoting the production, detection, consumption of, and reaction to events. An \textit{event} can be defined as \textit{"a significant change in state"}. For example, when a \textbf{process} \code{ttl} is completely done, it changes state from \code{RUNNING} $\rightarrow$ \code{DONE}. And again, if we are to look at the project from the standpoint of a \textit{Procedural} system, we would see that it follows a certain set of rules, which in the end, produce an output that can be interpreted and evaluated for further work. As an example, we would be able to see how the \textbf{SJF} algorithm performs under long processes.
 
 \subsubsection{\underline{Security Features}}
 
