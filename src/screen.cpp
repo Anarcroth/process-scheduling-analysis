@@ -25,12 +25,12 @@ const int PSAscreen::W_H_LEGEND = 51;
 
 const int PSAscreen::W_Y_WT = 24;
 const int PSAscreen::W_X_WT = 5;
-const int PSAscreen::W_W_WT = 45;
+const int PSAscreen::W_W_WT = 54;
 const int PSAscreen::W_H_WT = 15;
 
 const int PSAscreen::W_Y_TAT = 24;
-const int PSAscreen::W_X_TAT = 55;
-const int PSAscreen::W_W_TAT = 45;
+const int PSAscreen::W_X_TAT = 66;
+const int PSAscreen::W_W_TAT = 55;
 const int PSAscreen::W_H_TAT = 15;
 
 const std::string PSAscreen::LEG_PR = " Processes ";
