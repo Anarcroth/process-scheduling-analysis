@@ -25,10 +25,11 @@ public:
     static int current_awt;   /* current average waiting time */
 
 private:
-    void reset();            /* reset global variables */
-    void add_summary();      /* add newest execution stats */
+    void reset(); /* reset global variables */
 
-    int exponential_average(int prev_pr_ttl);
+    void add_summary(std::string algname); /* add newest summary stats */
+
+    int exponential_average(int prev_pr_ttl); /* calc expo average */
 
     void calc_current_awt();
 

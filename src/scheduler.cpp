@@ -90,7 +90,7 @@ void scheduler::fcfs()
 	calc_current_awt();
 	PSAscreen::get().show_awt(current_awt);
     }
-    add_summary();
+    add_summary("FCFS");
     PSAscreen::get().show_statistics(summaries);
 }
 
@@ -119,7 +119,7 @@ void scheduler::sjf_v1()
 
 	take(pit, pit->get_ttl());
     }
-    add_summary();
+    add_summary("SJF V1");
     PSAscreen::get().show_statistics(summaries);
 }
 
@@ -148,7 +148,7 @@ void scheduler::sjf_v2()
 	take(pit, prediction);
 	prediction = exponential_average(prev_pr_ttl);
     }
-    add_summary();
+    add_summary("SJF V2");
     PSAscreen::get().show_statistics(summaries);
 }
 
@@ -181,7 +181,7 @@ void scheduler::round_rob()
 	take(pit, TIME_QUANTUM);
 
     }
-    add_summary();
+    add_summary("Round Robin");
     PSAscreen::get().show_statistics(summaries);
 }
 
@@ -210,11 +210,11 @@ void scheduler::pjf()
 
 	take(pit, pit->get_ttl());
     }
-    add_summary();
+    add_summary("PJF");
     PSAscreen::get().show_statistics(summaries);
 }
 
-void scheduler::add_summary()
+void scheduler::add_summary(std::string algname)
 {
     for (auto& p : pool::done_queue) {
 	avg_tat += p.get_tat();
@@ -222,9 +222,12 @@ void scheduler::add_summary()
     }
     avg_tat /= pool::done_queue.size();
     avg_wt /= pool::done_queue.size();
-    std::string sumr = "Average Waiting Time: " + std::to_string(avg_wt) +
-	"\tAverage Turnaround Time: " + std::to_string(avg_tat);
-    summaries.push_back(sumr);
+    std::string sumr = algname +
+	" (" + std::to_string(pool::done_queue.size()) + ") >" +
+	" Average Waiting Time: " + std::to_string(avg_wt) +
+	" Average Turnaround Time: " + std::to_string(avg_tat);
+
+    summaries.insert(summaries.begin(), sumr);
 }
 
 void scheduler::calc_current_awt()
