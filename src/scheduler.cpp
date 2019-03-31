@@ -32,6 +32,7 @@ void scheduler::reset()
     avg_tat = 0;
     total_t = 0;
     prev_pr_burst = 0;
+    current_awt = 0;
 
     pool::clear();
 
@@ -90,8 +91,6 @@ void scheduler::fcfs()
 	PSAscreen::get().update_process_scr(*pit);
 
 	take(pit, pit->get_ttl());
-	//calc_current_awt();
-	//PSAscreen::get().show_awt(current_awt);
     }
     add_summary("FCFS");
     PSAscreen::get().show_statistics(summaries);
@@ -236,12 +235,8 @@ void scheduler::add_summary(std::string algname)
 
 void scheduler::calc_current_awt()
 {
-    int n = 0;
     for (auto& p : pool::done_queue) {
-	if (p.get_tos() != -1) {
-	    current_awt += p.get_wait_t();
-	    n += 1;
-	}
+	current_awt += p.get_wait_t();
     }
-    current_awt = std::round(current_awt / n);
+    current_awt = current_awt /	pool::done_queue.size();
 }

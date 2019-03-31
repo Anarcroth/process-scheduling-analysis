@@ -43,7 +43,7 @@ namespace dispatcher
 	    pool::done_queue.push_back(std::move(*pit));
 	    pit = pool::ready_queue.erase(pit);
 
-	    calc_current_awt();
+	    scheduler::calc_current_awt();
 	    PSAscreen::get().show_wt(scheduler::current_awt);
 
 	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
@@ -70,16 +70,4 @@ namespace dispatcher
 
 	iomutex.unlock();
     }
-}
-
-void dispatcher::calc_current_awt()
-{
-    int n = 0;
-    for (auto& p : pool::done_queue) {
-	if (p.get_tos() != -1) {
-	    scheduler::current_awt += p.get_wait_t();
-	    n += 1;
-	}
-    }
-    scheduler::current_awt = scheduler::current_awt / n;
 }

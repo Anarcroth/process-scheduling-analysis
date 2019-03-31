@@ -4,10 +4,10 @@
 #include "process.hpp"
 #include "commons.hpp"
 
-const double process::PROCESS_TTL_MEAN = 1000.0;
-const double process::PROCESS_TTL_STDDEV = 270.0;
-const double process::PROCESS_IO_MEAN = 10.0;
-const double process::PROCESS_IO_STDDEV = 2.0;
+const double process::TTL_MEAN = 1000.0;
+const double process::TTL_STDDEV = 300.0;
+const double process::IO_NUM_MEAN = 10.0;
+const double process::IO_NUM_STDDEV = 2.0;
 const double process::IO_TTL_MEAN = 1500.0;
 const double process::IO_TTL_STDDEV = 150.0;
 
@@ -114,7 +114,7 @@ int process::set_ttl()
     int temp_ttl = 0;
     while (temp_ttl < 1)
     {
-	temp_ttl = commons::gen_gaus_rand(PROCESS_TTL_MEAN, PROCESS_TTL_STDDEV);
+	temp_ttl = commons::gen_gaus_rand(TTL_MEAN, TTL_STDDEV);
     }
 
     return temp_ttl;
@@ -124,7 +124,7 @@ std::vector<int> process::set_ioops()
 {
     // Creates a Gaussian distribution (0-20) IO operations
     // with a Gaussian distribution (02-3000ms) for each IO
-    int number_of_ios = commons::gen_gaus_rand(PROCESS_IO_MEAN, PROCESS_IO_STDDEV);
+    int number_of_ios = commons::gen_gaus_rand(IO_NUM_MEAN, IO_NUM_STDDEV);
     std::vector<int> temp_ioops(number_of_ios);
     for (size_t i = 0; i < number_of_ios; i++)
     {

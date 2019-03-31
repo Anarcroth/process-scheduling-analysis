@@ -17,6 +17,8 @@ public:
     void round_rob(); /* round-robin */
     void pjf();       /* priority job first */
 
+    static void calc_current_awt();
+
     static int avg_wt;        /* average waiting time in ready queue */
     static int avg_tat;       /* average turnaround time */
     static int total_t;       /* total time of execution*/
@@ -30,8 +32,6 @@ private:
     void add_summary(std::string algname); /* add newest summary stats */
 
     int exponential_average(int prev_pr_ttl); /* calc expo average */
-
-    void calc_current_awt();
 
     std::vector<std::string> summaries; /* summaries of executions */
 

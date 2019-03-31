@@ -45,17 +45,17 @@ namespace pool
 	{
 	    if (p.get_prty() != priority::NONE) // Skip already set priorities
 		continue;
-	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN - 3 * process::PROCESS_TTL_STDDEV)
+	    else if (p.get_ttl() < process::TTL_MEAN - 3 * process::TTL_STDDEV)
 		p.set_prty(priority::PR0);
-	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN - 2 * process::PROCESS_TTL_STDDEV)
+	    else if (p.get_ttl() < process::TTL_MEAN - 2 * process::TTL_STDDEV)
 		p.set_prty(priority::PR1);
-	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN - process::PROCESS_TTL_STDDEV)
+	    else if (p.get_ttl() < process::TTL_MEAN - process::TTL_STDDEV)
 		p.set_prty(priority::PR2);
-	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN + process::PROCESS_TTL_STDDEV)
+	    else if (p.get_ttl() < process::TTL_MEAN + process::TTL_STDDEV)
 		p.set_prty(priority::PR3);
-	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN + 2 * process::PROCESS_TTL_STDDEV)
+	    else if (p.get_ttl() < process::TTL_MEAN + 2 * process::TTL_STDDEV)
 		p.set_prty(priority::PR4);
-	    else if (p.get_ttl() < process::PROCESS_TTL_MEAN + 3 * process::PROCESS_TTL_STDDEV)
+	    else if (p.get_ttl() < process::TTL_MEAN + 3 * process::TTL_STDDEV)
 		p.set_prty(priority::PR5);
 	    else
 		p.set_prty(priority::PR6);

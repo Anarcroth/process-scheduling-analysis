@@ -66,10 +66,10 @@ public:
     bool is_done();
     bool has_io();
 
-    static const double PROCESS_TTL_MEAN;
-    static const double PROCESS_TTL_STDDEV;
-    static const double PROCESS_IO_MEAN;
-    static const double PROCESS_IO_STDDEV;
+    static const double TTL_MEAN;
+    static const double TTL_STDDEV;
+    static const double IO_NUM_MEAN;
+    static const double IO_NUM_STDDEV;
     static const double IO_TTL_MEAN;
     static const double IO_TTL_STDDEV;
 

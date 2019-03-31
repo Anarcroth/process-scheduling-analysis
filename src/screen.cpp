@@ -289,8 +289,8 @@ void PSAscreen::show_wt(int wt)
 {
     wattron(wwt, COLOR_PAIR(8));
 
-    int x = std::floor(x_partitioning * pool::done_queue.size());
-    int y = std::floor((wt / y_max) * 12);
+    int x = std::floor(x_partitioning * pool::done_queue.size() + 1);
+    int y = std::floor((wt / y_max) * 13);
 
     wmove(wwt, 13 - y, x);
     waddstr(wwt, "*");
