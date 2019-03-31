@@ -11,4 +11,5 @@ namespace dispatcher
     void save_state(std::vector<process>::iterator& pit, int ttl_p);
     void restore_state(std::vector<process>::iterator& pit);
     void exec_io(std::vector<process>::iterator pit);
+    void calc_current_awt();
 }

@@ -13,9 +13,12 @@ namespace pool
 
     bool empty();
 
+    int size();
+
     extern std::vector<process> wait_queue;
     extern std::vector<process> ready_queue;
     extern std::vector<process> done_queue;
+    extern int psize;
 }
 
 #endif

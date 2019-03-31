@@ -87,8 +87,8 @@ void scheduler::fcfs()
 	PSAscreen::get().update_process_scr(*pit);
 
 	take(pit, pit->get_ttl());
-	calc_current_awt();
-	PSAscreen::get().show_awt(current_awt);
+	//calc_current_awt();
+	//PSAscreen::get().show_awt(current_awt);
     }
     add_summary("FCFS");
     PSAscreen::get().show_statistics(summaries);

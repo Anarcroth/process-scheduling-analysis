@@ -7,6 +7,7 @@ namespace pool
     std::vector<process> wait_queue(0);
     std::vector<process> ready_queue(0);
     std::vector<process> done_queue(0);
+    int psize = 0;
 
     void make_pr(int ch)
     {
@@ -37,6 +38,7 @@ namespace pool
 	    ready_queue.push_back(process(priority::PR6));
 	    break;
 	}
+	psize += 1;
     }
 
     void eval_prcs_prty()
@@ -70,5 +72,10 @@ namespace pool
     bool empty()
     {
 	return (ready_queue.empty() && wait_queue.empty()) ? true : false;
+    }
+
+    int size()
+    {
+	return psize;
     }
 }

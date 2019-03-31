@@ -284,14 +284,31 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 
 void PSAscreen::show_awt(int wt)
 {
-    wattron(wwt, COLOR_PAIR(1));
+    wattron(wwt, COLOR_PAIR(8));
     //wmove(walg, 6, 2);
     //waddstr(walg, ("Average Wait time: " +
 		    //	   std::to_string(wt) + "    ").c_str());
 
     //int partition = pool::ready_queue.size() / W_W_WT;
     //int height = 5000000 / wt;
-    wmove(wwt, std::round(wt % 14), 1);
+    float partition = 52 / pool::size();
+    int position = std::floor(partition * pool::done_queue.size());
+    int max = 15000;
+    int h = 0;
+    if (wt < 1000) h = 0;
+    else if (wt < 2000) h = 1;
+    else if (wt < 2000) h = 2;
+    else if (wt < 3000) h = 3;
+    else if (wt < 4000) h = 4;
+    else if (wt < 5000) h = 5;
+    else if (wt < 6000) h = 6;
+    else if (wt < 7000) h = 7;
+    else if (wt < 8000) h = 8;
+    else if (wt < 9000) h = 9;
+    else if (wt < 10000) h = 10;
+    else if (wt < 11000) h = 11;
+    else h = 12;
+    wmove(wwt, 13 - h, position);
     waddstr(wwt, "*");
     wnoutrefresh(wwt);
 }
@@ -312,6 +329,7 @@ void PSAscreen::show_statistics(std::vector<std::string>& summaries)
     else
 	curr_summary_size = summaries.size();
 
+    // shows the first statistic and highlights it
     wattron(walg, COLOR_PAIR(8));
     wmove(walg, 8, 2);
     waddstr(walg, summaries.at(0).c_str());
