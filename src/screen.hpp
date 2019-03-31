@@ -23,13 +23,15 @@ public:
 
     void update_process_scr(process& pr);
 
-    void show_awt(int wt);
+    void show_wt(int wt);
     void show_tat(int tat);
     void show_statistics(std::vector<std::string>& summaries);
 
     void show_process(process& pr);
 
     void push_prc_in(WINDOW* w, std::vector<process>& pcbs);
+
+    void get_table_partitionings();
 
     WINDOW* get_walg() const;
     WINDOW* get_wprc() const;
@@ -44,6 +46,9 @@ private:
 
     void init();
     void colorinprocess(WINDOW *w, priority pr);
+
+    static float x_partitioning;
+    static float y_max;
 
     static const int W_X_ALG;
     static const int W_Y_ALG;

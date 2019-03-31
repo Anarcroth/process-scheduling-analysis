@@ -32,7 +32,10 @@ void scheduler::reset()
     avg_tat = 0;
     total_t = 0;
     prev_pr_burst = 0;
+
     pool::clear();
+
+    PSAscreen::get().get_table_partitionings();
     PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
     PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 }

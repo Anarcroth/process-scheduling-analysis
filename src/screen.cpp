@@ -6,6 +6,9 @@
 #include "commons.hpp"
 #include "pool.hpp"
 
+float PSAscreen::x_partitioning = 0;
+float PSAscreen::y_max = 0;
+
 const int PSAscreen::W_Y_ALG = 1;
 const int PSAscreen::W_X_ALG = 3;
 const int PSAscreen::W_W_ALG = 119;
@@ -282,35 +285,23 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
     }
 }
 
-void PSAscreen::show_awt(int wt)
+void PSAscreen::show_wt(int wt)
 {
     wattron(wwt, COLOR_PAIR(8));
-    //wmove(walg, 6, 2);
-    //waddstr(walg, ("Average Wait time: " +
-		    //	   std::to_string(wt) + "    ").c_str());
 
-    //int partition = pool::ready_queue.size() / W_W_WT;
-    //int height = 5000000 / wt;
-    float partition = 52 / pool::size();
-    int position = std::floor(partition * pool::done_queue.size());
-    int max = 15000;
-    int h = 0;
-    if (wt < 1000) h = 0;
-    else if (wt < 2000) h = 1;
-    else if (wt < 2000) h = 2;
-    else if (wt < 3000) h = 3;
-    else if (wt < 4000) h = 4;
-    else if (wt < 5000) h = 5;
-    else if (wt < 6000) h = 6;
-    else if (wt < 7000) h = 7;
-    else if (wt < 8000) h = 8;
-    else if (wt < 9000) h = 9;
-    else if (wt < 10000) h = 10;
-    else if (wt < 11000) h = 11;
-    else h = 12;
-    wmove(wwt, 13 - h, position);
+    int x = std::floor(x_partitioning * pool::done_queue.size());
+    int y = std::floor((wt / y_max) * 12);
+
+    wmove(wwt, 13 - y, x);
     waddstr(wwt, "*");
     wnoutrefresh(wwt);
+}
+
+void PSAscreen::get_table_partitionings()
+{
+    // needs to be calculated only once each algorithm
+    x_partitioning = 52 / pool::size();
+    y_max = pool::size() * 1500;
 }
 
 void PSAscreen::show_tat(int tat)

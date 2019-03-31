@@ -44,7 +44,7 @@ namespace dispatcher
 	    pit = pool::ready_queue.erase(pit);
 
 	    calc_current_awt();
-	    PSAscreen::get().show_awt(scheduler::current_awt);
+	    PSAscreen::get().show_wt(scheduler::current_awt);
 
 	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
 	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
