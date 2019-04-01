@@ -376,13 +376,16 @@ void PSAscreen::draw_w_scale()
     for (int i = 1; i < 14; i++) {
 	wmove(wwt, 14 - i, 0);
 	std::string scale_num = std::to_string(
-	    std::floor(i * (y_max / 13.0)));
-	if (i < 10) {
-	    scale_num = scale_num.substr(0, 1) + "k";
+	    std::floor(i * (y_max / 13)));
+	scale_num = scale_num.substr(0, scale_num.find("."));
+	if (scale_num.length() < 4) {
+	    scale_num = "." + scale_num.substr(0, 1) + "k";
+	} else if (scale_num.length() < 5) {
+	    scale_num = scale_num.substr(0, 1) + "k ";
 	} else {
 	    scale_num = scale_num.substr(0, 2) + "k";
 	}
-	waddstr(wwt, (scale_num).c_str());
+	waddstr(wwt, scale_num.c_str());
     }
     wnoutrefresh(wwt);
 }
