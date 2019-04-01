@@ -10,30 +10,30 @@ float PSAscreen::x_partitioning = 0;
 float PSAscreen::y_max = 0;
 
 const int PSAscreen::W_Y_ALG = 1;
-const int PSAscreen::W_X_ALG = 3;
-const int PSAscreen::W_W_ALG = 119;
+const int PSAscreen::W_X_ALG = 1;
+const int PSAscreen::W_W_ALG = 132;
 const int PSAscreen::W_H_ALG = 39;
 
 const int PSAscreen::W_Y_PRC = 40;
-const int PSAscreen::W_X_PRC = 3;
+const int PSAscreen::W_X_PRC = 1;
 const int PSAscreen::W_Y_DONE = 40;
-const int PSAscreen::W_X_DONE = 66;
-const int PSAscreen::W_W_PRC_DONE = 56;
+const int PSAscreen::W_X_DONE = 72;
+const int PSAscreen::W_W_PRC_DONE = 61;
 const int PSAscreen::W_H_PRC_DONE = 12;
 
 const int PSAscreen::W_Y_LEGEND = 1;
-const int PSAscreen::W_X_LEGEND = 123;
-const int PSAscreen::W_W_LEGEND = 65;
+const int PSAscreen::W_X_LEGEND = 133;
+const int PSAscreen::W_W_LEGEND = 57;
 const int PSAscreen::W_H_LEGEND = 51;
 
 const int PSAscreen::W_Y_WT = 24;
-const int PSAscreen::W_X_WT = 5;
-const int PSAscreen::W_W_WT = 54;
+const int PSAscreen::W_X_WT = 2;
+const int PSAscreen::W_W_WT = 60;
 const int PSAscreen::W_H_WT = 15;
 
 const int PSAscreen::W_Y_TAT = 24;
-const int PSAscreen::W_X_TAT = 66;
-const int PSAscreen::W_W_TAT = 55;
+const int PSAscreen::W_X_TAT = 72;
+const int PSAscreen::W_W_TAT = 60;
 const int PSAscreen::W_H_TAT = 15;
 
 const std::string PSAscreen::LEG_PR = " Processes ";
@@ -44,7 +44,7 @@ const std::string PSAscreen::LEG_PR3 = "Priority 3: (3)";
 const std::string PSAscreen::LEG_PR4 = "Priority 4: (4)";
 const std::string PSAscreen::LEG_PR5 = "Priority 5: (5)";
 const std::string PSAscreen::LEG_PR6 = "Priority 6: (6)";
-const std::string PSAscreen::LEG_PRR = "Random Priority: (r)";
+const std::string PSAscreen::LEG_PRR = "Random Pri: (r)";
 const std::string PSAscreen::LEG_ALG = " Algorithm ";
 const std::string PSAscreen::LEG_FCFS_ALG = "First Come First Serve: FCFS (f)";
 const std::string PSAscreen::LEG_SJFV1_ALG = "Shortest Job First (V1): SJF1 (h)";
@@ -155,10 +155,10 @@ void PSAscreen::draw_small_arrows()
 {
     // This draws the small arrowsp between the
     // Process and Done windows
-    move(43, 62);
+    move(43, W_W_PRC_DONE + 5);
     addch(ACS_RARROW);
     addch(ACS_RARROW);
-    move(48, 62);
+    move(48, W_W_PRC_DONE + 5);
     addch(ACS_RARROW);
     addch(ACS_RARROW);
 }
