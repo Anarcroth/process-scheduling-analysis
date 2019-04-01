@@ -61,9 +61,6 @@ const int PSAscreen::PR5COLOR = 105;
 const int PSAscreen::PR6COLOR = 106;
 const int PSAscreen::PR7COLOR = 107;
 
-// TODO add two more screens, one for the waiting time and one for the tat time
-// as graphs changing with each turn of execution
-
 PSAscreen::PSAscreen()
 {
     // Makes basic setup and starts colors
@@ -287,6 +284,8 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 
 void PSAscreen::show_wt(int wt)
 {
+    wattron(wwt, COLOR_PAIR(9));
+    draw_w_scale();
     wattron(wwt, COLOR_PAIR(8));
 
     int x = std::floor(x_partitioning * pool::done_queue.size() + 1);
@@ -365,7 +364,23 @@ void PSAscreen::draw_frame_of(WINDOW *w, std::string title)
     box(w, 0, 0);
     wmove(w, 0, 1);
     waddstr(w, title.c_str());
+
+    // for the wt and tat, we need ta have scales on the side
+    // draw them after drawing the borders
+    if (w == wwt) {
+	draw_w_scale();
+    }
+
     wnoutrefresh(w);
+}
+
+void PSAscreen::draw_w_scale()
+{
+    for (int i = 1; i < 14; i++) {
+	wmove(wwt, 14 - i, 0);
+	int s = std::floor(i * (y_max / 13.0));
+	waddstr(wwt, (std::to_string(s).substr(0, 2) + "k").c_str() );
+    }
 }
 
 PSAscreen::~PSAscreen()

@@ -20,6 +20,7 @@ public:
 
     void draw_small_arrows();
     void draw_legend_cont();
+    void draw_w_scale();
 
     void update_process_scr(process& pr);
 
