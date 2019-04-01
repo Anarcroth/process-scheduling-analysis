@@ -284,8 +284,6 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
 
 void PSAscreen::show_wt(int wt)
 {
-    wattron(wwt, COLOR_PAIR(9));
-    draw_w_scale();
     wattron(wwt, COLOR_PAIR(8));
 
     int x = std::floor(x_partitioning * pool::done_queue.size() + 1);
@@ -364,23 +362,35 @@ void PSAscreen::draw_frame_of(WINDOW *w, std::string title)
     box(w, 0, 0);
     wmove(w, 0, 1);
     waddstr(w, title.c_str());
-
-    // for the wt and tat, we need ta have scales on the side
-    // draw them after drawing the borders
+    // The wt and tat windows should always have their scales drawn
+    // makes sure to do that
     if (w == wwt) {
 	draw_w_scale();
     }
-
     wnoutrefresh(w);
 }
 
 void PSAscreen::draw_w_scale()
 {
+    wattron(wwt, COLOR_PAIR(9));
     for (int i = 1; i < 14; i++) {
 	wmove(wwt, 14 - i, 0);
-	int s = std::floor(i * (y_max / 13.0));
-	waddstr(wwt, (std::to_string(s).substr(0, 2) + "k").c_str() );
+	std::string scale_num = std::to_string(
+	    std::floor(i * (y_max / 13.0)));
+	if (i < 10) {
+	    scale_num = scale_num.substr(0, 1) + "k";
+	} else {
+	    scale_num = scale_num.substr(0, 2) + "k";
+	}
+	waddstr(wwt, (scale_num).c_str());
     }
+    wnoutrefresh(wwt);
+}
+
+void PSAscreen::clear_scr()
+{
+    wclear(wwt);
+    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wwt(), " Waiting Time ");
 }
 
 PSAscreen::~PSAscreen()

@@ -22,6 +22,8 @@ public:
     void draw_legend_cont();
     void draw_w_scale();
 
+    void clear_scr();
+
     void update_process_scr(process& pr);
 
     void show_wt(int wt);

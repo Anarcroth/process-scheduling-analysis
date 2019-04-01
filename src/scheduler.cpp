@@ -36,7 +36,9 @@ void scheduler::reset()
 
     pool::clear();
 
+    PSAscreen::get().clear_scr();
     PSAscreen::get().get_table_partitionings();
+    PSAscreen::get().draw_w_scale();
     PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
     PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 }
