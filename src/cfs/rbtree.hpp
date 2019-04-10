@@ -11,7 +11,7 @@ struct sched_entity
     sched_entity *left;
     sched_entity *right;
 
-    int rb;
+    int rb; // black 0, red 1
 
     sched_entity(process k, sched_entity *p, sched_entity *l, sched_entity *r, int _rb) :
 	key(k),
@@ -27,11 +27,15 @@ public:
     rbtree() = default;
     ~rbtree();
 
-    void insert(sched_entity *&root, process &key);
+    void insert(process &key);
     process get_process();
+
 private:
+    void insert(sched_entity *&node, process &key);
     void right_rotation();
     void left_rotation();
+    void color_flip();
+    void balance(sched_entity *&node);
 
     sched_entity *root{};
 };
