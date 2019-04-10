@@ -374,6 +374,14 @@ For instance, if all of the processes were the same, that would pose no variety 
 
 By first instinct, we would head towards a uniform distribution. Why? Because we want to treat every process as equal and reduce the algorithms being biased towards them. For instance, we don't want the \textbf{FCFS} procedure to outperform the other ones because it is having more short processes to execute, we want things to be evenly spread out. And although our intuition is heading for the right track, there is a problem. This approach is not realistic, as things in nature \textbf{do not} tend towards an even distribution. That is why we must have a good and realistic distribution in order to evaluate all of the processes properly in the end.
 
+The underlying formula that is used for the \textbf{Gaussian Distribution} is
+
+\begin{equation}
+P(x) = \frac{1}{{\sigma \sqrt {2\pi } }}e^{{{ - \left( {x - \mu } \right)^2 } \mathord{\left/ {\vphantom {{ - \left( {x - \mu } \right)^2 } {2\sigma ^2 }}} \right. \kern-\nulldelimiterspace} {2\sigma ^2 }}}
+\end{equation}
+
+Of course this is provided \textit{as-is} from the standard \code{C++} implementations, and can be freely used for generating numbers.
+
 But, there is a special use for a even distribution nonetheless. Namely, each process ID has to be unique and here we can create a generation algorithm that labels every process with a name that (probably) won't come twice.
 
 Having said all of that, here is what the \textbf{Gaussian Distribution} is used for.
