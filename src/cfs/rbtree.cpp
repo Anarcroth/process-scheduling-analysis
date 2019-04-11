@@ -20,11 +20,27 @@ void rbtree::insert(sched_entity *&node, sched_entity *&parent, process &key)
     balance();
 }
 
-void rbtree::balance(sched_entity *&node)
+void rbtree::rebalance(sched_entity *&node)
 {
     if (root == node) {
 	root->rb = 0;
 	return;
     }
+    while (t->parent && t->parent->rb == 1) {
 
+	auto *aunt;
+	auto *grand_parent = t->parent->parent;
+
+	if (grand_parent->left != node->parent)
+	    aunt = grand_parent->left;
+	else
+	    aunt = grand_parent->right;
+
+	if (!aunt || aunt->rb == 0) { // if aunt doesn't exist or is black
+	    rotate(node);
+	} else { // the aunt is red
+	    color_flip(node);
+	}
+	// rebalance(node);
+    }
 }

@@ -32,10 +32,11 @@ public:
 
 private:
     void insert(sched_entity *&node, process &key);
-    void right_rotation();
-    void left_rotation();
-    void color_flip();
-    void balance(sched_entity *&node);
+    void right_rot(sched_entity *&node);
+    void left_rot(sched_entity *&node);
+    void rotate(sched_entity *&node);
+    void color_flip(sched_entity *&node);
+    void rebalance(sched_entity *&node);
 
     sched_entity *root{};
 };
