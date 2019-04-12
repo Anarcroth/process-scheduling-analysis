@@ -12,8 +12,8 @@ CPPFLAGS = -g -std=c++11 -Wall -lncurses -lpthread
 default: psa
 
 # To create the executable file:
-psa: psa.o process.o commons.o screen.o scheduler.o pool.o dispatcher.o
-	$(CC) $(CPPFLAGS) -o psa.app psa.o process.o commons.o screen.o scheduler.o pool.o dispatcher.o
+psa: psa.o process.o commons.o screen.o scheduler.o pool.o dispatcher.o rbtree.o
+	$(CC) $(CPPFLAGS) -o psa.app psa.o process.o commons.o screen.o scheduler.o pool.o dispatcher.o rbtree.o
 
 # Provide source files:
 psa.o: psa.cpp
@@ -36,6 +36,9 @@ pool.o: pool.cpp
 
 dispatcher.o: dispatcher.cpp
 	$(CC) -c dispatcher.cpp
+
+rbtree.o: cfs/rbtree.cpp
+	$(CC) -c cfs/rbtree.cpp
 
 # Remove executable files, as well as old .o object
 # files and *~ backup files:

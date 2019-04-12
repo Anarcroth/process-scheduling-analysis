@@ -17,7 +17,7 @@ void rbtree::insert(sched_entity *&node, sched_entity *&parent, process &key)
     } else {
 	insert(node->right, node, key);
     }
-    balance();
+    rebalance(node);
 }
 
 void rbtree::rebalance(sched_entity *&node)
@@ -26,10 +26,10 @@ void rbtree::rebalance(sched_entity *&node)
 	root->rb = 0;
 	return;
     }
-    while (t->parent && t->parent->rb == 1) {
+    while (node->parent && node->parent->rb == 1) {
 
-	auto *aunt;
-	auto *grand_parent = t->parent->parent;
+	sched_entity *aunt;
+	auto *grand_parent = node->parent->parent;
 
 	if (grand_parent->left != node->parent)
 	    aunt = grand_parent->left;
@@ -43,4 +43,14 @@ void rbtree::rebalance(sched_entity *&node)
 	}
 	// rebalance(node);
     }
+}
+
+void rbtree::rotate(sched_entity *&node)
+{
+    //if (node->parent)
+}
+
+void rbtree::color_flip(sched_entity *&node)
+{
+
 }

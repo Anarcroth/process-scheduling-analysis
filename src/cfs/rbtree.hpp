@@ -31,7 +31,7 @@ public:
     process get_process();
 
 private:
-    void insert(sched_entity *&node, process &key);
+    void insert(sched_entity *&node, sched_entity *&parent, process &key);
     void right_rot(sched_entity *&node);
     void left_rot(sched_entity *&node);
     void rotate(sched_entity *&node);
