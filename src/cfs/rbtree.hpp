@@ -29,7 +29,9 @@ public:
 
     void insert(int key);
     //process get_process();
+    void show_tree(sched_entity *&node);
 
+    sched_entity *root{};
 private:
     void insert(sched_entity *&node, sched_entity *&parent, int key);
     void right_rot(sched_entity *&node, sched_entity *&grand_parent);
@@ -40,7 +42,6 @@ private:
     void color_flip(sched_entity *&node);
     void rebalance(sched_entity *&node);
 
-    sched_entity *root{};
 };
 
 #endif
