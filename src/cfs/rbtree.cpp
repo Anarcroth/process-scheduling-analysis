@@ -72,10 +72,11 @@ void rbtree::rotate(sched_entity *&node, sched_entity *&grand_parent)
 
 void rbtree::right_rot(sched_entity *&node, sched_entity *&grand_parent)
 {
+    auto *oldgp = grand_parent->parent;
     auto *tmp = grand_parent->left;
     grand_parent->left = tmp->right;
     tmp->right = grand_parent;
-    grand_parent = tmp;
+    oldgp = tmp;
 
     // color flip
     node->parent->rb = 0;
@@ -85,25 +86,11 @@ void rbtree::right_rot(sched_entity *&node, sched_entity *&grand_parent)
 
 void rbtree::left_rot(sched_entity *&node, sched_entity *&grand_parent)
 {
-    printf("\n==============================left rot");
-    printf("\n%s%d", "1 the node is ", node->key);
-    printf("\n%s%d", "1 the node parent is ", node->parent->key);
-    printf("\n%s%d", "1 the grand parent is ", grand_parent->key);
-    printf("\n%s%d", "1 the grand parent parent is ", grand_parent->parent->key);
     auto *oldgp = grand_parent->parent;
     auto *tmp = grand_parent->right;
     grand_parent->right = tmp->left;
     tmp->left = grand_parent;
-    if (tmp == node->parent)
-	printf("\nall the same");
-    //grand_parent = oldgp;
     oldgp->right = tmp;
-    printf("\n%s%d", "2 the node is ", node->key);
-    printf("\n%s%d", "2 the node parent is ", node->parent->key);
-    printf("\n%s%d", "2 the node parent left is ", node->parent->left->key);
-    printf("\n%s%d", "2 the node parent right is ", node->parent->right->key);
-    printf("\n%s%d", "2 the grand parent is ", grand_parent->key);
-    //printf("\n%s%d", "2 the grand parent right is ", grand_parent->right->key);
 
     // color flip
     node->parent->rb = 0;
