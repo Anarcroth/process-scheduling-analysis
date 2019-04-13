@@ -1,11 +1,11 @@
 #ifndef __RBTREE_H_INCLUDED__
 #define __RBTREE_H_INCLUDED__
 
-#include "../process.hpp"
-
+//#include "../process.hpp"
+#include <stdio.h>
 struct sched_entity
 {
-    process key;
+    int key;
 
     sched_entity *parent;
     sched_entity *left;
@@ -13,7 +13,7 @@ struct sched_entity
 
     int rb; // black 0, red 1
 
-    sched_entity(process k, sched_entity *p, sched_entity *l, sched_entity *r, int _rb) :
+    sched_entity(int k, sched_entity *p, sched_entity *l, sched_entity *r, int _rb) :
 	key(k),
 	parent(p),
 	left(l),
@@ -25,18 +25,18 @@ class rbtree
 {
 public:
     rbtree() = default;
-    ~rbtree();
+    //~rbtree();
 
-    void insert(process &key);
-    process get_process();
+    void insert(int key);
+    //process get_process();
 
 private:
-    void insert(sched_entity *&node, sched_entity *&parent, process &key);
+    void insert(sched_entity *&node, sched_entity *&parent, int key);
     void right_rot(sched_entity *&node, sched_entity *&grand_parent);
     void left_rot(sched_entity *&node, sched_entity *&grand_parent);
     void right_left_rot(sched_entity *&node);
     void left_right_rot(sched_entity *&node);
-    void rotate(sched_entity *&node);
+    void rotate(sched_entity *&node, sched_entity *&grand_parent);
     void color_flip(sched_entity *&node);
     void rebalance(sched_entity *&node);
 
