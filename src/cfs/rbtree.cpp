@@ -49,11 +49,11 @@ void rbtree::rebalance(sched_entity *&node)
 	else
 	    aunt = grand_parent->right;
 
-	if (!aunt || aunt->rb == 0) { // if aunt doesn't exist or is black
+	if (!aunt || aunt->rb == 0) // if aunt doesn't exist or is black
 	    rotate(node, grand_parent);
-	} else { // the aunt is red
+	else // the aunt is red
 	    color_flip(node);
-	}
+
 	rebalance(node->parent);
     }
 }
@@ -61,11 +61,11 @@ void rbtree::rebalance(sched_entity *&node)
 void rbtree::rotate(sched_entity *&node, sched_entity *&grand_parent)
 {
     if (grand_parent->right->left == node)
-	right_left_rot(node);
+	right_left_rot(node, grand_parent);
     else if (grand_parent->right->right == node)
 	left_rot(node, grand_parent);
     else if (grand_parent->left->right == node)
-	left_right_rot(node);
+	left_right_rot(node, grand_parent);
     else if (grand_parent->left->left == node)
 	right_rot(node, grand_parent);
 }
@@ -98,16 +98,16 @@ void rbtree::left_rot(sched_entity *&node, sched_entity *&grand_parent)
     node->rb = 1;
 }
 
-void rbtree::right_left_rot(sched_entity *&node)
+void rbtree::right_left_rot(sched_entity *&node, sched_entity *&grand_parent)
 {
-    right_rot(node, node->parent->parent);
-    left_rot(node, node->parent->parent);
+    right_rot(node, grand_parent);
+    left_rot(node, grand_parent);
 }
 
-void rbtree::left_right_rot(sched_entity *&node)
+void rbtree::left_right_rot(sched_entity *&node, sched_entity *&grand_parent)
 {
-    left_rot(node, node->parent->parent);
-    right_rot(node, node->parent->parent);
+    left_rot(node, grand_parent);
+    right_rot(node, grand_parent);
 }
 
 void rbtree::color_flip(sched_entity *&node)
