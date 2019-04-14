@@ -11,6 +11,8 @@ void rbtree::insert(int key)
 void rbtree::show_tree(sched_entity *&node)
 {
     printf("\n%s%d", "node is ", node->key);
+    if (node->parent)
+	printf("\n%s%d", "node parent is ", node->parent->key);
     if (node->left) {
 	printf("\n%s%d", "node left is ", node->left->key);
 	show_tree(node->left);
@@ -49,9 +51,9 @@ void rbtree::rebalance(sched_entity *&node)
 	else
 	    aunt = grand_parent->right;
 
-	if (!aunt || aunt->rb == 0) // if aunt doesn't exist or is black
+	if (!aunt || aunt->rb == 0)
 	    rotate(node, grand_parent);
-	else // the aunt is red
+	else
 	    color_flip(node);
 
 	rebalance(node->parent);
@@ -60,54 +62,83 @@ void rbtree::rebalance(sched_entity *&node)
 
 void rbtree::rotate(sched_entity *&node, sched_entity *&grand_parent)
 {
-    if (grand_parent->right->left == node)
-	right_left_rot(node, grand_parent);
-    else if (grand_parent->right->right == node)
-	left_rot(node, grand_parent);
-    else if (grand_parent->left->right == node)
-	left_right_rot(node, grand_parent);
-    else if (grand_parent->left->left == node)
-	right_rot(node, grand_parent);
+    if (grand_parent->right->left == node) {
+	right_left_rot(node);
+    } else if (grand_parent->right->right == node) {
+        left_rot(grand_parent);
+    } else if (grand_parent->left->right == node) {
+	left_right_rot(node);
+    } else if (grand_parent->left->left == node) {
+	right_rot(grand_parent);
+    }
 }
 
-void rbtree::right_rot(sched_entity *&node, sched_entity *&grand_parent)
+void rbtree::right_rot(sched_entity *&root)
 {
-    auto *oldgp = grand_parent->parent;
-    auto *tmp = grand_parent->left;
-    grand_parent->left = tmp->right;
-    tmp->right = grand_parent;
-    oldgp = tmp;
+    printf("\n===== right rotation");
 
-    // color flip
-    node->parent->rb = 0;
-    node->parent->right->rb = 1;
-    node->rb = 1;
+    auto *oldgp = root->parent;
+    auto *tmp = root->left;
+
+    printf("\n%s%d", "oldgp ", oldgp->key);
+    printf("\n%s%d", "root ", root->key);
+    printf("\n%s%d", "tmp ", tmp->key);
+    if (tmp->right)
+	printf("\n%s%d", "tmp->right ", tmp->right->key);
+    if (root->left)
+	printf("\n%s%d", "root->left ", root->left->key);
+    /////
+    if (tmp->right)
+	root->left = tmp->right;
+    tmp->right = root;
+    if (tmp->right)
+	printf("\n%s%d", "tmp->right ", tmp->right->key);
+    oldgp->right = tmp;
+    printf("\n%s%d", "oldgp right ", oldgp->right->key);
+    /////
+    if (root->right)
+	printf("\n%s%d", "root->right ", root->right->key);
+    if (root->left)
+	printf("\n%s%d", "root->left ", root->left->key);
+    printf("\n%s%d", "root->left ", tmp->right->key);
+    printf("\n===== right rotation");
 }
 
-void rbtree::left_rot(sched_entity *&node, sched_entity *&grand_parent)
+void rbtree::left_rot(sched_entity *&grand_parent)
 {
     auto *oldgp = grand_parent->parent;
     auto *tmp = grand_parent->right;
-    grand_parent->right = tmp->left;
+    if (tmp->left)
+	grand_parent->right = tmp->left;
     tmp->left = grand_parent;
-    oldgp->right = tmp;
+    oldgp->left = tmp;
 
-    // color flip
-    node->parent->rb = 0;
-    node->parent->left->rb = 1;
-    node->rb = 1;
+    printf("\n===== left rotation");
+    printf("\n===== left rotation");
 }
 
-void rbtree::right_left_rot(sched_entity *&node, sched_entity *&grand_parent)
+void rbtree::right_left_rot(sched_entity *&node)
 {
-    right_rot(node, grand_parent);
-    left_rot(node, grand_parent);
+    right_rot(node->parent);
+
+    printf("\n===== right rotation");
+    printf("\n%s%d", "node ", node->key);
+    printf("\n%s%d", "node parent ", node->parent->key);
+    if (node->parent->right)
+	printf("\n%s%d", "node->parent->right ", node->parent->right->key);
+    if (node->parent->left)
+	printf("\n%s%d", "node->parent->left ", node->parent->left->key);
+    printf("\n===== right rotation");
+
+    left_rot(node->parent->parent);
+    color_flip_rev(node->parent->parent);
 }
 
-void rbtree::left_right_rot(sched_entity *&node, sched_entity *&grand_parent)
+void rbtree::left_right_rot(sched_entity *&node)
 {
-    left_rot(node, grand_parent);
-    right_rot(node, grand_parent);
+    left_rot(node->parent);
+    right_rot(node->parent->parent);
+    color_flip_rev(node->parent->parent);
 }
 
 void rbtree::color_flip(sched_entity *&node)
@@ -115,8 +146,17 @@ void rbtree::color_flip(sched_entity *&node)
     node->parent->parent->rb = 1;
     node->parent->parent->left->rb = 0;
     node->parent->parent->right->rb = 0;
-    if (root->rb != 0) // Turn to black.
+    if (root->rb != 0)
 	root->rb = 0;
+}
+
+void rbtree::color_flip_rev(sched_entity *&root)
+{
+    root->rb = 0;
+    if (root->left)
+	root->left->rb = 1;
+    if (root->right)
+	root->right->rb = 1;
 }
 
 int main()
@@ -126,12 +166,19 @@ int main()
     printf("\n%s%d", "Added successfully ", 3);
     rbt.insert(1);
     printf("\n%s%d", "Added successfully ", 1);
-    rbt.insert(6);
-    printf("\n%s%d", "Added successfully ", 6);
+    rbt.insert(5);
+    printf("\n%s%d", "Added successfully ", 5);
     rbt.insert(7);
     printf("\n%s%d", "Added successfully ", 7);
-    rbt.insert(8);
-    printf("\n%s%d", "Added successfully ", 8);
-    rbt.show_tree(rbt.root);
+    rbt.insert(6);
+    printf("\n%s%d", "Added successfully ", 6);
+    //rbt.show_tree(rbt.root);
+    //rbt.insert(8);
+    //printf("\n%s%d", "Added successfully ", 8);
+    //rbt.insert(9);
+    //printf("\n%s%d", "Added successfully ", 9);
+    //rbt.insert(10);
+    //printf("\n%s%d", "Added successfully ", 10);
+    //rbt.show_tree(rbt.root);
     return 0;
 }

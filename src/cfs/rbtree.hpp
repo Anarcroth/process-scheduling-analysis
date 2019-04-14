@@ -37,13 +37,13 @@ private:
     void rebalance(sched_entity *&node);
 
     void rotate(sched_entity *&node, sched_entity *&grand_parent);
-    void right_rot(sched_entity *&node, sched_entity *&grand_parent);
-    void left_rot(sched_entity *&node, sched_entity *&grand_parent);
-    void right_left_rot(sched_entity *&node, sched_entity *&grand_parent);
-    void left_right_rot(sched_entity *&node, sched_entity *&grand_parent);
+    void right_rot(sched_entity *&grand_parent);
+    void left_rot(sched_entity *&grand_parent);
+    void right_left_rot(sched_entity *&node);
+    void left_right_rot(sched_entity *&node);
 
     void color_flip(sched_entity *&node);
-
+    void color_flip_rev(sched_entity *&root);
 };
 
 #endif
