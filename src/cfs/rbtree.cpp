@@ -1,3 +1,5 @@
+#include <iostream>
+
 #include "rbtree.hpp"
 
 void rbtree::insert(int key)
@@ -75,33 +77,45 @@ void rbtree::rotate(sched_entity *&node, sched_entity *&grand_parent)
 
 void rbtree::right_rot(sched_entity *&root)
 {
-    printf("\n===== right rotation");
+    //printf("\n===== right rotation");
 
     auto *oldgp = root->parent;
     auto *tmp = root->left;
 
-    printf("\n%s%d", "oldgp ", oldgp->key);
-    printf("\n%s%d", "root ", root->key);
-    printf("\n%s%d", "tmp ", tmp->key);
-    if (tmp->right)
-	printf("\n%s%d", "tmp->right ", tmp->right->key);
-    if (root->left)
-	printf("\n%s%d", "root->left ", root->left->key);
+    // printf("\n%s%d", "0 oldgp ", oldgp->key);
+    // printf("\n%s%d", "0 root ", root->key);
+    // printf("\n%s%d", "0 tmp ", tmp->key);
+
     /////
     if (tmp->right)
-	root->left = tmp->right;
+	root->left = tmp->right; // should be null
+    else
+	root->left = nullptr;
     tmp->right = root;
-    if (tmp->right)
-	printf("\n%s%d", "tmp->right ", tmp->right->key);
+    // if (tmp->right)
+    // 	printf("\n%s%d", "1 tmp->right ", tmp->right->key);
+    root = tmp;
     oldgp->right = tmp;
-    printf("\n%s%d", "oldgp right ", oldgp->right->key);
+    //printf("\n%s%d", "1 oldgp right ", oldgp->right->key);
     /////
-    if (root->right)
-	printf("\n%s%d", "root->right ", root->right->key);
-    if (root->left)
-	printf("\n%s%d", "root->left ", root->left->key);
-    printf("\n%s%d", "root->left ", tmp->right->key);
-    printf("\n===== right rotation");
+    // if (root)
+    // 	printf("\n%s%d", "2 root ", root->key);
+    // if (root->right)
+    // 	printf("\n%s%d", "2 root->right ", root->right->key);
+    // if (root->left)
+    // 	printf("\n%s%d", "2 root->left ", root->left->key);
+    // if (tmp->right)
+    // 	printf("\n%s%d", "2 tmp->right ", tmp->right->key);
+    // if (tmp)
+    // 	printf("\n%s%d", "2 tmp ", tmp->key);
+    // if (oldgp->right)
+    // 	printf("\n%s%d", "2 oldgp right right ", oldgp->right->right->key);
+    // if (oldgp)
+    // 	printf("\n%s%d", "2 oldgp ", oldgp->key);
+    // if (tmp == oldgp->right && root == tmp)
+    // 	printf("\n%s", "yes they are the same");
+
+    // printf("\n===== oh yeah right rotation");
 }
 
 void rbtree::left_rot(sched_entity *&grand_parent)
@@ -121,15 +135,17 @@ void rbtree::right_left_rot(sched_entity *&node)
 {
     right_rot(node->parent);
 
-    printf("\n===== right rotation");
-    printf("\n%s%d", "node ", node->key);
-    printf("\n%s%d", "node parent ", node->parent->key);
-    if (node->parent->right)
-	printf("\n%s%d", "node->parent->right ", node->parent->right->key);
-    if (node->parent->left)
-	printf("\n%s%d", "node->parent->left ", node->parent->left->key);
-    printf("\n===== right rotation");
-
+    printf("\n===== after right rotation");
+    if (node)
+     	printf("\n%s%d", "node ", node->key);
+    if (node->parent)
+     	printf("\n%s%d", "node parent ", node->parent->key);
+    // if (node->parent->right)
+    // 	printf("\n%s%d", "node->parent->right ", node->parent->right->key);
+    // if (node->parent->left)
+    // 	printf("\n%s%d", "node->parent->left ", node->parent->left->key);
+    printf("\n===== after right rotation");
+    std::cin.get();
     left_rot(node->parent->parent);
     color_flip_rev(node->parent->parent);
 }
