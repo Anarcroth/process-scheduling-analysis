@@ -13,13 +13,15 @@ void rbtree::insert(int key)
 void rbtree::show_tree(sched_entity *&node)
 {
     printf("\n%s%d", "node is ", node->key);
-    std::cin.get();
+
     if (node->parent)
 	printf("\n%s%d", "node parent is ", node->parent->key);
+
     if (node->left) {
 	printf("\n%s%d", "node left is ", node->left->key);
 	show_tree(node->left);
     }
+
     if (node->right) {
 	printf("\n%s%d", "node right is ", node->right->key);
 	show_tree(node->right);
@@ -97,46 +99,28 @@ void rbtree::right_rot(sched_entity *&root)
 
 void rbtree::left_rot(sched_entity *&root)
 {
+    auto *grand_p = root->parent;
     auto *tmp = root->right;
     if (tmp->left)
-    	root->right = tmp->left;
+	root->right = tmp->left;
     tmp->left = root;
-    root = tmp;
-    // // printf("\n%s%d", "1 tmp right ", tmp->right->key);
-    // // printf("\n%s%d", "1 oldgp right ", oldgp->right->key);
-    // if (root)
-    // 	printf("\n%s%d", "0 root ", root->key);
-    // if (root->right)
-    // 	printf("\n%s%d", "0 root->right ", root->right->key);
-    // if (root->left)
-    // 	printf("\n%s%d", "0 root->left ", root->left->key);
-    // if (tmp)
-    // 	printf("\n%s%d", "0 tmp ", tmp->key);
-    // if (tmp->right)
-    // 	printf("\n%s%d", "0 tmp R ", tmp->right->key);
-    // if (tmp->left)
-    // 	printf("\n%s%d", "0 tmp L ", tmp->left->key);
-    // if (oldgp->right)
-    // 	printf("\n%s%d", "0 oldgp right right ", oldgp->left->key);
-    // if (oldgp)
-    // 	printf("\n%s%d", "0 oldgp ", oldgp->key);
-    // if (tmp == oldgp->right)
-    // 	printf("\n%s", "yes they are the same");
-    // printf("\n===== left rotation");
+    root->parent = tmp;
+    if (root->right)
+	root->right->parent = root;
+    if (grand_p) {
+	if (root == grand_p->left)
+	    grand_p->left = tmp;
+	else if (root == grand_p->right)
+	    grand_p->right = tmp;
+    }
+    tmp->parent = grand_p;
 }
 
 void rbtree::right_left_rot(sched_entity *&node)
 {
     right_rot(node->parent);
-    printf("\n%s%d", " ", node->key);
-    std::cin.get();
-    // node->parent = node->right->parent; // these two seem to be needed
-    // node->right->parent = node;
-
     left_rot(node->parent);
-    node->parent = node->left->parent;
-    node->left->parent = node;
-    printf("\n%s%d", " ", node->left->right->key);
+
     color_flip_rev(node);
 }
 
