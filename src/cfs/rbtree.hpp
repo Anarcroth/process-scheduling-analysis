@@ -37,8 +37,8 @@ private:
     void rebalance(sched_entity *&node);
 
     void rotate(sched_entity *&node, sched_entity *&grand_parent);
-    void right_rot(sched_entity *&grand_parent);
-    void left_rot(sched_entity *&grand_parent);
+    void right_rot(sched_entity *&root);
+    void left_rot(sched_entity *&root);
     void right_left_rot(sched_entity *&node);
     void left_right_rot(sched_entity *&node);
 
