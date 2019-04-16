@@ -13,6 +13,7 @@ void rbtree::insert(int key)
 void rbtree::show_tree(sched_entity *&node)
 {
     printf("\n%s%d", "node is ", node->key);
+    std::cin.get();
     if (node->parent)
 	printf("\n%s%d", "node parent is ", node->parent->key);
     if (node->left) {
@@ -77,24 +78,30 @@ void rbtree::rotate(sched_entity *&node, sched_entity *&grand_parent)
 
 void rbtree::right_rot(sched_entity *&root)
 {
-    auto *oldgp = root->parent;
+    auto *grand_p = root->parent;
     auto *tmp = root->left;
     if (tmp->right)
 	root->left = tmp->right;
-    //else
-    //root->left = nullptr;
     tmp->right = root;
-    root->parent->right = tmp;
+    root->parent = tmp;
+    if (root->left)
+	root->left->parent = root;
+    if (grand_p) {
+	if (root == grand_p->left)
+	    grand_p->left = tmp;
+	else if (root == grand_p->right)
+	    grand_p->right = tmp;
+    }
+    tmp->parent = grand_p;
 }
 
 void rbtree::left_rot(sched_entity *&root)
 {
-    auto *oldgp = root->parent;
     auto *tmp = root->right;
     if (tmp->left)
     	root->right = tmp->left;
     tmp->left = root;
-    root->parent->right = tmp;
+    root = tmp;
     // // printf("\n%s%d", "1 tmp right ", tmp->right->key);
     // // printf("\n%s%d", "1 oldgp right ", oldgp->right->key);
     // if (root)
@@ -121,13 +128,15 @@ void rbtree::left_rot(sched_entity *&root)
 void rbtree::right_left_rot(sched_entity *&node)
 {
     right_rot(node->parent);
-    node->parent = node->right->parent; // these two seem to be needed
-    node->right->parent = node;
+    printf("\n%s%d", " ", node->key);
+    std::cin.get();
+    // node->parent = node->right->parent; // these two seem to be needed
+    // node->right->parent = node;
 
     left_rot(node->parent);
     node->parent = node->left->parent;
     node->left->parent = node;
-
+    printf("\n%s%d", " ", node->left->right->key);
     color_flip_rev(node);
 }
 
@@ -169,7 +178,7 @@ int main()
     printf("\n%s%d", "Added successfully ", 7);
     rbt.insert(6);
     printf("\n%s%d", "Added successfully ", 6);
-    //rbt.show_tree(rbt.root);
+    rbt.show_tree(rbt.root);
     //rbt.insert(8);
     //printf("\n%s%d", "Added successfully ", 8);
     //rbt.insert(9);
