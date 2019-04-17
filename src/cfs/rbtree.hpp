@@ -36,16 +36,16 @@ private:
     void insert(sched_entity *&node, sched_entity *&parent, int key);
     void rebalance(sched_entity *&node);
 
-    sched_entity *rotate(sched_entity *&node, sched_entity *&grand_parent);
-    sched_entity *right_rot(sched_entity *&root);
-    sched_entity *left_rot(sched_entity *&root);
-    sched_entity *right_left_rot(sched_entity *&node);
-    sched_entity *left_right_rot(sched_entity *&node);
+    sched_entity *rotate(sched_entity *node, sched_entity *grand_parent);
+    sched_entity *right_rot(sched_entity *root);
+    sched_entity *left_rot(sched_entity *root);
+    sched_entity *right_left_rot(sched_entity *node);
+    sched_entity *left_right_rot(sched_entity *node);
 
-    sched_entity *color_flip(sched_entity *&node);
-    sched_entity *color_flip_rev(sched_entity *&root);
+    sched_entity *color_flip(sched_entity *node);
+    sched_entity *color_flip_rev(sched_entity *root);
 
-    sched_entity *grandpa(sched_entity *root);
+    sched_entity *parent(sched_entity *root);
 };
 
 #endif
