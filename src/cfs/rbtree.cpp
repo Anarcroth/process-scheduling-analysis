@@ -7,7 +7,7 @@ void rbtree::insert(int key)
     if (root != nullptr)
     	insert(root, root, key);
     else
-    	root = new sched_entity(key, nullptr, nullptr, nullptr, 0);
+    	root = new sched_entity(key, nullptr, nullptr, nullptr, col::BLACK);
 }
 
 sched_entity *rbtree::parent(sched_entity *root)
@@ -28,7 +28,7 @@ void rbtree::show_tree(sched_entity *&node)
 {
     printf("\n%s", "======");
     printf("\n%s%d", "node is ", node->key);
-    printf("\n%s%d", "node is color ", node->rb);
+    printf("\n%s%hu", "node is color ", node->rb);
 
     if (node->parent)
 	printf("\n%s%d", "node parent is ", node->parent->key);
@@ -47,7 +47,7 @@ void rbtree::show_tree(sched_entity *&node)
 void rbtree::insert(sched_entity *&node, sched_entity *&parent, int key)
 {
     if (!node) {
-	node = new sched_entity(key, parent, nullptr, nullptr, 1);
+	node = new sched_entity(key, parent, nullptr, nullptr, col::RED);
 	rebalance(node);
     } else if (key <= node->key) {
 	insert(node->left, node, key);
@@ -62,12 +62,12 @@ void rbtree::rebalance(sched_entity *&node)
 	return;
 
     if (root == node) {
-	root->rb = 0;
+	root->rb = col::BLACK;
 	return;
     }
 
     sched_entity *nnode = node;
-    if (node->rb == 1 && node->parent->rb == 1) {
+    if (node->rb == col::RED && node->parent->rb == col::RED) {
 	auto *grand_p = parent(node->parent);
 	sched_entity *aunt;
 
@@ -76,7 +76,7 @@ void rbtree::rebalance(sched_entity *&node)
 	else
 	    aunt = grand_p->right;
 
-	if (!aunt || aunt->rb == 0)
+	if (!aunt || aunt->rb == col::BLACK)
 	    nnode = rotate(node, grand_p);
 	else
 	    nnode = color_flip(node);
@@ -158,21 +158,21 @@ sched_entity *rbtree::left_right_rot(sched_entity *&node)
 
 sched_entity *rbtree::color_flip(sched_entity *node)
 {
-    node->parent->parent->rb = 1;
-    node->parent->parent->left->rb = 0;
-    node->parent->parent->right->rb = 0;
-    if (root->rb != 0)
-	root->rb = 0;
+    node->parent->parent->rb = col::RED;
+    node->parent->parent->left->rb = col::BLACK;
+    node->parent->parent->right->rb = col::BLACK;
+    if (root->rb != col::BLACK)
+	root->rb = col::BLACK;
     return node;
 }
 
 sched_entity *rbtree::color_flip_rev(sched_entity *root)
 {
-    root->rb = 0;
+    root->rb = col::BLACK;
     if (root->left)
-	root->left->rb = 1;
+	root->left->rb = col::RED;
     if (root->right)
-	root->right->rb = 1;
+	root->right->rb = col::RED;
     return root;
 }
 
@@ -193,9 +193,9 @@ void rbtree::delete_one_child(sched_entity *root)
     sched_entity* child = (root->right) ? root->left : root->right;
 
     replace_node(root, child);
-    if (root->rb == 0) {
-	if (child->rb == 1)
-	    child->rb = 0;
+    if (root->rb == col::BLACK) {
+	if (child->rb == col::RED)
+	    child->rb = col::BLACK;
 	else
 	    del1(child);
     }
@@ -212,9 +212,9 @@ void rbtree::del2(sched_entity *root)
 {
     auto* sib = sibling(root);
 
-    if (sib->rb == 1) {
-	root->parent->rb = 1;
-	sib->rb = 0;
+    if (sib->rb == col::RED) {
+	root->parent->rb = col::RED;
+	sib->rb = col::BLACK;
 	if (root == root->parent->left)
 	    left_rot(root->parent);
 	else
@@ -227,11 +227,11 @@ void rbtree::del3(sched_entity *root)
 {
     auto* sib = sibling(root);
 
-    if ((root->parent->rb == 0) &&
-	(sib->rb == 0) &&
-	(sib->left->rb == 0) &&
-	(sib->right->rb == 0)) {
-	sib->rb = 1;
+    if ((root->parent->rb == col::BLACK) &&
+	(sib->rb == col::BLACK) &&
+	(sib->left->rb == col::BLACK) &&
+	(sib->right->rb == col::BLACK)) {
+	sib->rb = col::RED;
 	del1(root->parent);
     } else {
 	del4(root);
@@ -242,12 +242,12 @@ void rbtree::del4(sched_entity *root)
 {
     auto* sib = sibling(root);
 
-    if ((root->parent->rb == 1) &&
-	(sib->rb == 0) &&
-	(sib->left->rb == 0) &&
-	(sib->right->rb == 0)) {
-	sib->rb = 1;
-	root->parent->rb = 0;
+    if ((root->parent->rb == col::RED) &&
+	(sib->rb == col::BLACK) &&
+	(sib->left->rb == col::BLACK) &&
+	(sib->right->rb == col::BLACK)) {
+	sib->rb = col::RED;
+	root->parent->rb = col::BLACK;
     } else {
 	del5(root);
     }
@@ -257,18 +257,18 @@ void rbtree::del5(sched_entity *root)
 {
     auto* sib = sibling(root);
 
-    if (sib->rb == 0) {
+    if (sib->rb == col::BLACK) {
 	if ((root == root->parent->left) &&
-	    (sib->right->rb == 0) &&
-	    (sib->left->rb == 1)) {
-	    sib->rb = 1;
-	    sib->left->rb = 0;
+	    (sib->right->rb == col::BLACK) &&
+	    (sib->left->rb == col::RED)) {
+	    sib->rb = col::RED;
+	    sib->left->rb = col::BLACK;
 	    right_rot(sib);
 	} else if ((root == root->parent->right) &&
-		   (sib->left->rb == 0) &&
-		   (sib->right->rb == 1)) {
-	    sib->rb = 1;
-	    sib->right->rb = 0;
+		   (sib->left->rb == col::BLACK) &&
+		   (sib->right->rb == col::RED)) {
+	    sib->rb = col::RED;
+	    sib->right->rb = col::BLACK;
 	    left_rot(sib);
 	}
     }
@@ -280,13 +280,13 @@ void rbtree::del6(sched_entity *root)
     auto* sib = sibling(root);
 
     sib->rb = root->parent->rb;
-    root->parent->rb = 0;
+    root->parent->rb = col::BLACK;
 
     if (root == root->parent->left) {
-	sib->right->rb = 0;
+	sib->right->rb = col::BLACK;
 	left_rot(root->parent);
     } else {
-	sib->left->rb = 0;
+	sib->left->rb = col::BLACK;
 	right_rot(root->parent);
     }
 }

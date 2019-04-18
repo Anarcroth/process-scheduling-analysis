@@ -3,6 +3,13 @@
 
 //#include "../process.hpp"
 #include <stdio.h>
+
+enum class col : unsigned short
+{
+    BLACK,
+    RED
+};
+
 struct sched_entity
 {
     int key;
@@ -11,9 +18,9 @@ struct sched_entity
     sched_entity *left;
     sched_entity *right;
 
-    int rb; // black 0, red 1
+    col rb;
 
-    sched_entity(int k, sched_entity *p, sched_entity *l, sched_entity *r, int _rb) :
+    sched_entity(int k, sched_entity *p, sched_entity *l, sched_entity *r, col _rb) :
 	key(k),
 	parent(p),
 	left(l),
