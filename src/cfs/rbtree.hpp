@@ -46,6 +46,15 @@ private:
     sched_entity *color_flip_rev(sched_entity *root);
 
     sched_entity *parent(sched_entity *root);
+
+    void replace_node(sched_entity *root, sched_entity *child);
+    void delete_one_child(sched_entity *root);
+    void del1(sched_entity *root);
+    void del2(sched_entity *root);
+    void del3(sched_entity *root);
+    void del4(sched_entity *root);
+    void del5(sched_entity *root);
+    void del6(sched_entity *root);
 };
 
 #endif
