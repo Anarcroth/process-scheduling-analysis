@@ -48,19 +48,15 @@ class rbtree
 {
 public:
     rbtree() = default;
-    //~rbtree();
 
     void insert(int key);
-    //process get_process();
     void show_tree(sched_entity *&node);
 
     sched_entity *root{};
     sched_entity *print_smallest(sched_entity *node);
-    void delete_one_child(sched_entity *root);
-    sched_entity *deleten(sched_entity *node);
-    sched_entity *BSTreplace(sched_entity *x);
-    void deleteNode(sched_entity *v);
-    void fixDoubleBlack(sched_entity *x);
+
+    void delete_node(sched_entity *node);
+
 private:
     void insert(sched_entity *&node, sched_entity *&parent, int key);
     void rebalance(sched_entity *&node);
@@ -77,14 +73,8 @@ private:
     sched_entity *parent(sched_entity *root);
     sched_entity *sibling(sched_entity *root);
 
-    void replace_node(sched_entity *root, sched_entity *child);
-    void del1(sched_entity *root);
-    void del2(sched_entity *root);
-    void del3(sched_entity *root);
-    void del4(sched_entity *root);
-    void del5(sched_entity *root);
-    void del6(sched_entity *root);
-    void deleteFixUp(sched_entity *node, sched_entity *nodeParent, bool nodeIsLeft);
+    sched_entity *replace(sched_entity *node);
+    void fix_dubs_black(sched_entity *node);
 };
 
 #endif

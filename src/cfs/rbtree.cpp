@@ -177,252 +177,111 @@ sched_entity *rbtree::color_flip_rev(sched_entity *root)
     return root;
 }
 
-void rbtree::replace_node(sched_entity *root, sched_entity *child)
+sched_entity *rbtree::replace(sched_entity *node)
 {
-    printf("\n%s%d", "will delete ", root->key);
-    child->parent = parent(root);//->parent;
-    std::cin.get();
-    if (root == root->parent->left)
-        root->parent->left = child;
+    if (node->left && node->right)
+	return parent(node->right);
+    if (!node->left && !node->right)
+	return nullptr;
+    if (node->left)
+	return node->left;
     else
-        root->parent->right = child;
+	return node->right;
 }
 
-void rbtree::delete_one_child(sched_entity *root)
+void rbtree::delete_node(sched_entity *node)
 {
-    printf("\n%s%d", "will delete ", root->key);
-    sched_entity* child = (root->right) ? root->left : root->right;
-    if (child)
-	printf("\n%s%d", "the child is ", child->key);
-    replace_node(root, child);
-    if (root->rb == col::BLACK) {
-	if (child->rb == col::RED)
-	    child->rb = col::BLACK;
-	else
-	    del1(child);
-    }
-    free(root);
-}
+    sched_entity *rnode = replace(node);
 
-void rbtree::del1(sched_entity *root)
-{
-    if (root->parent)
-	del2(root);
-}
+    bool dubblack = ((!rnode || rnode->rb == col::BLACK)
+		    && (node->rb == col::BLACK));
 
-void rbtree::del2(sched_entity *root)
-{
-    auto* sib = sibling(root);
+    sched_entity *par = node->parent;
 
-    if (sib->rb == col::RED) {
-	root->parent->rb = col::RED;
-	sib->rb = col::BLACK;
-	if (root == root->parent->left)
-	    left_rot(root->parent);
-	else
-	    right_rot(root->parent);
-    }
-    del3(root);
-}
-
-void rbtree::del3(sched_entity *root)
-{
-    auto* sib = sibling(root);
-
-    if ((root->parent->rb == col::BLACK) &&
-	(sib->rb == col::BLACK) &&
-	(sib->left->rb == col::BLACK) &&
-	(sib->right->rb == col::BLACK)) {
-	sib->rb = col::RED;
-	del1(root->parent);
-    } else {
-	del4(root);
-    }
-}
-
-void rbtree::del4(sched_entity *root)
-{
-    auto* sib = sibling(root);
-
-    if ((root->parent->rb == col::RED) &&
-	(sib->rb == col::BLACK) &&
-	(sib->left->rb == col::BLACK) &&
-	(sib->right->rb == col::BLACK)) {
-	sib->rb = col::RED;
-	root->parent->rb = col::BLACK;
-    } else {
-	del5(root);
-    }
-}
-
-void rbtree::del5(sched_entity *root)
-{
-    auto* sib = sibling(root);
-
-    if (sib->rb == col::BLACK) {
-	if ((root == root->parent->left) &&
-	    (sib->right->rb == col::BLACK) &&
-	    (sib->left->rb == col::RED)) {
-	    sib->rb = col::RED;
-	    sib->left->rb = col::BLACK;
-	    right_rot(sib);
-	} else if ((root == root->parent->right) &&
-		   (sib->left->rb == col::BLACK) &&
-		   (sib->right->rb == col::RED)) {
-	    sib->rb = col::RED;
-	    sib->right->rb = col::BLACK;
-	    left_rot(sib);
-	}
-    }
-    del6(root);
-}
-
-void rbtree::del6(sched_entity *root)
-{
-    auto* sib = sibling(root);
-
-    sib->rb = root->parent->rb;
-    root->parent->rb = col::BLACK;
-
-    if (root == root->parent->left) {
-	sib->right->rb = col::BLACK;
-	left_rot(root->parent);
-    } else {
-	sib->left->rb = col::BLACK;
-	right_rot(root->parent);
-    }
-}
-
-// find node that replaces a deleted node in BST
-sched_entity *rbtree::BSTreplace(sched_entity *x) {
-    // when node have 2 children
-    if (x->left != NULL and x->right != NULL)
-	return parent(x->right);
-
-    // when leaf
-    if (x->left == NULL and x->right == NULL)
-	return NULL;
-
-    // when single child
-    if (x->left != NULL)
-	return x->left;
-    else
-	return x->right;
-}
-
-  // deletes the given node
-void rbtree::deleteNode(sched_entity *v) {
-    sched_entity *u = BSTreplace(v);
-
-    // True when u and v are both black
-    bool uvBlack = ((u == NULL or u->rb == col::BLACK) and (v->rb == col::BLACK));
-    sched_entity *parent = v->parent;
-
-    if (u == NULL) {
-	// u is NULL therefore v is leaf
-	if (v == root) {
-	    // v is root, making root null
-	    root = NULL;
+    if (!rnode) {
+	if (node == root) {
+	    root = nullptr;
 	} else {
-	    if (uvBlack) {
-		// u and v both black
-		// v is leaf, fix double black at v
-		fixDoubleBlack(v);
+	    if (dubblack) {
+		fix_dubs_black(node);
 	    } else {
-		// u or v is red
-		if (v->sibling() != NULL)
-		    // sibling is not null, make it red"
-		    v->sibling()->rb = col::RED;
+		if (node->sibling())
+		    node->sibling()->rb = col::RED;
 	    }
 
-	    // delete v from the tree
-	    if (v == v->parent->left) {
-		parent->left = NULL;
-	    } else {
-		parent->right = NULL;
-	    }
+	    if (node == node->parent->left)
+		par->left = nullptr;
+	    else
+		par->right = nullptr;
 	}
-	delete v;
+	delete node;
 	return;
     }
 
-    if (v->left == NULL or v->right == NULL) {
-	// v has 1 child
-	if (v == root) {
-	    // v is root, assign the value of u to v, and delete u
-	    v->key = u->key;
-	    v->left = v->right = NULL;
-	    delete u;
+    if (node->left == nullptr || node->right == nullptr) {
+	if (node == root) {
+	    node->key = rnode->key;
+	    node->left = node->right = nullptr;
+	    delete rnode;
 	} else {
-	    // Detach v from tree and move u up
-	    if (v == v->parent->left) {
-		parent->left = u;
+	    if (node == node->parent->left) {
+		par->left = rnode;
 	    } else {
-		parent->right = u;
+		par->right = rnode;
 	    }
-	    delete v;
-	    u->parent = parent;
-	    if (uvBlack) {
-		// u and v both black, fix double black at u
-		fixDoubleBlack(u);
-	    } else {
-		// u or v red, rb u black
-		u->rb = col::BLACK;
-	    }
+	    delete node;
+	    rnode->parent = par;
+	    if (dubblack)
+		fix_dubs_black(rnode);
+	    else
+		rnode->rb = col::BLACK;
 	}
 	return;
     }
 
-    // v has 2 children, swap values with successor and recurse
-    std::swap(u->key, v->key);
-    deleteNode(u);
+    std::swap(rnode->key, node->key);
+    delete_node(rnode);
 }
 
-void rbtree::fixDoubleBlack(sched_entity *x) {
-    if (x == root)
+void rbtree::fix_dubs_black(sched_entity *node)
+{
+    if (node == root)
 	return;
 
-    sched_entity *sibling = x->sibling(), *parent = x->parent;
-    if (sibling == NULL) {
-	// No sibiling, double black pushed up
-	fixDoubleBlack(parent);
+    sched_entity *sibling = node->sibling();
+    sched_entity *parent = node->parent;
+    if (!sibling) {
+	fix_dubs_black(parent);
     } else {
 	if (sibling->rb == col::RED) {
-	    // Sibling red
 	    parent->rb = col::RED;
 	    sibling->rb = col::BLACK;
-	    if (sibling->isOnLeft()) {
-		// left case
+
+	    if (sibling->isOnLeft())
 		right_rot(parent);
-	    } else {
-		// right case
+	    else
 		left_rot(parent);
-	    }
-	    fixDoubleBlack(x);
+
+	    fix_dubs_black(node);
+
 	} else {
-	    // Sibling black
 	    if (sibling->hasRedChild()) {
-		// at least 1 red children
-		if (sibling->left != NULL and sibling->left->rb == col::RED) {
+		if (sibling->left && sibling->left->rb == col::RED) {
 		    if (sibling->isOnLeft()) {
-			// left left
 			sibling->left->rb = sibling->rb;
 			sibling->rb = parent->rb;
 			right_rot(parent);
 		    } else {
-			// right left
 			sibling->left->rb = parent->rb;
 			right_rot(sibling);
 			left_rot(parent);
 		    }
 		} else {
 		    if (sibling->isOnLeft()) {
-			// left right
 			sibling->right->rb = parent->rb;
 			left_rot(sibling);
 			right_rot(parent);
 		    } else {
-			// right right
 			sibling->right->rb = sibling->rb;
 			sibling->rb = parent->rb;
 			left_rot(parent);
@@ -430,10 +289,9 @@ void rbtree::fixDoubleBlack(sched_entity *x) {
 		}
 		parent->rb = col::BLACK;
 	    } else {
-		// 2 black children
 		sibling->rb = col::RED;
 		if (parent->rb == col::BLACK)
-		    fixDoubleBlack(parent);
+		    fix_dubs_black(parent);
 		else
 		    parent->rb = col::BLACK;
 	    }
@@ -470,12 +328,12 @@ int main()
     //rbt.show_tree(rbt.root);
     auto *smallest = rbt.print_smallest(rbt.root);
     // printf("\n%s%d", "--------------------node smallest ", smallest->parent->key);
-    rbt.deleteNode(smallest);
+    rbt.delete_node(smallest);
     auto *s = rbt.print_smallest(rbt.root);
     printf("\n%s%d", "--------------------node smallest ", s->key);
-    rbt.deleteNode(s);
+    rbt.delete_node(s);
     auto *a = rbt.print_smallest(rbt.root);
-    rbt.deleteNode(a);
+    rbt.delete_node(a);
     rbt.show_tree(rbt.root);
     return 0;
 }
