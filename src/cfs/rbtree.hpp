@@ -19,22 +19,6 @@ struct sched_entity
     sched_entity *right;
 
     col rb;
-    bool isOnLeft() { return this == parent->left; }
-    // returns pointer to sibling
-    sched_entity *sibling() {
-	// sibling null if no parent
-	if (parent == NULL)
-	    return NULL;
-
-	if (this == parent->left)
-	    return parent->right;
-	return parent->left;
-    }
-
-    bool hasRedChild() {
-	return (left != NULL and left->rb == col::RED) or
-	    (right != NULL and right->rb == col::RED);
-    }
 
     sched_entity(int k, sched_entity *p, sched_entity *l, sched_entity *r, col _rb) :
 	key(k),
@@ -72,6 +56,8 @@ private:
 
     sched_entity *parent(sched_entity *root);
     sched_entity *sibling(sched_entity *root);
+    bool is_left(sched_entity *node);
+    bool has_red_child(sched_entity *node);
 
     sched_entity *replace(sched_entity *node);
     void fix_dubs_black(sched_entity *node);

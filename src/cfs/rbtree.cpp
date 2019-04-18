@@ -25,6 +25,17 @@ sched_entity *rbtree::sibling(sched_entity *root)
 	return par->left;
 }
 
+bool rbtree::is_left(sched_entity *node)
+{
+    return node == node->parent->left;
+}
+
+bool rbtree::has_red_child(sched_entity *node)
+{
+    return (node->left && node->left->rb == col::RED) ||
+	(node->right && node->right->rb == col::RED);
+}
+
 void rbtree::show_tree(sched_entity *&node)
 {
     printf("\n%s", "======");
@@ -196,7 +207,7 @@ void rbtree::delete_node(sched_entity *node)
     bool dubblack = ((!rnode || rnode->rb == col::BLACK)
 		    && (node->rb == col::BLACK));
 
-    sched_entity *par = node->parent;
+    sched_entity *par = parent(node);
 
     if (!rnode) {
 	if (node == root) {
@@ -205,8 +216,8 @@ void rbtree::delete_node(sched_entity *node)
 	    if (dubblack) {
 		fix_dubs_black(node);
 	    } else {
-		if (node->sibling())
-		    node->sibling()->rb = col::RED;
+		if (sibling(node))
+		    sibling(node)->rb = col::RED;
 	    }
 
 	    if (node == node->parent->left)
@@ -248,52 +259,52 @@ void rbtree::fix_dubs_black(sched_entity *node)
     if (node == root)
 	return;
 
-    sched_entity *sibling = node->sibling();
-    sched_entity *parent = node->parent;
-    if (!sibling) {
-	fix_dubs_black(parent);
+    sched_entity *sib = sibling(node);
+    sched_entity *par = parent(node);
+    if (!sib) {
+	fix_dubs_black(par);
     } else {
-	if (sibling->rb == col::RED) {
-	    parent->rb = col::RED;
-	    sibling->rb = col::BLACK;
+	if (sib->rb == col::RED) {
+	    par->rb = col::RED;
+	    sib->rb = col::BLACK;
 
-	    if (sibling->isOnLeft())
-		right_rot(parent);
+	    if (is_left(sib))
+		right_rot(par);
 	    else
-		left_rot(parent);
+		left_rot(par);
 
 	    fix_dubs_black(node);
 
 	} else {
-	    if (sibling->hasRedChild()) {
-		if (sibling->left && sibling->left->rb == col::RED) {
-		    if (sibling->isOnLeft()) {
-			sibling->left->rb = sibling->rb;
-			sibling->rb = parent->rb;
-			right_rot(parent);
+	    if (has_red_child(sib)) {
+		if (sib->left && sib->left->rb == col::RED) {
+		    if (is_left(sib)) {
+			sib->left->rb = sib->rb;
+			sib->rb = par->rb;
+			right_rot(par);
 		    } else {
-			sibling->left->rb = parent->rb;
-			right_rot(sibling);
-			left_rot(parent);
+			sib->left->rb = par->rb;
+			right_rot(sib);
+			left_rot(par);
 		    }
 		} else {
-		    if (sibling->isOnLeft()) {
-			sibling->right->rb = parent->rb;
-			left_rot(sibling);
-			right_rot(parent);
+		    if (is_left(sib)) {
+			sib->right->rb = par->rb;
+			left_rot(sib);
+			right_rot(par);
 		    } else {
-			sibling->right->rb = sibling->rb;
-			sibling->rb = parent->rb;
-			left_rot(parent);
+			sib->right->rb = sib->rb;
+			sib->rb = par->rb;
+			left_rot(par);
 		    }
 		}
-		parent->rb = col::BLACK;
+		par->rb = col::BLACK;
 	    } else {
-		sibling->rb = col::RED;
-		if (parent->rb == col::BLACK)
-		    fix_dubs_black(parent);
+		sib->rb = col::RED;
+		if (par->rb == col::BLACK)
+		    fix_dubs_black(par);
 		else
-		    parent->rb = col::BLACK;
+		    par->rb = col::BLACK;
 	    }
 	}
     }
