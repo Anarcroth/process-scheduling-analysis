@@ -19,6 +19,22 @@ struct sched_entity
     sched_entity *right;
 
     col rb;
+    bool isOnLeft() { return this == parent->left; }
+    // returns pointer to sibling
+    sched_entity *sibling() {
+	// sibling null if no parent
+	if (parent == NULL)
+	    return NULL;
+
+	if (this == parent->left)
+	    return parent->right;
+	return parent->left;
+    }
+
+    bool hasRedChild() {
+	return (left != NULL and left->rb == col::RED) or
+	    (right != NULL and right->rb == col::RED);
+    }
 
     sched_entity(int k, sched_entity *p, sched_entity *l, sched_entity *r, col _rb) :
 	key(k),
@@ -39,6 +55,12 @@ public:
     void show_tree(sched_entity *&node);
 
     sched_entity *root{};
+    sched_entity *print_smallest(sched_entity *node);
+    void delete_one_child(sched_entity *root);
+    sched_entity *deleten(sched_entity *node);
+    sched_entity *BSTreplace(sched_entity *x);
+    void deleteNode(sched_entity *v);
+    void fixDoubleBlack(sched_entity *x);
 private:
     void insert(sched_entity *&node, sched_entity *&parent, int key);
     void rebalance(sched_entity *&node);
@@ -56,13 +78,13 @@ private:
     sched_entity *sibling(sched_entity *root);
 
     void replace_node(sched_entity *root, sched_entity *child);
-    void delete_one_child(sched_entity *root);
     void del1(sched_entity *root);
     void del2(sched_entity *root);
     void del3(sched_entity *root);
     void del4(sched_entity *root);
     void del5(sched_entity *root);
     void del6(sched_entity *root);
+    void deleteFixUp(sched_entity *node, sched_entity *nodeParent, bool nodeIsLeft);
 };
 
 #endif

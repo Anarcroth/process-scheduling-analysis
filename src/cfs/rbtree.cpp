@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 
 #include "rbtree.hpp"
 
@@ -178,7 +179,9 @@ sched_entity *rbtree::color_flip_rev(sched_entity *root)
 
 void rbtree::replace_node(sched_entity *root, sched_entity *child)
 {
-    child->parent = root->parent;
+    printf("\n%s%d", "will delete ", root->key);
+    child->parent = parent(root);//->parent;
+    std::cin.get();
     if (root == root->parent->left)
         root->parent->left = child;
     else
@@ -187,11 +190,10 @@ void rbtree::replace_node(sched_entity *root, sched_entity *child)
 
 void rbtree::delete_one_child(sched_entity *root)
 {
-    /*
-     * Precondition: n has at most one non-leaf child.
-     */
+    printf("\n%s%d", "will delete ", root->key);
     sched_entity* child = (root->right) ? root->left : root->right;
-
+    if (child)
+	printf("\n%s%d", "the child is ", child->key);
     replace_node(root, child);
     if (root->rb == col::BLACK) {
 	if (child->rb == col::RED)
@@ -199,7 +201,7 @@ void rbtree::delete_one_child(sched_entity *root)
 	else
 	    del1(child);
     }
-    //free(n);
+    free(root);
 }
 
 void rbtree::del1(sched_entity *root)
@@ -291,6 +293,161 @@ void rbtree::del6(sched_entity *root)
     }
 }
 
+// find node that replaces a deleted node in BST
+sched_entity *rbtree::BSTreplace(sched_entity *x) {
+    // when node have 2 children
+    if (x->left != NULL and x->right != NULL)
+	return parent(x->right);
+
+    // when leaf
+    if (x->left == NULL and x->right == NULL)
+	return NULL;
+
+    // when single child
+    if (x->left != NULL)
+	return x->left;
+    else
+	return x->right;
+}
+
+  // deletes the given node
+void rbtree::deleteNode(sched_entity *v) {
+    sched_entity *u = BSTreplace(v);
+
+    // True when u and v are both black
+    bool uvBlack = ((u == NULL or u->rb == col::BLACK) and (v->rb == col::BLACK));
+    sched_entity *parent = v->parent;
+
+    if (u == NULL) {
+	// u is NULL therefore v is leaf
+	if (v == root) {
+	    // v is root, making root null
+	    root = NULL;
+	} else {
+	    if (uvBlack) {
+		// u and v both black
+		// v is leaf, fix double black at v
+		fixDoubleBlack(v);
+	    } else {
+		// u or v is red
+		if (v->sibling() != NULL)
+		    // sibling is not null, make it red"
+		    v->sibling()->rb = col::RED;
+	    }
+
+	    // delete v from the tree
+	    if (v == v->parent->left) {
+		parent->left = NULL;
+	    } else {
+		parent->right = NULL;
+	    }
+	}
+	delete v;
+	return;
+    }
+
+    if (v->left == NULL or v->right == NULL) {
+	// v has 1 child
+	if (v == root) {
+	    // v is root, assign the value of u to v, and delete u
+	    v->key = u->key;
+	    v->left = v->right = NULL;
+	    delete u;
+	} else {
+	    // Detach v from tree and move u up
+	    if (v == v->parent->left) {
+		parent->left = u;
+	    } else {
+		parent->right = u;
+	    }
+	    delete v;
+	    u->parent = parent;
+	    if (uvBlack) {
+		// u and v both black, fix double black at u
+		fixDoubleBlack(u);
+	    } else {
+		// u or v red, rb u black
+		u->rb = col::BLACK;
+	    }
+	}
+	return;
+    }
+
+    // v has 2 children, swap values with successor and recurse
+    std::swap(u->key, v->key);
+    deleteNode(u);
+}
+
+void rbtree::fixDoubleBlack(sched_entity *x) {
+    if (x == root)
+	return;
+
+    sched_entity *sibling = x->sibling(), *parent = x->parent;
+    if (sibling == NULL) {
+	// No sibiling, double black pushed up
+	fixDoubleBlack(parent);
+    } else {
+	if (sibling->rb == col::RED) {
+	    // Sibling red
+	    parent->rb = col::RED;
+	    sibling->rb = col::BLACK;
+	    if (sibling->isOnLeft()) {
+		// left case
+		right_rot(parent);
+	    } else {
+		// right case
+		left_rot(parent);
+	    }
+	    fixDoubleBlack(x);
+	} else {
+	    // Sibling black
+	    if (sibling->hasRedChild()) {
+		// at least 1 red children
+		if (sibling->left != NULL and sibling->left->rb == col::RED) {
+		    if (sibling->isOnLeft()) {
+			// left left
+			sibling->left->rb = sibling->rb;
+			sibling->rb = parent->rb;
+			right_rot(parent);
+		    } else {
+			// right left
+			sibling->left->rb = parent->rb;
+			right_rot(sibling);
+			left_rot(parent);
+		    }
+		} else {
+		    if (sibling->isOnLeft()) {
+			// left right
+			sibling->right->rb = parent->rb;
+			left_rot(sibling);
+			right_rot(parent);
+		    } else {
+			// right right
+			sibling->right->rb = sibling->rb;
+			sibling->rb = parent->rb;
+			left_rot(parent);
+		    }
+		}
+		parent->rb = col::BLACK;
+	    } else {
+		// 2 black children
+		sibling->rb = col::RED;
+		if (parent->rb == col::BLACK)
+		    fixDoubleBlack(parent);
+		else
+		    parent->rb = col::BLACK;
+	    }
+	}
+    }
+}
+
+sched_entity *rbtree::print_smallest(sched_entity *node)
+{
+    while (node->left)
+	node = node->left;
+    return node;
+}
+
 int main()
 {
     rbtree rbt;
@@ -310,6 +467,15 @@ int main()
     printf("\n%s%d", "Added successfully ", 9);
     rbt.insert(10);
     printf("\n%s%d", "Added successfully ", 10);
+    //rbt.show_tree(rbt.root);
+    auto *smallest = rbt.print_smallest(rbt.root);
+    // printf("\n%s%d", "--------------------node smallest ", smallest->parent->key);
+    rbt.deleteNode(smallest);
+    auto *s = rbt.print_smallest(rbt.root);
+    printf("\n%s%d", "--------------------node smallest ", s->key);
+    rbt.deleteNode(s);
+    auto *a = rbt.print_smallest(rbt.root);
+    rbt.deleteNode(a);
     rbt.show_tree(rbt.root);
     return 0;
 }
