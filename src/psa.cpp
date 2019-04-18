@@ -36,6 +36,10 @@ int main()
 	{
 	    schedule.pjf();
 	}
+	else if (ch == 'c')
+	{
+	    schedule.cfs();
+	}
 
 	PSAscreen::get().draw_frame();
 	PSAscreen::get().draw_frame_of(PSAscreen::get().get_walg(), " ALGORITHM ");

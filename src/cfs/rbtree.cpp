@@ -3,7 +3,7 @@
 
 #include "rbtree.hpp"
 
-void rbtree::insert(int key)
+void rbtree::insert(process key)
 {
     if (root != nullptr)
     	insert(root, root, key);
@@ -39,29 +39,29 @@ bool rbtree::has_red_child(sched_entity *node)
 void rbtree::show_tree(sched_entity *&node)
 {
     printf("\n%s", "======");
-    printf("\n%s%d", "node is ", node->key);
+    printf("\n%s%d", "node is ", node->key.get_vruntime());
     printf("\n%s%hu", "node is color ", node->rb);
 
     if (node->parent)
-	printf("\n%s%d", "node parent is ", node->parent->key);
+	printf("\n%s%d", "node parent is ", node->parent->key.get_vruntime());
 
     if (node->left) {
-	printf("\n%s%d", "node left is ", node->left->key);
+	printf("\n%s%d", "node left is ", node->left->key.get_vruntime());
 	show_tree(node->left);
     }
 
     if (node->right) {
-	printf("\n%s%d", "node right is ", node->right->key);
+	printf("\n%s%d", "node right is ", node->right->key.get_vruntime());
 	show_tree(node->right);
     }
 }
 
-void rbtree::insert(sched_entity *&node, sched_entity *&parent, int key)
+void rbtree::insert(sched_entity *&node, sched_entity *&parent, process key)
 {
     if (!node) {
 	node = new sched_entity(key, parent, nullptr, nullptr, col::RED);
 	rebalance(node);
-    } else if (key <= node->key) {
+    } else if (key.get_vruntime() <= node->key.get_vruntime()) {
 	insert(node->left, node, key);
     } else {
 	insert(node->right, node, key);
@@ -317,34 +317,35 @@ sched_entity *rbtree::print_smallest(sched_entity *node)
     return node;
 }
 
-int main()
-{
-    rbtree rbt;
-    rbt.insert(3);
-    printf("\n%s%d", "Added successfully ", 3);
-    rbt.insert(1);
-    printf("\n%s%d", "Added successfully ", 1);
-    rbt.insert(5);
-    printf("\n%s%d", "Added successfully ", 5);
-    rbt.insert(7);
-    printf("\n%s%d", "Added successfully ", 7);
-    rbt.insert(6);
-    printf("\n%s%d", "Added successfully ", 6);
-    rbt.insert(8);
-    printf("\n%s%d", "Added successfully ", 8);
-    rbt.insert(9);
-    printf("\n%s%d", "Added successfully ", 9);
-    rbt.insert(10);
-    printf("\n%s%d", "Added successfully ", 10);
-    //rbt.show_tree(rbt.root);
-    auto *smallest = rbt.print_smallest(rbt.root);
-    // printf("\n%s%d", "--------------------node smallest ", smallest->parent->key);
-    rbt.delete_node(smallest);
-    auto *s = rbt.print_smallest(rbt.root);
-    printf("\n%s%d", "--------------------node smallest ", s->key);
-    rbt.delete_node(s);
-    auto *a = rbt.print_smallest(rbt.root);
-    rbt.delete_node(a);
-    rbt.show_tree(rbt.root);
-    return 0;
-}
+// int main()
+// {
+//     rbtree rbt;
+//     rbt.insert(3);
+//     printf("\n%s%d", "Added successfully ", 3);
+//     rbt.insert(1);
+//     printf("\n%s%d", "Added successfully ", 1);
+//     rbt.insert(5);
+//     printf("\n%s%d", "Added successfully ", 5);
+//     rbt.insert(7);
+//     printf("\n%s%d", "Added successfully ", 7);
+//     rbt.insert(6);
+//     printf("\n%s%d", "Added successfully ", 6);
+//     rbt.insert(8);
+//     printf("\n%s%d", "Added successfully ", 8);
+//     rbt.insert(9);
+//     printf("\n%s%d", "Added successfully ", 9);
+//     rbt.insert(10);
+//     printf("\n%s%d", "Added successfully ", 10);
+//     //rbt.show_tree(rbt.root);
+//     auto *smallest = rbt.print_smallest(rbt.root);
+//     // printf("\n%s%d", "--------------------node smallest ", smallest->parent->key);
+//     rbt.delete_node(smallest);
+//     auto *s = rbt.print_smallest(rbt.root);
+//     printf("\n%s%d", "--------------------node smallest ", s->key);
+//     rbt.delete_node(s);
+//     auto *a = rbt.print_smallest(rbt.root);
+//     rbt.delete_node(a);
+//     rbt.show_tree(rbt.root);
+//     printf("\n%s%d", "--------------------node smallest ", rbt.root->parent->right->key);
+//     return 0;
+// }

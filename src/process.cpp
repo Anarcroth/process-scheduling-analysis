@@ -21,6 +21,7 @@ process::process() : tat(0),
 		     prty(priority::NONE),
 		     id(set_id()),
 		     ttl(set_ttl()),
+		     vruntime(ttl),
 		     ioops(set_ioops()){}
 
 process::process(priority p) : tat(0),
@@ -33,6 +34,7 @@ process::process(priority p) : tat(0),
 			       prty(p),
 			       id(set_id()),
 			       ttl(set_ttl()),
+			       vruntime(ttl),
 			       ioops(set_ioops()) {}
 
 int process::get_tat() const { return tat; }
@@ -42,6 +44,7 @@ int process::get_ttl() const { return ttl; }
 int process::get_work_done() const { return work_done; }
 int process::get_prev_exec_t() const { return prev_exec_t; }
 int process::get_wait_t() const { return wait_t; }
+int process::get_vruntime() const { return vruntime; }
 state process::get_state() const { return stt; }
 priority process::get_prty() const { return prty; }
 std::string process::get_id() const { return id; }

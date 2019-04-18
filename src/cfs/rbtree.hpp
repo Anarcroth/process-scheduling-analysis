@@ -1,8 +1,9 @@
 #ifndef __RBTREE_H_INCLUDED__
 #define __RBTREE_H_INCLUDED__
 
-//#include "../process.hpp"
 #include <stdio.h>
+
+#include "../process.hpp"
 
 enum class col : unsigned short
 {
@@ -12,7 +13,7 @@ enum class col : unsigned short
 
 struct sched_entity
 {
-    int key;
+    process key;
 
     sched_entity *parent;
     sched_entity *left;
@@ -20,7 +21,7 @@ struct sched_entity
 
     col rb;
 
-    sched_entity(int k, sched_entity *p, sched_entity *l, sched_entity *r, col _rb) :
+    sched_entity(process k, sched_entity *p, sched_entity *l, sched_entity *r, col _rb) :
 	key(k),
 	parent(p),
 	left(l),
@@ -33,7 +34,7 @@ class rbtree
 public:
     rbtree() = default;
 
-    void insert(int key);
+    void insert(process key);
     void show_tree(sched_entity *&node);
 
     sched_entity *root{};
@@ -42,7 +43,7 @@ public:
     void delete_node(sched_entity *node);
 
 private:
-    void insert(sched_entity *&node, sched_entity *&parent, int key);
+    void insert(sched_entity *&node, sched_entity *&parent, process key);
     void rebalance(sched_entity *&node);
 
     sched_entity *rotate(sched_entity *&node, sched_entity *&grand_parent);

@@ -9,6 +9,7 @@
 #include "pool.hpp"
 #include "dispatcher.hpp"
 #include "commons.hpp"
+#include "cfs/rbtree.hpp"
 
 const double scheduler::ALPHA = 0.5;
 const int scheduler::TIME_QUANTUM = 50;
@@ -215,6 +216,27 @@ void scheduler::pjf()
 	take(pit, pit->get_ttl());
     }
     add_summary("PJF");
+    PSAscreen::get().show_statistics(summaries);
+}
+
+void scheduler::cfs()
+{
+    reset();
+    pool::eval_prcs_prty();
+
+    rbtree rbt;
+    for (auto p : pool::ready_queue) {
+	rbt.insert(p);
+    }
+    rbt.show_tree(rbt.root);
+
+    auto pit = pool::ready_queue.begin();
+    while (!pool::empty()) {
+	PSAscreen::get().update_process_scr(*pit);
+
+	take(pit, pit->get_ttl());
+    }
+    add_summary("CFS");
     PSAscreen::get().show_statistics(summaries);
 }
 

@@ -49,6 +49,7 @@ public:
     int get_work_done() const;
     int get_prev_exec_t() const;
     int get_wait_t() const;
+    int get_vruntime() const;
     state get_state() const;
     priority get_prty() const;
     std::string get_id() const;
@@ -89,6 +90,7 @@ private:
     priority prty;          /* process priority */
     std::string id;         /* process id */
     int ttl;                /* time to live */
+    int vruntime;           /* virtual run-time */
     std::vector<int> ioops; /* set of IO operations */
 };
 
