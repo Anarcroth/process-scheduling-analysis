@@ -1,7 +1,7 @@
 #ifndef __PROCESS_H_INCLUDED__
 #define __PROCESS_H_INCLUDED__
 
-#include <queue>
+#include <vector>
 #include <string>
 
 enum class state : unsigned short
@@ -53,8 +53,9 @@ public:
     state get_state() const;
     priority get_prty() const;
     std::string get_id() const;
-    std::queue<int> get_ioops() const;
-    int get_next_io();
+    std::vector<int> get_ioops() const;
+    int get_iopart() const;
+    int get_ciopart() const;
 
     void set_tos(int _tos);
     void set_toc(int _toc);
@@ -79,7 +80,7 @@ private:
     void set_state(state _stt);
     std::string set_id();
     int set_ttl();
-    std::queue<int> set_ioops();
+    std::vector<int> set_ioops();
     int set_iopart();
 
     int tat;                /* turnaround time */
@@ -93,8 +94,9 @@ private:
     std::string id;         /* process id */
     int ttl;                /* time to live */
     int vruntime;           /* virtual run-time */
-    std::queue<int> ioops;  /* set of IO operations */
+    std::vector<int> ioops; /* set of IO operations */
     int io_part;            /* io partition */
+    int __io_part;          /* constant io partition */
 };
 
 #endif

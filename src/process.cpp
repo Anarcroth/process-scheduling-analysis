@@ -24,7 +24,8 @@ process::process() : tat(0),
 		     ttl(set_ttl()),
 		     vruntime(ttl),
 		     ioops(set_ioops()),
-		     io_part(set_iopart()) {}
+		     io_part(set_iopart()),
+		     __io_part(io_part) {}
 
 process::process(priority p) : tat(0),
 			       tos(-1),
@@ -38,7 +39,8 @@ process::process(priority p) : tat(0),
 			       ttl(set_ttl()),
 			       vruntime(ttl),
 			       ioops(set_ioops()),
-			       io_part(set_iopart()) {}
+			       io_part(set_iopart()),
+			       __io_part(io_part) {}
 
 int process::get_tat() const { return tat; }
 int process::get_tos() const { return tos; }
@@ -51,8 +53,9 @@ int process::get_vruntime() const { return vruntime; }
 state process::get_state() const { return stt; }
 priority process::get_prty() const { return prty; }
 std::string process::get_id() const { return id; }
-std::queue<int> process::get_ioops() const { return ioops; }
-int process::get_next_io() { int t = ioops.front(); ioops.pop(); return t; }
+std::vector<int> process::get_ioops() const { return ioops; }
+int process::get_iopart() const { return io_part; }
+int process::get_ciopart() const { return __io_part; }
 
 void process::set_tos(int _tos)
 {
@@ -96,9 +99,8 @@ void process::add_tat(int _tat)
 
 void process::add_wait_t(int curr_t)
 {
-    if (curr_t != prev_exec_t) {
+    if (curr_t != prev_exec_t)
 	wait_t += curr_t - prev_exec_t;
-    }
 }
 
 bool process::is_done()
@@ -132,23 +134,20 @@ int process::set_ttl()
     // Guarantees no negative ttls
     int temp_ttl = 0;
     while (temp_ttl < 1)
-    {
 	temp_ttl = commons::gen_gaus_rand(TTL_MEAN, TTL_STDDEV);
-    }
 
     return temp_ttl;
 }
 
-std::queue<int> process::set_ioops()
+std::vector<int> process::set_ioops()
 {
     // Creates a Gaussian distribution (0-20) IO operations
-    // with a Gaussian distribution (02-3000ms) for each IO
+    // with a Gaussian distribution (0-3000ms) for each IO
     int number_of_ios = commons::gen_gaus_rand(IO_NUM_MEAN, IO_NUM_STDDEV);
-    std::queue<int> temp_ioops;
-    for (size_t i = 0; i < number_of_ios; i++)
-    {
-	temp_ioops.push(commons::gen_gaus_rand(IO_TTL_MEAN, IO_TTL_STDDEV));
-    }
+
+    std::vector<int> temp_ioops(number_of_ios);
+    for (size_t i = 0; i < number_of_ios; i++){
+	temp_ioops.push_back(commons::gen_gaus_rand(IO_TTL_MEAN, IO_TTL_STDDEV));}
 
     return temp_ioops;
 }

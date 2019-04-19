@@ -93,7 +93,14 @@ void scheduler::fcfs()
     while (!pool::empty()) {
 	PSAscreen::get().update_process_scr(*pit);
 
-	take(pit, pit->get_ttl());
+	pit->set_tos(total_t);
+	pit->add_wait_t(total_t);
+	exec(pit->get_ttl());
+	if (pit->has_io()) {
+	    dispatcher::interrupt(pit, pit->get_ciopart());
+	} else {
+	    dispatcher::context_switch(pit, pit->get_ciopart());
+	}
     }
     add_summary("FCFS");
     PSAscreen::get().show_statistics(summaries);
