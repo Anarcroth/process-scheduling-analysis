@@ -1,5 +1,6 @@
 #include <string>
 #include <algorithm>
+#include <cmath>
 
 #include "process.hpp"
 #include "commons.hpp"
@@ -22,7 +23,8 @@ process::process() : tat(0),
 		     id(set_id()),
 		     ttl(set_ttl()),
 		     vruntime(ttl),
-		     ioops(set_ioops()){}
+		     ioops(set_ioops()),
+		     io_part(set_iopart()) {}
 
 process::process(priority p) : tat(0),
 			       tos(-1),
@@ -35,7 +37,8 @@ process::process(priority p) : tat(0),
 			       id(set_id()),
 			       ttl(set_ttl()),
 			       vruntime(ttl),
-			       ioops(set_ioops()) {}
+			       ioops(set_ioops()),
+			       io_part(set_iopart()) {}
 
 int process::get_tat() const { return tat; }
 int process::get_tos() const { return tos; }
@@ -48,7 +51,8 @@ int process::get_vruntime() const { return vruntime; }
 state process::get_state() const { return stt; }
 priority process::get_prty() const { return prty; }
 std::string process::get_id() const { return id; }
-std::vector<int> process::get_ioops() const { return ioops; }
+std::queue<int> process::get_ioops() const { return ioops; }
+int process::get_next_io() { int t = ioops.front(); ioops.pop(); return t; }
 
 void process::set_tos(int _tos)
 {
@@ -64,8 +68,10 @@ void process::set_toc(int _toc)
 void process::set_work_done(int _ttl)
 {
     // TODO Fix this bs
-    if (_ttl > ttl) work_done = ttl;
-    else work_done += _ttl;
+    if (_ttl > ttl)
+	work_done = ttl;
+    else
+	work_done += _ttl;
 }
 
 void process::set_prev_exec_time(int _pet)
@@ -76,6 +82,11 @@ void process::set_prev_exec_time(int _pet)
 void process::set_prty(priority _prty)
 {
     prty = _prty;
+}
+
+int process::set_iopart()
+{
+    return std::round(ttl / ioops.size());
 }
 
 void process::add_tat(int _tat)
@@ -97,7 +108,12 @@ bool process::is_done()
 
 bool process::has_io()
 {
-    return (commons::gen_even_rand() % 2 == 1) ? true : false;
+    if (work_done >= io_part) {
+	io_part += io_part;
+	return true;
+    }
+    return false;
+    //return (commons::gen_even_rand() % 2 == 1) ? true : false;
 }
 
 void process::set_state(state _stt)
@@ -123,15 +139,15 @@ int process::set_ttl()
     return temp_ttl;
 }
 
-std::vector<int> process::set_ioops()
+std::queue<int> process::set_ioops()
 {
     // Creates a Gaussian distribution (0-20) IO operations
     // with a Gaussian distribution (02-3000ms) for each IO
     int number_of_ios = commons::gen_gaus_rand(IO_NUM_MEAN, IO_NUM_STDDEV);
-    std::vector<int> temp_ioops(number_of_ios);
+    std::queue<int> temp_ioops;
     for (size_t i = 0; i < number_of_ios; i++)
     {
-	temp_ioops.push_back(commons::gen_gaus_rand(IO_TTL_MEAN, IO_TTL_STDDEV));
+	temp_ioops.push(commons::gen_gaus_rand(IO_TTL_MEAN, IO_TTL_STDDEV));
     }
 
     return temp_ioops;
