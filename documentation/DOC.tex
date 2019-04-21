@@ -650,6 +650,58 @@ The operating system used to create the software is \code{Arch Linux}, with addi
 
 \section{\underline{Result and Conclusion}}
 
+In the end we have to compare all this information. We would expect that in theory, some of the algorithms would be significantly slower than others.
+
+In this table, we see how we are comparing several algorithms, based on the number of processes that are submitted to the queue.
+
+\begin{center}
+  \begin{tabular}{l|c|c|r}
+    \multicolumn{4}{c}{FCFS} \\
+    \toprule
+    \textit{Num Processes} & \textbf{Exec Time}$_{ms}$ & \textbf{Wait Time}$_{ms}$ & \textbf{Turnaround Time}$_{ms}$ \\
+    \midrule
+    20 & 19746 & 9713 & 1007 \\ \hline
+    50 & 50293 & 24186 & 971 \\ \hline
+    100 & 101362 & 51690 & 1029 \\ \hline
+    200 & 200948 & 102545 & 1032 \\
+    \bottomrule
+    \toprule
+    \multicolumn{4}{c}{SJF1} \\
+    \toprule
+    \textit{Num Processes} & \textbf{Exec Time}$_{ms}$ & \textbf{Wait Time}$_{ms}$ & \textbf{Turnaround Time}$_{ms}$ \\
+    \midrule
+    20 & 19814 & 8542 & 1057 \\ \hline
+    50 & 49986 & 18360 & 959 \\ \hline
+    100 & 99770 & 43420 & 1047 \\ \hline
+    200 & 200805 & 82409 & 1015 \\
+    \bottomrule
+    \toprule
+  \end{tabular}
+\end{center}
+\newpage
+\begin{center}
+  \begin{tabular}{l|c|c|r}
+    \multicolumn{4}{c}{SJF2} \\
+    \toprule
+    \textit{Num Processes} & \textbf{Exec Time}$_{ms}$ & \textbf{Wait Time}$_{ms}$ & \textbf{Turnaround Time}$_{ms}$ \\
+    \midrule
+    20 & 73043 & 38126 & 34787 \\ \hline
+    50 & 188321 & 98706 & 78400 \\ \hline
+    100 & 368691 & 202500 & 159449 \\
+    \bottomrule
+    \toprule
+    \multicolumn{4}{c}{RR} \\
+    \toprule
+    \textit{Num Processes} & \textbf{Exec Time}$_{ms}$ & \textbf{Wait Time}$_{ms}$ & \textbf{Turnaround Time}$_{ms}$ \\
+    \midrule
+    20 & 20593 & 17512 & 18125 \\ \hline
+    50 & 50411 & 45391 & 45254 \\ \hline
+    100 & 192607 & 81059 & 79558 \\
+    \bottomrule
+    \toprule
+  \end{tabular}
+\end{center}
+
 \section{\underline{References}}
 
 \end{document}
