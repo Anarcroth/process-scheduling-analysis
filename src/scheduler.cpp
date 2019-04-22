@@ -2,6 +2,8 @@
 #include <chrono>
 #include <utility>
 #include <algorithm>
+#include <iostream>
+#include <fstream>
 
 #include "scheduler.hpp"
 #include "process.hpp"
@@ -10,6 +12,13 @@
 #include "dispatcher.hpp"
 #include "commons.hpp"
 #include "cfs/rbtree.hpp"
+
+void log1(const std::string &text)
+{
+    std::ofstream log_file(
+        "log_file.txt", std::ios_base::out | std::ios_base::app);
+    log_file << text << std::endl;
+}
 
 const double scheduler::ALPHA = 0.5;
 const int scheduler::TIME_QUANTUM = 50;
@@ -232,8 +241,11 @@ void scheduler::cfs()
     pool::eval_prcs_prty();
 
     rbtree rbt;
+    // rbt.insert(pool::ready_queue[0]);
+    log1("starting");
     for (auto p : pool::ready_queue) {
-	rbt.insert(p);
+	log1(std::to_string(p.get_ttl()));
+    	rbt.insert(p);
     }
     rbt.show_tree(rbt.root);
 

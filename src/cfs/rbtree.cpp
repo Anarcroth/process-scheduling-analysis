@@ -1,7 +1,17 @@
+#include <utility>
 #include <iostream>
 #include <algorithm>
+#include <string>
+#include <fstream>
 
 #include "rbtree.hpp"
+
+void log(const std::string &text)
+{
+    std::ofstream log_file(
+        "log_file1.txt", std::ios_base::out | std::ios_base::app);
+    log_file << text << std::endl;
+}
 
 void rbtree::insert(process key)
 {
@@ -38,20 +48,24 @@ bool rbtree::has_red_child(sched_entity *node)
 
 void rbtree::show_tree(sched_entity *&node)
 {
-    printf("\n%s", "======");
-    printf("\n%s%d", "node is ", node->key.get_vruntime());
-    printf("\n%s%hu", "node is color ", node->rb);
+    log("======");
+    log("node is ");
+    log(std::to_string(node->key.get_vruntime()).c_str());
 
-    if (node->parent)
-	printf("\n%s%d", "node parent is ", node->parent->key.get_vruntime());
+    if (node->parent) {
+	log("node parent is ");
+	log(std::to_string(node->parent->key.get_vruntime()).c_str());
+    }
 
     if (node->left) {
-	printf("\n%s%d", "node left is ", node->left->key.get_vruntime());
+	log("node left is ");
+	log(std::to_string(node->left->key.get_vruntime()).c_str());
 	show_tree(node->left);
     }
 
     if (node->right) {
-	printf("\n%s%d", "node right is ", node->right->key.get_vruntime());
+	log("node right is ");
+	log(std::to_string(node->right->key.get_vruntime()).c_str());
 	show_tree(node->right);
     }
 }
