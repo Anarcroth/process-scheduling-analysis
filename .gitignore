@@ -1,6 +1,7 @@
 # Custom ignores
 **/*.aux
 **/*.log
+**/*.graphml
 **/auto/*
 compile_commands.json
 .bootrtags.sh
