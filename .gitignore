@@ -3,6 +3,7 @@
 **/*.log
 **/*.graphml
 **/auto/*
+**/log_file*
 compile_commands.json
 .bootrtags.sh
 nohup.out
