@@ -117,16 +117,20 @@ void rbtree::rebalance(sched_entity *&node)
 
 sched_entity *rbtree::rotate(sched_entity *&node, sched_entity *&grand_parent)
 {
-    if (grand_parent->right->left == node) {
-	return right_left_rot(node);
-    } else if (grand_parent->right->right == node) {
-        auto *lr = left_rot(grand_parent);
-	return color_flip_rev(lr);
-    } else if (grand_parent->left->right == node) {
-	return left_right_rot(node);
-    } else {// if (grand_parent->left->left == node)
-	auto *rr = right_rot(grand_parent);
-	return color_flip_rev(rr);
+    if (grand_parent->right) {
+	if (grand_parent->right->left == node) {
+	    return right_left_rot(node);
+	} else if (grand_parent->right->right == node) {
+	    auto *lr = left_rot(grand_parent);
+	    return color_flip_rev(lr);
+	}
+    } else {
+	if (grand_parent->left->right == node) {
+	    return left_right_rot(node);
+	} else {// if (grand_parent->left->left == node)
+	    auto *rr = right_rot(grand_parent);
+	    return color_flip_rev(rr);
+	}
     }
 }
 
