@@ -241,13 +241,9 @@ void scheduler::cfs()
     pool::eval_prcs_prty();
 
     rbtree rbt;
-    // rbt.insert(pool::ready_queue[0]);
-    log1("starting");
     for (auto p : pool::ready_queue) {
-	log1(std::to_string(p.get_ttl()));
     	rbt.insert(p);
     }
-    rbt.show_tree(rbt.root);
 
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
