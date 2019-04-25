@@ -37,10 +37,12 @@ public:
     void insert(process key);
     void show_tree(sched_entity *&node);
 
-    sched_entity *root{};
-    sched_entity *print_smallest(sched_entity *node);
-
+    sched_entity *get_smallest(sched_entity *node);
     void delete_node(sched_entity *node);
+
+    bool empty();
+
+    sched_entity *root{};
 
 private:
     void insert(sched_entity *&node, sched_entity *&parent, process key);
@@ -62,6 +64,8 @@ private:
 
     sched_entity *replace(sched_entity *node);
     void fix_dubs_black(sched_entity *node);
+
+    int size;
 };
 
 #endif

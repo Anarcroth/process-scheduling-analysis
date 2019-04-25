@@ -241,9 +241,21 @@ void scheduler::cfs()
     pool::eval_prcs_prty();
 
     rbtree rbt;
-    for (auto p : pool::ready_queue) {
+    for (auto p : pool::ready_queue)
     	rbt.insert(p);
-    }
+
+    auto *smallest = rbt.get_smallest(rbt.root);
+    rbt.delete_node(smallest);
+    auto *smallest1 = rbt.get_smallest(rbt.root);
+    rbt.delete_node(smallest1);
+    auto *smallest2 = rbt.get_smallest(rbt.root);
+    rbt.delete_node(smallest2);
+
+    if (!rbt.empty())
+    	log1("tree is not empty");
+    else
+    	log1("tree is empty");
+
 
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
@@ -274,8 +286,8 @@ void scheduler::add_summary(std::string algname)
 
 void scheduler::calc_current_awt()
 {
-    for (auto& p : pool::done_queue) {
+    for (auto& p : pool::done_queue)
 	current_awt += p.get_wait_t();
-    }
+
     current_awt = current_awt /	pool::done_queue.size();
 }

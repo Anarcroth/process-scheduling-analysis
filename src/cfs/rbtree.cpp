@@ -17,8 +17,10 @@ void rbtree::insert(process key)
 {
     if (root != nullptr)
     	insert(root, root, key);
-    else
+    else {
     	root = new sched_entity(key, nullptr, nullptr, nullptr, col::BLACK);
+	size = 1;
+    }
 }
 
 sched_entity *rbtree::parent(sched_entity *root)
@@ -74,6 +76,9 @@ void rbtree::insert(sched_entity *&node, sched_entity *&parent, process key)
 {
     if (!node) {
 	node = new sched_entity(key, parent, nullptr, nullptr, col::RED);
+	size += 1;
+	log("size inserting");
+	log(std::to_string(size));
 	rebalance(node);
     } else if (key.get_vruntime() <= node->key.get_vruntime()) {
 	insert(node->left, node, key);
@@ -243,6 +248,9 @@ void rbtree::delete_node(sched_entity *node)
 	    else
 		par->right = nullptr;
 	}
+	size -= 1;
+	log("size deleting");
+	log(std::to_string(size));
 	delete node;
 	return;
     }
@@ -265,6 +273,9 @@ void rbtree::delete_node(sched_entity *node)
 	    else
 		rnode->rb = col::BLACK;
 	}
+	size -= 1;
+	log("size deleting");
+	log(std::to_string(size));
 	return;
     }
 
@@ -328,11 +339,16 @@ void rbtree::fix_dubs_black(sched_entity *node)
     }
 }
 
-sched_entity *rbtree::print_smallest(sched_entity *node)
+sched_entity *rbtree::get_smallest(sched_entity *node)
 {
     while (node->left)
 	node = node->left;
     return node;
+}
+
+bool rbtree::empty()
+{
+    return (size != 0) ? false : true;
 }
 
 // int main()
