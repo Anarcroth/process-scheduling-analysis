@@ -1,3 +1,4 @@
+#include <vector>
 #include <thread>
 #include <chrono>
 #include <utility>
@@ -244,11 +245,40 @@ void scheduler::cfs()
     for (auto p : pool::ready_queue)
     	rbt.insert(p);
 
-    auto pit = pool::ready_queue.begin();
-    while (!pool::empty()) {
-	PSAscreen::get().update_process_scr(*pit);
+    //std::sort(rbt.rq.begin(), rbt.rq.end());
+    //auto pit = rbt.rq.begin();
 
-	take(pit, pit->get_ttl());
+    while (!rbt.empty()) {
+
+	//std::sort(rbt.rq.begin(), rbt.rq.end());
+
+	// get the smallest process from the ready queue
+	auto shortest = rbt.get_smallest(rbt.root);
+	auto pr = shortest->key;
+	PSAscreen::get().update_process_scr(pr);
+
+	// exec time calc
+	pr.calc_max_exec_t();
+	int exec_t = 0;
+	if (pr.get_max_exec_t() > 0)
+	    exec_t = pr.get_max_exec_t();
+	else
+	    exec_t = pr.get_ttl();
+
+	// stats
+	pr.set_tos(total_t);
+	pr.add_wait_t(total_t);
+
+	// IO
+
+	// exec
+	std::this_thread::sleep_for(std::chrono::milliseconds(exec_t));
+	total_t += exec_t;
+
+	// new vruntime
+	pr.add_vruntime(exec_t);
+
+	dispatcher::cfs::con_swch(shortest, exec_t, rbt);
     }
     add_summary("CFS");
     PSAscreen::get().show_statistics(summaries);
