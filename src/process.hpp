@@ -50,6 +50,7 @@ public:
     int get_prev_exec_t() const;
     int get_wait_t() const;
     int get_vruntime() const;
+    int get_max_exec_t() const;
     state get_state() const;
     priority get_prty() const;
     std::string get_id() const;
@@ -65,6 +66,9 @@ public:
 
     void add_tat(int _tat);
     void add_wait_t(int curr_t);
+    void add_vruntime(int _vrt);
+
+    void calc_max_exec_t();
 
     bool is_done();
     bool has_io();
@@ -94,6 +98,7 @@ private:
     std::string id;         /* process id */
     int ttl;                /* time to live */
     int vruntime;           /* virtual run-time */
+    int max_exec_t;         /* max execution time */
     std::vector<int> ioops; /* set of IO operations */
     int io_part;            /* io partition */
     int __io_part;          /* constant io partition */

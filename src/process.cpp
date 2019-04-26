@@ -4,6 +4,7 @@
 
 #include "process.hpp"
 #include "commons.hpp"
+#include "pool.hpp"
 
 const double process::TTL_MEAN = 1000.0;
 const double process::TTL_STDDEV = 300.0;
@@ -23,6 +24,7 @@ process::process() : tat(0),
 		     id(set_id()),
 		     ttl(set_ttl()),
 		     vruntime(ttl),
+		     max_exec_t(0),
 		     ioops(set_ioops()),
 		     io_part(set_iopart()),
 		     __io_part(io_part) {}
@@ -38,6 +40,7 @@ process::process(priority p) : tat(0),
 			       id(set_id()),
 			       ttl(set_ttl()),
 			       vruntime(ttl),
+			       max_exec_t(0),
 			       ioops(set_ioops()),
 			       io_part(set_iopart()),
 			       __io_part(io_part) {}
@@ -50,6 +53,7 @@ int process::get_work_done() const { return work_done; }
 int process::get_prev_exec_t() const { return prev_exec_t; }
 int process::get_wait_t() const { return wait_t; }
 int process::get_vruntime() const { return vruntime; }
+int process::get_max_exec_t() const { return max_exec_t; }
 state process::get_state() const { return stt; }
 priority process::get_prty() const { return prty; }
 std::string process::get_id() const { return id; }
@@ -70,7 +74,6 @@ void process::set_toc(int _toc)
 
 void process::set_work_done(int _ttl)
 {
-    // TODO Fix this bs
     if (_ttl > ttl)
 	work_done = ttl;
     else
@@ -101,6 +104,16 @@ void process::add_wait_t(int curr_t)
 {
     if (curr_t != prev_exec_t)
 	wait_t += curr_t - prev_exec_t;
+}
+
+void process::add_vruntime(int _vrt)
+{
+    vruntime += _vrt;
+}
+
+void process::calc_max_exec_t()
+{
+    max_exec_t = wait_t / pool::pr_size();
 }
 
 bool process::is_done()
