@@ -244,19 +244,6 @@ void scheduler::cfs()
     for (auto p : pool::ready_queue)
     	rbt.insert(p);
 
-    auto *smallest = rbt.get_smallest(rbt.root);
-    rbt.delete_node(smallest);
-    auto *smallest1 = rbt.get_smallest(rbt.root);
-    rbt.delete_node(smallest1);
-    auto *smallest2 = rbt.get_smallest(rbt.root);
-    rbt.delete_node(smallest2);
-
-    if (!rbt.empty())
-    	log1("tree is not empty");
-    else
-    	log1("tree is empty");
-
-
     auto pit = pool::ready_queue.begin();
     while (!pool::empty()) {
 	PSAscreen::get().update_process_scr(*pit);

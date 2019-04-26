@@ -1,17 +1,8 @@
 #include <utility>
-#include <iostream>
 #include <algorithm>
 #include <string>
-#include <fstream>
 
 #include "rbtree.hpp"
-
-void log(const std::string &text)
-{
-    std::ofstream log_file(
-        "log_file1.txt", std::ios_base::out | std::ios_base::app);
-    log_file << text << std::endl;
-}
 
 void rbtree::insert(process key)
 {
@@ -19,7 +10,6 @@ void rbtree::insert(process key)
     	insert(root, root, key);
     else {
     	root = new sched_entity(key, nullptr, nullptr, nullptr, col::BLACK);
-	size = 1;
     }
 }
 
@@ -48,37 +38,10 @@ bool rbtree::has_red_child(sched_entity *node)
 	(node->right && node->right->rb == col::RED);
 }
 
-void rbtree::show_tree(sched_entity *&node)
-{
-    log("======");
-    log("node is ");
-    log(std::to_string(node->key.get_vruntime()).c_str());
-
-    if (node->parent) {
-	log("node parent is ");
-	log(std::to_string(node->parent->key.get_vruntime()).c_str());
-    }
-
-    if (node->left) {
-	log("node left is ");
-	log(std::to_string(node->left->key.get_vruntime()).c_str());
-	show_tree(node->left);
-    }
-
-    if (node->right) {
-	log("node right is ");
-	log(std::to_string(node->right->key.get_vruntime()).c_str());
-	show_tree(node->right);
-    }
-}
-
 void rbtree::insert(sched_entity *&node, sched_entity *&parent, process key)
 {
     if (!node) {
 	node = new sched_entity(key, parent, nullptr, nullptr, col::RED);
-	size += 1;
-	log("size inserting");
-	log(std::to_string(size));
 	rebalance(node);
     } else if (key.get_vruntime() <= node->key.get_vruntime()) {
 	insert(node->left, node, key);
@@ -225,6 +188,12 @@ sched_entity *rbtree::replace(sched_entity *node)
 
 void rbtree::delete_node(sched_entity *node)
 {
+    __delete_node(node);
+    root = fix_root(root);
+}
+
+void rbtree::__delete_node(sched_entity *node)
+{
     sched_entity *rnode = replace(node);
 
     bool dubblack = ((!rnode || rnode->rb == col::BLACK)
@@ -248,9 +217,6 @@ void rbtree::delete_node(sched_entity *node)
 	    else
 		par->right = nullptr;
 	}
-	size -= 1;
-	log("size deleting");
-	log(std::to_string(size));
 	delete node;
 	return;
     }
@@ -273,9 +239,6 @@ void rbtree::delete_node(sched_entity *node)
 	    else
 		rnode->rb = col::BLACK;
 	}
-	size -= 1;
-	log("size deleting");
-	log(std::to_string(size));
 	return;
     }
 
@@ -346,40 +309,16 @@ sched_entity *rbtree::get_smallest(sched_entity *node)
     return node;
 }
 
-bool rbtree::empty()
+sched_entity *rbtree::fix_root(sched_entity *node)
 {
-    return (size != 0) ? false : true;
+    if (!node)
+	return nullptr;
+    while (node->parent)
+	node = node->parent;
+    return node;
 }
 
-// int main()
-// {
-//     rbtree rbt;
-//     rbt.insert(3);
-//     printf("\n%s%d", "Added successfully ", 3);
-//     rbt.insert(1);
-//     printf("\n%s%d", "Added successfully ", 1);
-//     rbt.insert(5);
-//     printf("\n%s%d", "Added successfully ", 5);
-//     rbt.insert(7);
-//     printf("\n%s%d", "Added successfully ", 7);
-//     rbt.insert(6);
-//     printf("\n%s%d", "Added successfully ", 6);
-//     rbt.insert(8);
-//     printf("\n%s%d", "Added successfully ", 8);
-//     rbt.insert(9);
-//     printf("\n%s%d", "Added successfully ", 9);
-//     rbt.insert(10);
-//     printf("\n%s%d", "Added successfully ", 10);
-//     //rbt.show_tree(rbt.root);
-//     auto *smallest = rbt.print_smallest(rbt.root);
-//     // printf("\n%s%d", "--------------------node smallest ", smallest->parent->key);
-//     rbt.delete_node(smallest);
-//     auto *s = rbt.print_smallest(rbt.root);
-//     printf("\n%s%d", "--------------------node smallest ", s->key);
-//     rbt.delete_node(s);
-//     auto *a = rbt.print_smallest(rbt.root);
-//     rbt.delete_node(a);
-//     rbt.show_tree(rbt.root);
-//     printf("\n%s%d", "--------------------node smallest ", rbt.root->parent->right->key);
-//     return 0;
-// }
+bool rbtree::empty()
+{
+    return (root) ? false : true;
+}

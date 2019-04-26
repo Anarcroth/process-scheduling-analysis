@@ -35,7 +35,6 @@ public:
     rbtree() = default;
 
     void insert(process key);
-    void show_tree(sched_entity *&node);
 
     sched_entity *get_smallest(sched_entity *node);
     void delete_node(sched_entity *node);
@@ -62,10 +61,11 @@ private:
     bool is_left(sched_entity *node);
     bool has_red_child(sched_entity *node);
 
+    void __delete_node(sched_entity *node);
+
     sched_entity *replace(sched_entity *node);
     void fix_dubs_black(sched_entity *node);
-
-    int size;
+    sched_entity *fix_root(sched_entity *node);
 };
 
 #endif
