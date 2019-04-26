@@ -76,4 +76,9 @@ namespace pool
     {
 	return ready_queue.size() + wait_queue.size() + done_queue.size();
     }
+
+    int pr_size()
+    {
+	return ready_queue.size() + wait_queue.size();
+    }
 }

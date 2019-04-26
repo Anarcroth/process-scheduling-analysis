@@ -14,6 +14,7 @@ namespace pool
     bool empty();
 
     int size();
+    int pr_size();
 
     extern std::vector<process> wait_queue;
     extern std::vector<process> ready_queue;
