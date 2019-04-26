@@ -2,6 +2,7 @@
 #define __RBTREE_H_INCLUDED__
 
 #include <stdio.h>
+#include <vector>
 
 #include "../process.hpp"
 
@@ -35,13 +36,17 @@ public:
     rbtree() = default;
 
     void insert(process key);
+    void delete_node(sched_entity *node);
 
     sched_entity *get_smallest(sched_entity *node);
-    void delete_node(sched_entity *node);
 
     bool empty();
 
     sched_entity *root{};
+
+    std::vector<process> wq;
+    std::vector<process> rq;
+    std::vector<process> dq;
 
 private:
     void insert(sched_entity *&node, sched_entity *&parent, process key);

@@ -43,6 +43,7 @@ void rbtree::insert(sched_entity *&node, sched_entity *&parent, process key)
     if (!node) {
 	node = new sched_entity(key, parent, nullptr, nullptr, col::RED);
 	rebalance(node);
+	rq.push_back(node->key);
     } else if (key.get_vruntime() <= node->key.get_vruntime()) {
 	insert(node->left, node, key);
     } else {
@@ -188,6 +189,7 @@ sched_entity *rbtree::replace(sched_entity *node)
 
 void rbtree::delete_node(sched_entity *node)
 {
+    //rq.erase(std::remove(rq.begin(), rq.end(), node->key), rq.end());
     __delete_node(node);
     root = fix_root(root);
 }
