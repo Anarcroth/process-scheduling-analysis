@@ -38,6 +38,8 @@ public:
     void insert(process key);
     void delete_node(sched_entity *node);
 
+    void fix_internal_repr();
+
     sched_entity *get_smallest(sched_entity *node);
 
     bool empty();
