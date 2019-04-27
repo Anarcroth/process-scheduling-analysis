@@ -15,10 +15,10 @@ namespace dispatcher
 
     namespace cfs
     {
-	void interpt(process &pit, int tq, rbtree rbt);
-	void con_swch(sched_entity *se, int tq, rbtree rbt);
+	void interpt(process &pit, int tq, rbtree &rbt);
+	void con_swch(process &pit, int tq, rbtree &rbt);
 	void save_st(process &pit, int ttl_p);
-	void restore_st(sched_entity *se, rbtree rbt);
+	void restore_st(process &pit, rbtree &rbt);
 	void ex_io(std::vector<process>::iterator pit);
     }
 }

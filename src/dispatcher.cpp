@@ -47,13 +47,19 @@ namespace dispatcher
 	    scheduler::calc_current_awt();
 	    PSAscreen::get().show_wt(scheduler::current_awt);
 
-	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
-	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
+	    PSAscreen::get().push_prc_in(
+		PSAscreen::get().get_wdone(), pool::done_queue);
+	    PSAscreen::get().draw_frame_of(
+		PSAscreen::get().get_wdone(), " DONE ");
 	} else {
-	    std::rotate(pool::ready_queue.begin(), pit + 1, pool::ready_queue.end());
+	    std::rotate(pool::ready_queue.begin(),
+			pit + 1,
+			pool::ready_queue.end());
 
-	    PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::ready_queue);
-	    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
+	    PSAscreen::get().push_prc_in(
+		PSAscreen::get().get_wprc(), pool::ready_queue);
+	    PSAscreen::get().draw_frame_of(
+		PSAscreen::get().get_wprc(), " PROCESS ");
 	}
     }
 
@@ -74,9 +80,9 @@ namespace dispatcher
 
     namespace cfs
     {
-	void interpt(process &pit, int tq, rbtree rbt)
+	void interpt(process &pit, int tq, rbtree &rbt)
 	{
-	    save_st(pit, tq);
+	    //save_st(pit, tq);
 
 	    pool::wait_queue.push_back(std::move(pit));
 	    //pit = pool::ready_queue.erase(pit);
@@ -86,10 +92,10 @@ namespace dispatcher
 	    iothread.detach();
 	}
 
-	void con_swch(sched_entity *se, int tq, rbtree rbt)
+	void con_swch(process &pit, int tq, rbtree &rbt)
 	{
-	    save_st(se->key, tq);
-	    restore_st(se, rbt);
+	    save_st(pit, tq);
+	    restore_st(pit, rbt);
 	}
 
 	void save_st(process &pit, int ttl_p)
@@ -98,27 +104,27 @@ namespace dispatcher
 	    pit.set_work_done(ttl_p);
 	}
 
-	void restore_st(sched_entity *se, rbtree rbt)
+	void restore_st(process &pit, rbtree &rbt)
 	{
-	    if (se->key.is_done()) {
-		se->key.set_toc(scheduler::total_t);
-		se->key.add_tat(se->key.get_toc() - se->key.get_tos());
+	    if (pit.is_done()) {
+		pit.set_toc(scheduler::total_t);
+		pit.add_tat(pit.get_toc() - pit.get_tos());
 
-		pool::done_queue.push_back(std::move(se->key));
-		//se->key = pool::ready_queue.erase(se->key);
+		rbt.dq.push_back(std::move(pit));
 
-		scheduler::calc_current_awt();
-		PSAscreen::get().show_wt(scheduler::current_awt);
-
-		PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
-		PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
+		//scheduler::calc_current_awt();
+		//PSAscreen::get().show_wt(scheduler::current_awt);
 	    } else {
-		//std::rotate(pool::ready_queue.begin(), pit + 1, pool::ready_queue.end());
-		rbt.delete_node(se);
-
-		PSAscreen::get().push_prc_in(PSAscreen::get().get_wprc(), pool::done_queue);
-		PSAscreen::get().draw_frame_of(PSAscreen::get().get_wprc(), " PROCESS ");
+		rbt.insert(pit);
 	    }
+	    PSAscreen::get().push_prc_in(
+		PSAscreen::get().get_wdone(), rbt.dq);
+	    PSAscreen::get().draw_frame_of(
+		PSAscreen::get().get_wdone(), " DONE ");
+	    PSAscreen::get().push_prc_in(
+		PSAscreen::get().get_wprc(), rbt.rq);
+	    PSAscreen::get().draw_frame_of(
+		PSAscreen::get().get_wprc(), " PROCESS ");
 	}
 
 	void ex_io(std::vector<process>::iterator pit)

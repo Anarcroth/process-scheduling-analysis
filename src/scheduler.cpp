@@ -245,17 +245,21 @@ void scheduler::cfs()
     for (auto p : pool::ready_queue)
     	rbt.insert(p);
 
-    //std::sort(rbt.rq.begin(), rbt.rq.end());
-    //auto pit = rbt.rq.begin();
+    // small hack to make the thing more optimal
+    rbt.fix_internal_repr();
 
     while (!rbt.empty()) {
 
-	//std::sort(rbt.rq.begin(), rbt.rq.end());
+	sched_entity *shortest = rbt.get_smallest(rbt.root);
+	process pr = shortest->key;
 
-	// get the smallest process from the ready queue
-	auto shortest = rbt.get_smallest(rbt.root);
-	auto pr = shortest->key;
+	rbt.delete_node(shortest);
+
 	PSAscreen::get().update_process_scr(pr);
+
+	// stats
+	pr.set_tos(total_t);
+	pr.add_wait_t(total_t);
 
 	// exec time calc
 	pr.calc_max_exec_t();
@@ -265,23 +269,21 @@ void scheduler::cfs()
 	else
 	    exec_t = pr.get_ttl();
 
-	// stats
-	pr.set_tos(total_t);
-	pr.add_wait_t(total_t);
-
 	// IO
 
-	// exec
-	std::this_thread::sleep_for(std::chrono::milliseconds(exec_t));
-	total_t += exec_t;
+	exec(exec_t);
 
-	// new vruntime
 	pr.add_vruntime(exec_t);
-
-	dispatcher::cfs::con_swch(shortest, exec_t, rbt);
+	dispatcher::cfs::con_swch(pr, exec_t, rbt);
     }
+    pool::done_queue = rbt.dq;
     add_summary("CFS");
     PSAscreen::get().show_statistics(summaries);
+
+    // these queues have to be cleared otherwise they
+    // will be in a polluted state
+    pool::ready_queue.clear();
+    rbt.rq.clear();
 }
 
 void scheduler::add_summary(std::string algname)
