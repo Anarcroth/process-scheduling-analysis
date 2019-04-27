@@ -127,7 +127,7 @@ The application should \textbf{not} try to implement every algorithm for schedul
 
 \subsection{\underline{Use cases}}
 
-The use cases for this project are people who are interested in seeing how different process scheduling algorithms work underneath the hood and want to compare their abilities. For people who want to learn or get a better idea as to why systems are working the way they are, through running the application and looking at the source code, this project is a great place for research and learning.
+This project is targeted at two general use groups. One group is for those who want to test and examine scheduling algorithms, see how they work and how they present themselves in a graphical way. The other group is for people who want to learn and have a learning experience in the world of operating systems. In some sense, this project can be seen as either a research tool, or as a pedagogical tool. In both cases we see how different process scheduling algorithms work underneath the hood and see how to compare their abilities. For people who want to learn or get a better idea as to why systems are working the way they are, through running the application and looking at the source code, this project is a great place for research and learning.
 
 \begin{figure}[H]
   \includegraphics[width=\linewidth]{./pics/usecase.jpg}
@@ -135,7 +135,7 @@ The use cases for this project are people who are interested in seeing how diffe
   \label{fig:Use-Case Diagram}
 \end{figure}
 
-From this use-case diagram, we can see the more academic aspect of the program.
+This use case diagram can help us understand how exactly to use the application. We can see that the actor in the picture would be anyone who is using the application. Because this application is not an online service, the usage is controlled solely by the user. First, the student or researcher interacts with User Interface of the app, which is part of the graphical layer. Through it, the actor is able to create different processes, where each one will be used to run in the demo algorithm. Then after the process creation is done, the actor picks the desired algorithm and then the control of the app is handed to the Scheduler component. In this diagram, we can treat the Scheduler as another actor, because it is providing a certain type of service and is giving output in the end. After the algorithm has finished, a summary in the form of an output is given to the user. Then the user, if he/she wishes, can evaluate the received results.
 
 \begin{figure}[H]
   \includegraphics[width=\linewidth]{./pics/narrative.jpg}
@@ -143,13 +143,19 @@ From this use-case diagram, we can see the more academic aspect of the program.
   \label{fig:Narrative Diagram}
 \end{figure}
 
+In this Narrative diagram, we can see how a more detailed approach is taken to using the app.
+
 \begin{figure}[H]
   \includegraphics[width=\linewidth]{./pics/pipeline.jpg}
   \caption{Pipeline Diagram}
   \label{fig:Pipeline Diagram}
 \end{figure}
 
-activity diagram
+In this Activity Diagram, we can see in detail the different steps that are taken at each moment for the creating and execution of each algorithm. First, we start with a few choices that influence the processes we will see in the app. Namely, these are the priorities that each process will have. After that, an algorithm is picked. We notice here that we first have to create processes and assign them priorities, because otherwise the algorithm will be working on an empty pool of processes, which makes no sense. After that, we go to the pool entity of the program and we evaluate each processes based on the total execution time it has. If the processes, however, does have a predefined priority, we do not override it. This means that this evaluation is done for randomly created processes, and that's okay.
+
+After this step, we then move on to the execution of the picked algorithm. The procedure here is such that we first do the "empty" work on each process and then evaluate the needed statistics for each process, then we check through a method if that process will get into an IO state or not. Based on that, we either call the dispatcher part of the procedure or the interrupt handler. If the dispatcher is called, then we do context switch and we continue with the next process. If the interrupt handler is called, then we create a separate thread that executes the IO operations.
+
+In the end, we update the screen with all of this information and we check if the process is done. If it is not, then we just loop back to the pool and star all over until the whole pool is executed completely. If it is however, then we finish everything and give the desired output to the user!
 
 \section{\underline{Design of the Software Solution}}
 
@@ -376,9 +382,150 @@ Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround t
 
 \subsubsection{\underline{Round-Robin}}
 
+The \textbf{R}ound \textbf{R}obin algorithm is one of the more complex, but far more efficient systems we can look at. It is an algorithm centered around the idea for having a more \textit{fair} distribution of CPU bursts for each process. Initially used in the field of computer networking, and also following the same principle, the algorithm has a special global variable, called a \textbf{TIME QUANTUM}. This constant with an initial value of between $10_{ms} \to 100_{ms}$, which is picked by the OS on the basis of the hardware capabilities, is used as the time each process is allowed to have in the CPU. Technically, this is the same constant that each process has as a burst. Then a rotation is done, where the next process is picked from the queue and executes with the same constant. This means that in the end, each process will execute for it's whole execution time, separated into equal chunks, each one \textbf{TIME QUANTUM} long.
+
+\textbf{Note:} each of these algorithms concentrate on how long a process is executing, without trying too hard to have any other balancing factor, or to be more precise with it's predictions. But even with these small changes, we still see quite noticeable results in the final output in terms of both average waiting time and average turnaround time.
+
+It's also good to mention that this algorithm handles IO heavy tasks great, as it is constantly in a state where it changes the running task and it can parallelize itself in a good manner. Another interesting thing is that this algorithm is used in a real modern system - the current Windows 10 operating system is using it. But because this algorithm alone cannot handle the complexity of the entire OS, it is also combined with a multilevel priority queue, in order to have a good scheduler.
+
+\begin{table}[H]
+  \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
+    \toprule
+    \hfil\bfseries Pros & \hfil\bfseries Cons \\
+    \cmidrule(r{3\tabcolsep}){1-1}\cmidrule(l{-\tabcolsep}){2-2}
+
+    Optimal\par
+    Used in real systems\par
+    Has fair scheduling\par
+
+    &
+
+    Too simplistic to be alone as a scheduler\par
+    Not fair enough \\
+    \bottomrule
+  \end{tabularx}
+  \caption{Pros and Cons of SJF}
+\end{table}
+
+From this table we can gather a few things. This is the first algorithm that is running in an optimal time. The complexity of the algorithm itself is in linear time, but the execution of the processes is in fact in logarithmic, meaning that we can expect optimal evaluation in the end. The reason that the algorithm is in linear time is because we are dealing with the full set of processes and we are iterating over them in a sequential manner. But the execution time of the processes is in logarithmic time, because each process will gradually go over its life time, where in the end, all of the process will almost simultaneously finish.
+
+Let's take an example and look at a Gantt chart to see how this will look like.
+
+\begin{table}[H]
+  \begin{center}
+    \label{tab:SJF processes}
+    \begin{tabular}{c|c}
+      \toprule
+      \textbf{Process ID} & \textbf{Time To Live} \\
+      \midrule
+      9479 & 2 \\
+      7470 & 3 \\
+      2b62 & 5 \\
+      047c & 5 \\
+      d19c & 5 \\
+      \bottomrule
+    \end{tabular}
+    \caption{SJF processes table}
+  \end{center}
+\end{table}
+
+\begin{ganttchart}[
+  expand chart=\textwidth,
+  hgrid={black}
+  ]{1}{20}
+  \gantttitle{RR \textbf{TQ = 2}}{20} \\
+  \gantttitlelist{1,...,20}{1} \\
+  \ganttbar[bar/.append style={fill=pr1}]{9479}{1}{2} \\
+  \ganttbar[bar/.append style={fill=pr3}]{7470}{3}{4}
+  \ganttbar[bar/.append style={fill=pr3}]{7470}{11}{11} \\
+  \ganttbar[bar/.append style={fill=pr4}]{2b62}{5}{6}
+  \ganttbar[bar/.append style={fill=pr4}]{2b62}{12}{13}
+  \ganttbar[bar/.append style={fill=pr4}]{2b62}{18}{18} \\
+  \ganttbar[bar/.append style={fill=pr4}]{047c}{7}{8}
+  \ganttbar[bar/.append style={fill=pr4}]{047c}{14}{15}
+  \ganttbar[bar/.append style={fill=pr4}]{047c}{19}{19} \\
+  \ganttbar[bar/.append style={fill=pr4}]{d19c}{9}{10}
+  \ganttbar[bar/.append style={fill=pr4}]{d19c}{16}{17}
+  \ganttbar[bar/.append style={fill=pr4}]{d19c}{20}{20} \\
+\end{ganttchart}
+
+From this chart we can see how the processes are executed in the linear fashion we mentioned. Some processes are executed exactly as the given time quantum of 2. When a process is more than the TQ, then we just execute that part of it, when it is less, we do not waste the remaining leftover time, we just take the next process immediately and execute it next. We can see that happening on the second iteration of second process and with the last 3 processes. From the chart we can also see how in the end all of the processes quickly finish one after another, which would be an indicator for the logarithmic time execution of the algorithm.
+
+\begin{table}[H]
+  \begin{center}
+    \label{tab:RR times}
+    \begin{tabular}{c|c|c}
+      \toprule
+      \textbf{Process ID} & \textbf{Waiting time} & \textbf{Turnaround time} \\
+      \midrule
+      9479 & 0 & 2 \\
+      7470 & 6 & 9 \\
+      2b62 & 5 & 12 \\
+      047c & 5 & 12 \\
+      d19c & 5 & 12 \\
+      \bottomrule
+      \toprule
+      \textbf{Average} & \textbf{4.2} & \textbf{9.4} \\
+    \end{tabular}
+    \caption{RR times table}
+  \end{center}
+\end{table}
+
+From the table we can draw the conclusion that the waiting time is significantly smaller than the rest of the processes and although the turnaround time isn't perfect, we still have a relatively fast algorithm in the end.
+
 \subsubsection{\underline{Priority Job First}}
 
 \subsubsection{\underline{Completely Fair Scheduling}}
+
+The \textbf{C}ompletely \textbf{F}air \textbf{S}cheduler is one of the most interesting scheduling schemes we can observe. It is the famous scheduler, used by default, in the GNU/Linux Operating System. First introduced in the 2.6 patch in 2007, and shortly after optimized for the 2.6.24 release, this algorithm provides, as the name suggests, a completely fair scheduling for all of the processes.
+
+\subsubsection{\underline{A short history of Linux schedulers}}
+
+Early Linux schedulers used minimal designs, obviously not focused on massive architectures with many processors or even hyperthreading. The 1.2 Linux scheduler used a circular queue for runnable task management that operated with a round-robin scheduling policy. This scheduler was efficient for adding and removing processes (with a lock to protect the structure). In short, the scheduler wasn’t complex but was simple and fast.
+
+Linux version 2.2 introduced the idea of scheduling classes, permitting scheduling policies for real-time tasks, non-preemptible tasks, and non-real-time tasks. The 2.2 scheduler also included support for symmetric multiprocessing (SMP).
+
+The 2.4 kernel included a relatively simple scheduler that operated in O(N) time (as it iterated over every task during a scheduling event). The 2.4 scheduler divided time into epochs, and within each epoch, every task was allowed to execute up to its time slice. If a task did not use all of its time slice, then half of the remaining time slice was added to the new time slice to allow it to execute longer in the next epoch. The scheduler would simply iterate over the tasks, applying a goodness function (metric) to determine which task to execute next. Although this approach was relatively simple, it was relatively inefficient, lacked scalability, and was weak for real-time systems. It also lacked features to exploit new hardware architectures such as multi-core processors.
+
+The early 2.6 scheduler, called the O(1) scheduler, was designed to solve many of the problems with the 2.4 scheduler—namely, the scheduler was not required to iterate the entire task list to identify the next task to schedule (resulting in its name, O(1), which meant that it was much more efficient and much more scalable). The O(1) scheduler kept track of runnable tasks in a run queue (actually, two run queues for each priority level—one for active and one for expired tasks), which meant that to identify the task to execute next, the scheduler simply needed to dequeue the next task off the specific active per-priority run queue. The O(1) scheduler was much more scalable and incorporated interactivity metrics with numerous heuristics to determine whether tasks were I/O-bound or processor-bound. But the O(1) scheduler became unwieldy in the kernel. The large mass of code needed to calculate heuristics was fundamentally difficult to manage and, for the purist, lacked algorithmic substance.
+
+\subsubsection{\underline{How CFS works}}
+
+CFS tries to be "fair" to every task running in the system.
+
+\epigraph{CFS basically models an 'ideal, precise multitasking CPU' on real hardware.}{\textit{Ingo Molnar, author of CFS}}
+
+Let's try to understand what "ideal, precise, multitasking CPU" means, as the CFS tries to emulate this CPU. An "ideal, precise, multitasking CPU" is a hardware CPU that can run multiple processes at the same time (in parallel), giving each process an equal share of processor power (not time, but power). If a single process is running, it would receive 100\% of the processor's power. With two processes, each would have exactly 50\% of the physical power (in parallel). Similarly, with four processes running, each would get precisely 25\% of physical CPU power in parallel and so on. Therefore, this CPU would be "fair" to all the tasks running in the system.
+
+\begin{figure}[H]
+  \center
+  \includegraphics[width=0.7\columnwidth]{./pics/cpu0.jpg}
+  \caption{Ideal CPU}
+  \label{fig:Ideal CPU}
+\end{figure}
+
+Obviously, this ideal CPU is nonexistent, but the CFS tries to emulate such a processor in software. On an actual real-world processor, only one task can be allocated to a CPU at a particular time. Therefore, all other tasks wait during this period. So, while the currently running task gets 100\% of the CPU power, all other tasks get 0\% of the CPU power. This is obviously not fair. The CFS tries to eliminate this unfairness from the system. The CFS tries to keep track of the fair share of the CPU that would have been available to each process in the system.
+
+\begin{figure}[H]
+  \center
+  \includegraphics[width=0.7\columnwidth]{./pics/cpu1.jpg}
+  \caption{Actual CPU}
+  \label{fig:Actual CPU}
+\end{figure}
+
+The main idea behind the CFS is to maintain balance (fairness) in providing processor time to tasks. This means processes should be given a fair amount of the processor. When the time for tasks is out of balance (meaning that one or more tasks are not given a fair amount of time relative to others), then those out-of-balance tasks should be given time to execute.
+
+To determine the balance, the CFS maintains the amount of time provided to a given task in what's called the virtual runtime. The smaller a task's virtual runtime—meaning the smaller amount of time a task has been permitted access to the processor—the higher its need for the processor. The CFS also includes the concept of sleeper fairness to ensure that tasks that are not currently runnable (for example, waiting for I/O) receive a comparable share of the processor when they eventually need it.
+
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{./pics/rbtsched.jpg}
+  \caption{CFS Red-Black Tree}
+  \label{fig:CFS Red-Black Tree}
+\end{figure}
+
+But rather than maintain the tasks in a run queue, as has been done in prior Linux schedulers, the CFS maintains a time-ordered red-black tree. A red-black tree is a tree with a couple of interesting and useful properties. First, it's self-balancing, which means that no path in the tree will ever be more than twice as long as any other. Second, operations on the tree occur in O(log n) time (where n is the number of nodes in the tree). This means that you can insert or delete a task quickly and efficiently.
+
+With tasks (represented by \code{sched\_entity} objects) stored in the time-ordered red-black tree, tasks with the gravest need for the processor (lowest virtual runtime) are stored toward the left side of the tree, and tasks with the least need of the processor (highest virtual runtimes) are stored toward the right side of the tree. The scheduler then, to be fair, picks the left-most node of the red-black tree to schedule next to maintain fairness. The task accounts for its time with the CPU by adding its execution time to the virtual runtime and is then inserted back into the tree if runnable. In this way, tasks on the left side of the tree are given time to execute, and the contents of the tree migrate from the right to the left to maintain fairness. Therefore, each runnable task chases the other to maintain a balance of execution across the set of runnable tasks.
 
 \subsubsection{\underline{Normal and Even Distributions for Processes}}
 
@@ -413,7 +560,7 @@ From this, we can then pick the magic numbers which would go into each distribut
     \label{tab:Distributions of Process variables}
     \begin{tabular}{l|r|c}
       \toprule
-       \textbf{Type} & \textbf{Mean $\mu$} & \textbf{Standard Deviation$\sigma$} \\
+       \textbf{Type} & \textbf{Mean $\mu$} & \textbf{Standard Deviation $\sigma$} \\
       \midrule
       Process TTL & 1000 ms & 270 ms \\
       IO TTL & 1500 ms & 150 ms \\
