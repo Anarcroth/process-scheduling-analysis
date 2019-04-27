@@ -270,20 +270,22 @@ void scheduler::cfs()
 	    exec_t = pr.get_ttl();
 
 	// IO
-
-	exec(exec_t);
+	if (pr.has_io())
+	    exec(exec_t / 2);
+	else
+	    exec(exec_t);
 
 	pr.add_vruntime(exec_t);
 	dispatcher::cfs::con_swch(pr, exec_t, rbt);
     }
+    // these queues have to be cleared otherwise
+    // they will be in a polluted state
+    pool::ready_queue.clear();
+    rbt.rq.clear();
+
     pool::done_queue = rbt.dq;
     add_summary("CFS");
     PSAscreen::get().show_statistics(summaries);
-
-    // these queues have to be cleared otherwise they
-    // will be in a polluted state
-    pool::ready_queue.clear();
-    rbt.rq.clear();
 }
 
 void scheduler::add_summary(std::string algname)
@@ -303,10 +305,10 @@ void scheduler::add_summary(std::string algname)
     summaries.insert(summaries.begin(), sumr);
 }
 
-void scheduler::calc_current_awt()
+void scheduler::calc_current_awt(std::vector<process> d_queue)
 {
-    for (auto& p : pool::done_queue)
+    for (auto& p : d_queue)
 	current_awt += p.get_wait_t();
 
-    current_awt = current_awt /	pool::done_queue.size();
+    current_awt = current_awt /	d_queue.size();
 }

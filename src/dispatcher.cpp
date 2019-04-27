@@ -44,8 +44,9 @@ namespace dispatcher
 	    pool::done_queue.push_back(std::move(*pit));
 	    pit = pool::ready_queue.erase(pit);
 
-	    scheduler::calc_current_awt();
-	    PSAscreen::get().show_wt(scheduler::current_awt);
+	    scheduler::calc_current_awt(pool::done_queue);
+	    PSAscreen::get().show_wt(pool::done_queue,
+				     scheduler::current_awt);
 
 	    PSAscreen::get().push_prc_in(
 		PSAscreen::get().get_wdone(), pool::done_queue);
@@ -80,15 +81,15 @@ namespace dispatcher
 
     namespace cfs
     {
+	std::mutex cfs_iomx;
+
 	void interpt(process &pit, int tq, rbtree &rbt)
 	{
-	    //save_st(pit, tq);
+	    save_st(pit, tq);
 
-	    pool::wait_queue.push_back(std::move(pit));
-	    //pit = pool::ready_queue.erase(pit);
+	    rbt.wq.push_back(std::move(pit));
 
-	    std::thread iothread(dispatcher::cfs::ex_io,
-				 pool::wait_queue.begin());
+	    std::thread iothread(dispatcher::cfs::ex_io, pit, rbt);
 	    iothread.detach();
 	}
 
@@ -112,11 +113,12 @@ namespace dispatcher
 
 		rbt.dq.push_back(std::move(pit));
 
-		//scheduler::calc_current_awt();
-		//PSAscreen::get().show_wt(scheduler::current_awt);
+		scheduler::calc_current_awt(rbt.dq);
+		PSAscreen::get().show_wt(rbt.dq, scheduler::current_awt);
 	    } else {
 		rbt.insert(pit);
 	    }
+
 	    PSAscreen::get().push_prc_in(
 		PSAscreen::get().get_wdone(), rbt.dq);
 	    PSAscreen::get().draw_frame_of(
@@ -127,19 +129,24 @@ namespace dispatcher
 		PSAscreen::get().get_wprc(), " PROCESS ");
 	}
 
-	void ex_io(std::vector<process>::iterator pit)
+	void ex_io(process pit, rbtree rbt)
 	{
-	    iomutex.lock();
+	    cfs_iomx.lock();
 
-	    auto io_ttl = pit->get_ioops().begin();
+	    auto io_ttl = pit.get_ioops().begin();
 	    std::this_thread::sleep_for(std::chrono::milliseconds(*io_ttl));
-	    pit->add_tat(*io_ttl);
-	    pit->get_ioops().erase(io_ttl);
+	    pit.add_tat(*io_ttl);
+	    pit.get_ioops().erase(io_ttl);
 
-	    pool::ready_queue.push_back(std::move(*pit));
-	    pool::wait_queue.erase(pit);
+	    rbt.insert(pit);
+	    for (auto p = rbt.wq.begin(); p != rbt.wq.end(); ++p) {
+		if (pit.get_id() == p->get_id()) {
+		    rbt.wq.erase(p);
+		    break;
+		}
+	    }
 
-	    iomutex.unlock();
+	    cfs_iomx.unlock();
 	}
     }
 }

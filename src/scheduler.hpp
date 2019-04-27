@@ -18,7 +18,7 @@ public:
     void pjf();       /* priority job first */
     void cfs();       /* completely fair scheduler */
 
-    static void calc_current_awt();
+    static void calc_current_awt(std::vector<process> d_queue);
 
     static int avg_wt;        /* average waiting time in ready queue */
     static int avg_tat;       /* average turnaround time */

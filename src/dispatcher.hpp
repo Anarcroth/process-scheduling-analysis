@@ -15,10 +15,12 @@ namespace dispatcher
 
     namespace cfs
     {
+	extern std::mutex cfs_iomx;
+
 	void interpt(process &pit, int tq, rbtree &rbt);
 	void con_swch(process &pit, int tq, rbtree &rbt);
 	void save_st(process &pit, int ttl_p);
 	void restore_st(process &pit, rbtree &rbt);
-	void ex_io(std::vector<process>::iterator pit);
+	void ex_io(process pit, rbtree rbt);
     }
 }
