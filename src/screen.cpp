@@ -88,8 +88,7 @@ void PSAscreen::init()
     cbreak();
     curs_set(0);
 
-    if (has_colors() == FALSE)
-    {
+    if (has_colors() == FALSE) {
 	endwin();
 	printf("Your terminal does not support color\n");
 	exit(1);
@@ -232,17 +231,15 @@ void PSAscreen::push_prc_in(WINDOW* w, std::vector<process>& prcs)
 {
     wclear(w);
     int width = 1, height = 1;
-    for (auto &p : prcs)
-    {
-	if (width >= W_W_PRC_DONE - 2)
-	{
+    for (auto &p : prcs) {
+	if (width >= W_W_PRC_DONE - 2) {
 	    width = 1;
 	    height += 1;
 	}
+
 	if (height >= W_H_PRC_DONE - 1)
-	{
 	    break;
-	}
+
 	wmove(w, height, width);
 	colorinprocess(w, p.get_prty());
 	waddstr(w, p.get_id().c_str());
@@ -282,11 +279,11 @@ void PSAscreen::colorinprocess(WINDOW *w, priority pr)
     }
 }
 
-void PSAscreen::show_wt(int wt)
+void PSAscreen::show_wt(std::vector<process> dq, int wt)
 {
     wattron(wwt, COLOR_PAIR(8));
 
-    int x = std::floor(x_partitioning * pool::done_queue.size() + 1);
+    int x = std::floor(x_partitioning * dq.size() + 1);
     int y = std::floor((wt / y_max) * 13);
 
     wmove(wwt, 13 - y, x);
@@ -364,9 +361,9 @@ void PSAscreen::draw_frame_of(WINDOW *w, std::string title)
     waddstr(w, title.c_str());
     // The wt and tat windows should always have their scales drawn
     // makes sure to do that
-    if (w == wwt) {
+    if (w == wwt)
 	draw_w_scale();
-    }
+
     wnoutrefresh(w);
 }
 
@@ -378,13 +375,14 @@ void PSAscreen::draw_w_scale()
 	std::string scale_num = std::to_string(
 	    std::floor(i * (y_max / 13)));
 	scale_num = scale_num.substr(0, scale_num.find("."));
-	if (scale_num.length() < 4) {
+
+	if (scale_num.length() < 4)
 	    scale_num = "." + scale_num.substr(0, 1) + "k";
-	} else if (scale_num.length() < 5) {
+	else if (scale_num.length() < 5)
 	    scale_num = scale_num.substr(0, 1) + "k ";
-	} else {
+	else
 	    scale_num = scale_num.substr(0, 2) + "k";
-	}
+
 	waddstr(wwt, scale_num.c_str());
     }
     wnoutrefresh(wwt);
@@ -393,7 +391,8 @@ void PSAscreen::draw_w_scale()
 void PSAscreen::clear_scr()
 {
     wclear(wwt);
-    PSAscreen::get().draw_frame_of(PSAscreen::get().get_wwt(), " Waiting Time ");
+    PSAscreen::get().draw_frame_of(
+	PSAscreen::get().get_wwt(), " Waiting Time ");
 }
 
 PSAscreen::~PSAscreen()

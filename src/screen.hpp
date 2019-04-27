@@ -26,7 +26,7 @@ public:
 
     void update_process_scr(process& pr);
 
-    void show_wt(int wt);
+    void show_wt(std::vector<process> dq, int wt);
     void show_tat(int tat);
     void show_statistics(std::vector<std::string>& summaries);
 
