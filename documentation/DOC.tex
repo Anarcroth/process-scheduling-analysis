@@ -138,17 +138,9 @@ This project is targeted at two general use groups. One group is for those who w
 This use case diagram can help us understand how exactly to use the application. We can see that the actor in the picture would be anyone who is using the application. Because this application is not an online service, the usage is controlled solely by the user. First, the student or researcher interacts with User Interface of the app, which is part of the graphical layer. Through it, the actor is able to create different processes, where each one will be used to run in the demo algorithm. Then after the process creation is done, the actor picks the desired algorithm and then the control of the app is handed to the Scheduler component. In this diagram, we can treat the Scheduler as another actor, because it is providing a certain type of service and is giving output in the end. After the algorithm has finished, a summary in the form of an output is given to the user. Then the user, if he/she wishes, can evaluate the received results.
 
 \begin{figure}[H]
-  \includegraphics[width=\linewidth]{./pics/narrative.jpg}
-  \caption{Narrative Diagram}
-  \label{fig:Narrative Diagram}
-\end{figure}
-
-In this Narrative diagram, we can see how a more detailed approach is taken to using the app.
-
-\begin{figure}[H]
-  \includegraphics[width=\linewidth]{./pics/pipeline.jpg}
-  \caption{Pipeline Diagram}
-  \label{fig:Pipeline Diagram}
+  \includegraphics[width=\linewidth]{./pics/activity.jpg}
+  \caption{Activity Diagram}
+  \label{fig:Activity Diagram}
 \end{figure}
 
 In this Activity Diagram, we can see in detail the different steps that are taken at each moment for the creating and execution of each algorithm. First, we start with a few choices that influence the processes we will see in the app. Namely, these are the priorities that each process will have. After that, an algorithm is picked. We notice here that we first have to create processes and assign them priorities, because otherwise the algorithm will be working on an empty pool of processes, which makes no sense. After that, we go to the pool entity of the program and we evaluate each processes based on the total execution time it has. If the processes, however, does have a predefined priority, we do not override it. This means that this evaluation is done for randomly created processes, and that's okay.
@@ -156,6 +148,14 @@ In this Activity Diagram, we can see in detail the different steps that are take
 After this step, we then move on to the execution of the picked algorithm. The procedure here is such that we first do the "empty" work on each process and then evaluate the needed statistics for each process, then we check through a method if that process will get into an IO state or not. Based on that, we either call the dispatcher part of the procedure or the interrupt handler. If the dispatcher is called, then we do context switch and we continue with the next process. If the interrupt handler is called, then we create a separate thread that executes the IO operations.
 
 In the end, we update the screen with all of this information and we check if the process is done. If it is not, then we just loop back to the pool and star all over until the whole pool is executed completely. If it is however, then we finish everything and give the desired output to the user!
+
+\begin{figure}[H]
+  \includegraphics[width=\linewidth]{./pics/pipeline.jpg}
+  \caption{Pipeline Diagram}
+  \label{fig:Pipeline Diagram}
+\end{figure}
+
+Additionally, we also have a pipeline diagram that shows us what is the general procedure of each run of the application. Through this, we can see what each part of the program does and in what context it is. First, we see that we have a process creation step, that is concerned with populating the pool of processes. For each input, we create a process and assign it a priority, either manually or automatically. Then we pick the algorithm we want to see running. All of this information is sent to the global pool of processes. We can see that the pool holds in itself all of the processes. While this is happening, we can evaluate the processes by priority, based on their execution time. We do this right before we start the main algorithm execution. When we start that part, we move each process from the ready queue into the execution step. We pick which process to move based on the selected algorithm. Then we execute the picked process for some amount of time, also dependent on the selected algorithm. When this is done, we add the statistical data that this execution has accumulated and then we check if we have to do any IO operations. Depending on that answer, we either call the Dispatcher or the Interrupt Handler. If we call the Dispatcher, then we do a context switch, otherwise, we execute the IO operation waiting next. In the end, we check if the process is done or not. Until there are still unfinished processes, we get the next one and loop right back to the execution step. When everything is finished, we move the processes to the done queue and then update the screen and create the result, which is sent to the user.
 
 \section{\underline{Design of the Software Solution}}
 
@@ -176,6 +176,8 @@ Having these distinctions made, we can then proceed to the algorithms and data-s
 The \textbf{F}irst \textbf{C}ome \textbf{F}irst \textbf{S}erve algorithm is one of the easiest to understand and implement. It can be looked at from many different angles. \textbf{FCFS} can be seen as a \code{linked-list} or a \code{queue}, which just serves each incoming process to the CPU for execution. When a new process is created, it is put at the back of the \code{ready\_queue}. Then each process, one by one, is taken from the head of the queue and is given to the CPU for execution. It really depends on what type of system is running this scheduler, but in general, this algorithm, although easy, is not the most effective one to have. Because each process can take any time to finish, it can stall the whole system with its execution. For instance, if we were to have several processes and one is to be long in execution time, depending on their time of arrival, we can either quickly go through all of them, or we can wait for a long time.
 
 In this project, the \textbf{FCFS} algorithm is created using a \code{vector} to hold all of the processes in sequential manner. At the start of the algorithm, we just take each next process for execution, wait for its time to live (\code{ttl}) and then we proceed to the next one in line. Because this project tries to imitate a \textit{Real-Time} system, we also check if each process will do an \textit{IO} operation. If so, the process is then sent to an \code{exec\_io} routine, and the next process is then taken. This means that the \code{done\_queue} will not be populated in the exact same order as the processes have been created in the \code{ready\_queue}, because of these \textit{IO} operations. Regardless, this still follows the \textbf{FCFS} pattern, and we can see that indeed, each process is taken from the head of the queue (technically vector).
+
+\bigskip
 
 \underline{\textbf{Evaluation}}
 
@@ -199,15 +201,26 @@ In this project, the \textbf{FCFS} algorithm is created using a \code{vector} to
     System can stall if not preemptive\par
     Bad prediction for \textit{Waiting time} and \textit{Turnaround time} \\
     \bottomrule
+    \toprule
+    \hfil\bfseries Algorithm Complexity & \hfil\bfseries Execution Complexity \\
+
+    \\
+    \centerline{$O(n)$}\par
+
+    &
+
+    \centerline{$O(n)$}
   \end{tabularx}
   \caption{Pros and Cons of FCFS}
 \end{table}
 
-\
+From this table we can also see how the complexity of the algorithm together with its execution complexity align. The reason that FCFS is in linear time when it comes to the algorithm complexity is because we are iterating over the whole bunch of processes in the pool. We are doing that in a sequential manner, meaning that we would not be skipping over anything. This is fine, but when we look at the execution complexity, we can see that we also have linear time. This is not the most optimal complexity we can have, because we are going through every process and we are also blocking the CPU, if that process has a long execution.
 
-\underline{\textit{Example}}
+\bigskip
 
-Let's take a set of processes and see how they would hold under this algorithm. We generate 5 random processes.
+\underline{\textbf{Example}}
+
+Let's do an example in a set of a small group of processes, which would give us a more visual idea of how this algorithm might perform. In a set of 5 randomly generated processes, with decreased execution time (in order to make calculation easier), we have the following table.
 
 \begin{table}[H]
   \begin{center}
@@ -227,22 +240,29 @@ Let's take a set of processes and see how they would hold under this algorithm. 
   \end{center}
 \end{table}
 
+We notice that the processes are not ordered and that they do not have any priority assigned to them yet. This is as expected, because we want the algorithm to make that choice automatically. We also assume that the submission time of each process is in the manner in which they appear. Now that we have this data, we can put it in a Gantt chart to see how they execute.
+
 From this, we can create the following \textbf{Gantt chart}.
 
-\begin{ganttchart}[
-  expand chart=\textwidth,
-  hgrid={black}
-  ]{1}{20}
-  \gantttitle{FCFS}{20} \\
-  \gantttitlelist{1,...,20}{1} \\
-  \ganttbar[bar/.append style={fill=pr2}]{c37f}{1}{2} \\
-  \ganttbar[bar/.append style={fill=pr3}]{e2fc}{3}{7} \\
-  \ganttbar[bar/.append style={fill=pr2}]{792d}{8}{10} \\
-  \ganttbar[bar/.append style={fill=pr3}]{0a35}{11}{15} \\
-  \ganttbar[bar/.append style={fill=pr3}]{3207}{16}{20} \\
-\end{ganttchart}
+\begin{figure}[H]
+  \centering
+  \begin{ganttchart}[
+    expand chart=\textwidth,
+    hgrid={black}
+    ]{1}{20}
+    \gantttitle{\textbf{FCFS}}{20} \\
+    \gantttitlelist{1,...,20}{1} \\
+    \ganttbar[bar/.append style={fill=pr2}]{c37f}{1}{2} \\
+    \ganttbar[bar/.append style={fill=pr3}]{e2fc}{3}{7} \\
+    \ganttbar[bar/.append style={fill=pr2}]{792d}{8}{10} \\
+    \ganttbar[bar/.append style={fill=pr3}]{0a35}{11}{15} \\
+    \ganttbar[bar/.append style={fill=pr3}]{3207}{16}{20} \\
+  \end{ganttchart}
+  \caption{FCFS Gantt Chart}
+  \label{fig:FCFS Gantt Chart}
+\end{figure}
 
-Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround time}.
+From the Gantt chart we see a few things off the bat. First, the processes have been evaluated in terms of priority and have been colored in their respective color. Then, we see that the time of submission is the time in which they start execution for the very first time. We can also see that they are exactly in the order listed in the table above, which is the expected behavior. Then, if we calculate and average all of the data in order to get the \textbf{Waiting Time} and the \textbf{Turnaround Time} for the whole batch, we would get the following table.
 
 \begin{table}[H]
   \begin{center}
@@ -264,6 +284,8 @@ Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround t
   \end{center}
 \end{table}
 
+From this, we can see that the waiting time is quite large, even for such short processes. The waiting time is longer than the average process execution, this means that most of the time, processes are waiting in the ready queue and are not working. The turnaround time is short. In fact, for each process, the turnaround time is the time it takes for the process to execute. This is to be expected, because this is the time between the time of submission and the time of completion for each process. And although it is short, it doesn't mean that the whole algorithm did all that good. For instance, if we are to take the longest processes first and the shortest ones last, then we would have even larger waiting time, making the whole execution much slower.
+
 Of course this is a fairly simple example, because the processes do not take as long to execute, and we are also not taking into consideration the fact that these processes \textit{might} have some IO to do.
 
 \subsubsection{\underline{SJF}}
@@ -271,7 +293,6 @@ Of course this is a fairly simple example, because the processes do not take as 
 The \textbf{S}hortest \textbf{J}ob \textbf{F}irst is another easy to understand, not so easy to implement algorithm. The SJF is an optimal algorithm, because it takes the greedy approach. It tries to finish all of the shortest processes first, which would cause the whole set of processes to finish as quick as possible. But there is a downside to this. This algorithm is not practically applicable, because it either relies on information beforehand for each process, or it has to do estimations for each upcoming process. Usually there is no way to know for how long a process will execute. In general, depending on what information we have, there are two ways to approach this algorithm.
 
 \textbf{Note:} much like the FCFS, we also take into account the fact that we might have IO operations and we also preempt every process that does such actions.
-
 
 \begin{itemize}
 \item Method 1
@@ -299,6 +320,8 @@ Usually, \scalebox{1.1}{\(\alpha\)} is less than 1, thus each successive term ha
 
 One thing that arises in this algorithm is why we must make a guess as to which process should be executed? Why is this happening? This type of guessing is done only here, while anywhere else, we do not need to make presumptions. The reason is that for all other algorithms, we either have a constant \code{TIME\_QUANTUM}, which is used to define each CPU burst (used in \textbf{Round-Robin Scheduling}), or we wait for the process to tell us if it's done or not (such as the case with \textbf{FCFS}). Here, however, we have to \textit{dynamically} specify the CPU burst time on each new process execution. This forces us to keep track of each execution time.
 
+\bigskip
+
 \underline{\textbf{Evaluation}}
 
 \begin{table}[H]
@@ -317,15 +340,29 @@ One thing that arises in this algorithm is why we must make a guess as to which 
     Cannot be used in a real system\par
     Still might have a process that stalls \\
     \bottomrule
+    \toprule
+    \hfil\bfseries Algorithm Complexity & \hfil\bfseries Execution Complexity \\
+
+    \\
+    \centerline{$O(n)$}\par
+
+    &
+
+    \centerline{$O(n)$ - without prediction}
+    \centerline{$O(n)$ - with prediction}
   \end{tabularx}
   \caption{Pros and Cons of SJF}
 \end{table}
 
 In this case we might think that FCFS is the better algorithm, since at least it has some real life value to it, but that's not the immediate case. Although we are dealing with a hypothetical algorithm here, it is still worth it to check what are the times for SJF. If we run an example, we would see that SJF has better waiting time for each process, where the turnaround time doesn't change. Thus, SJF yields better results on average that FCFS.
 
-\underline{\textit{Example}}
+From a complexity perspective, we can see that this algorithm is also running in linear time and also execution in the same time. But because we are also considering the case that we can implement such an algorithm with some prediction calculations, then the algorithm for execution becomes a little bit better and that we can expect a bit more performance boosts. The complexity in theory is still the same, but in practice, we would see better results.
 
-Let's take again a set of processes and see how they would work. Then we can create the \textbf{Gantt chart}.
+\bigskip
+
+\underline{\textbf{Example}}
+
+As before, we want to visualize how this works. With a new set of processes and with now execution times, we have the following table. Note that we also take into account the previous assumptions about the time of submission and the priority.
 
 \begin{table}[H]
   \begin{center}
@@ -345,18 +382,27 @@ Let's take again a set of processes and see how they would work. Then we can cre
   \end{center}
 \end{table}
 
-\begin{ganttchart}[
-  expand chart=\textwidth,
-  hgrid={black}
-  ]{1}{20}
-  \gantttitle{SJF}{20} \\
-  \gantttitlelist{1,...,20}{1} \\
-  \ganttbar[bar/.append style={fill=pr1}]{9479}{1}{2} \\
-  \ganttbar[bar/.append style={fill=pr3}]{7470}{3}{5} \\
-  \ganttbar[bar/.append style={fill=pr3}]{2b62}{6}{9} \\
-  \ganttbar[bar/.append style={fill=pr3}]{047c}{10}{13} \\
-  \ganttbar[bar/.append style={fill=pr4}]{d19c}{14}{20} \\
-\end{ganttchart}
+With these numbers, we would want to enforce the notion that there are some processes that are marginally slower that the rest, such as the last one. In comparison, it is 3 times slower that the shortest job. This is what we want, because now we can compare an even more unfavorable case with the previous algorithm and see how this does.
+
+\begin{figure}[H]
+  \centering
+  \begin{ganttchart}[
+    expand chart=\textwidth,
+    hgrid={black}
+    ]{1}{20}
+    \gantttitle{\textbf{SJF}}{20} \\
+    \gantttitlelist{1,...,20}{1} \\
+    \ganttbar[bar/.append style={fill=pr1}]{9479}{1}{2} \\
+    \ganttbar[bar/.append style={fill=pr3}]{7470}{3}{5} \\
+    \ganttbar[bar/.append style={fill=pr3}]{2b62}{6}{9} \\
+    \ganttbar[bar/.append style={fill=pr3}]{047c}{10}{13} \\
+    \ganttbar[bar/.append style={fill=pr4}]{d19c}{14}{20} \\
+  \end{ganttchart}
+  \caption{SJF Gantt Chart}
+  \label{fig:SJF Gantt Chart}
+\end{figure}
+
+We see that the algorithm does it's job and evaluates each process accordingly and then it also sorts the processes based on their priority. This can be seen by the color arrangement each one has. The longest one is at the end and is executing for the longest time, while the shortest process is first and is the easiest to execute.
 
 Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround time}.
 
@@ -379,6 +425,8 @@ Then we can calculate the average \textbf{Waiting time} and \textbf{Turnaround t
     \caption{SJF times table}
   \end{center}
 \end{table}
+
+The results are interesting. First we see that although the more complicated set of processes, we get even less waiting time in the end. This means that with the same time and algorithm complexity, we are getting better results from this SJF algorithm. We can also see that the turnaround time is the same, which is expected, because we are not changing the state of execution for the processes and they are still executing for their complete time.
 
 \subsubsection{\underline{Round-Robin}}
 
@@ -403,8 +451,17 @@ It's also good to mention that this algorithm handles IO heavy tasks great, as i
     Too simplistic to be alone as a scheduler\par
     Not fair enough \\
     \bottomrule
+    \toprule
+    \hfil\bfseries Algorithm Complexity & \hfil\bfseries Execution Complexity \\
+
+    \\
+    \centerline{$O(n)$}\par
+
+    &
+
+    \centerline{$O(log(n))$}
   \end{tabularx}
-  \caption{Pros and Cons of SJF}
+  \caption{Pros and Cons of RR}
 \end{table}
 
 From this table we can gather a few things. This is the first algorithm that is running in an optimal time. The complexity of the algorithm itself is in linear time, but the execution of the processes is in fact in logarithmic, meaning that we can expect optimal evaluation in the end. The reason that the algorithm is in linear time is because we are dealing with the full set of processes and we are iterating over them in a sequential manner. But the execution time of the processes is in logarithmic time, because each process will gradually go over its life time, where in the end, all of the process will almost simultaneously finish.
@@ -413,41 +470,46 @@ Let's take an example and look at a Gantt chart to see how this will look like.
 
 \begin{table}[H]
   \begin{center}
-    \label{tab:SJF processes}
+    \label{tab:RR processes}
     \begin{tabular}{c|c}
       \toprule
       \textbf{Process ID} & \textbf{Time To Live} \\
       \midrule
-      9479 & 2 \\
-      7470 & 3 \\
-      2b62 & 5 \\
-      047c & 5 \\
-      d19c & 5 \\
+      6c8b & 2 \\
+      33e9 & 3 \\
+      7ff7 & 5 \\
+      d3e4 & 5 \\
+      cce5 & 5 \\
       \bottomrule
     \end{tabular}
-    \caption{SJF processes table}
+    \caption{RR processes table}
   \end{center}
 \end{table}
 
-\begin{ganttchart}[
-  expand chart=\textwidth,
-  hgrid={black}
-  ]{1}{20}
-  \gantttitle{RR \textbf{TQ = 2}}{20} \\
-  \gantttitlelist{1,...,20}{1} \\
-  \ganttbar[bar/.append style={fill=pr1}]{9479}{1}{2} \\
-  \ganttbar[bar/.append style={fill=pr3}]{7470}{3}{4}
-  \ganttbar[bar/.append style={fill=pr3}]{7470}{11}{11} \\
-  \ganttbar[bar/.append style={fill=pr4}]{2b62}{5}{6}
-  \ganttbar[bar/.append style={fill=pr4}]{2b62}{12}{13}
-  \ganttbar[bar/.append style={fill=pr4}]{2b62}{18}{18} \\
-  \ganttbar[bar/.append style={fill=pr4}]{047c}{7}{8}
-  \ganttbar[bar/.append style={fill=pr4}]{047c}{14}{15}
-  \ganttbar[bar/.append style={fill=pr4}]{047c}{19}{19} \\
-  \ganttbar[bar/.append style={fill=pr4}]{d19c}{9}{10}
-  \ganttbar[bar/.append style={fill=pr4}]{d19c}{16}{17}
-  \ganttbar[bar/.append style={fill=pr4}]{d19c}{20}{20} \\
-\end{ganttchart}
+\begin{figure}[H]
+  \centering
+  \begin{ganttchart}[
+    expand chart=\textwidth,
+    hgrid={black}
+    ]{1}{20}
+    \gantttitle{\textbf{RR} \textit{TQ = 2}}{20} \\
+    \gantttitlelist{1,...,20}{1} \\
+    \ganttbar[bar/.append style={fill=pr1}]{6c8b}{1}{2} \\
+    \ganttbar[bar/.append style={fill=pr3}]{33e9}{3}{4}
+    \ganttbar[bar/.append style={fill=pr3}]{33e9}{11}{11} \\
+    \ganttbar[bar/.append style={fill=pr4}]{7ff7}{5}{6}
+    \ganttbar[bar/.append style={fill=pr4}]{7ff7}{12}{13}
+    \ganttbar[bar/.append style={fill=pr4}]{7ff7}{18}{18} \\
+    \ganttbar[bar/.append style={fill=pr4}]{d3e4}{7}{8}
+    \ganttbar[bar/.append style={fill=pr4}]{d3e4}{14}{15}
+    \ganttbar[bar/.append style={fill=pr4}]{d3e4}{19}{19} \\
+    \ganttbar[bar/.append style={fill=pr4}]{cce5}{9}{10}
+    \ganttbar[bar/.append style={fill=pr4}]{cce5}{16}{17}
+    \ganttbar[bar/.append style={fill=pr4}]{cce5}{20}{20} \\
+  \end{ganttchart}
+  \caption{RR Gantt Chart}
+  \label{fig:RR Gantt Chart}
+\end{figure}
 
 From this chart we can see how the processes are executed in the linear fashion we mentioned. Some processes are executed exactly as the given time quantum of 2. When a process is more than the TQ, then we just execute that part of it, when it is less, we do not waste the remaining leftover time, we just take the next process immediately and execute it next. We can see that happening on the second iteration of second process and with the last 3 processes. From the chart we can also see how in the end all of the processes quickly finish one after another, which would be an indicator for the logarithmic time execution of the algorithm.
 
@@ -458,11 +520,11 @@ From this chart we can see how the processes are executed in the linear fashion 
       \toprule
       \textbf{Process ID} & \textbf{Waiting time} & \textbf{Turnaround time} \\
       \midrule
-      9479 & 0 & 2 \\
-      7470 & 6 & 9 \\
-      2b62 & 5 & 12 \\
-      047c & 5 & 12 \\
-      d19c & 5 & 12 \\
+      6c8b & 0 & 2 \\
+      33e9 & 6 & 9 \\
+      7ff7 & 5 & 12 \\
+      d3e4 & 5 & 12 \\
+      cce5 & 5 & 12 \\
       \bottomrule
       \toprule
       \textbf{Average} & \textbf{4.2} & \textbf{9.4} \\
@@ -518,6 +580,7 @@ The main idea behind the CFS is to maintain balance (fairness) in providing proc
 To determine the balance, the CFS maintains the amount of time provided to a given task in what's called the virtual runtime. The smaller a task's virtual runtime—meaning the smaller amount of time a task has been permitted access to the processor—the higher its need for the processor. The CFS also includes the concept of sleeper fairness to ensure that tasks that are not currently runnable (for example, waiting for I/O) receive a comparable share of the processor when they eventually need it.
 
 \begin{figure}[H]
+  \center
   \includegraphics[width=\linewidth]{./pics/rbtsched.jpg}
   \caption{CFS Red-Black Tree}
   \label{fig:CFS Red-Black Tree}
@@ -787,10 +850,71 @@ The \textit{UI} of this project takes an alternative approach. Because the main 
 The structure of \textit{UI} is as follows: 4 main panels, each one holding information for the processes and the currently executing algorithm. Let's go through them one by one:
 
 \begin{itemize}
-\item \textbf{ALGORITHM} panel - This panel is used to display the currently running process and its different data. Things like its priority, \code{ttl}, and ID, are shown at the top. Upon each algorithm completion, a summary is displayed below, indicating the \textit{Average Waiting Time} and \textit{Average Turnaround Time} for that algorithm. In addition to this, the name of the used algorithm together with the number of processes is displayed as well. On the very bottom of this panel, there are two miniature windows. Both of them depict the graph of the \textit{Waiting Time} and \textit{Turnaround Time} in terms of \textbf{amount of time} (on the $y-axis$) and number of processes (on the $x-axis$). That is, at each CPU Burst rotation, the graph shows what are the current averages. This gives an idea on how the algorithm is performing over time. When it comes to comparing, these graphs will make it easier for further evaluation and records keeping.
+\item \textbf{ALGORITHM} panel - This panel is used to display the currently running process and its different data. Things like its priority, \code{ttl}, and ID, are shown at the top. Upon each algorithm completion, a summary is displayed below, indicating the \textit{Average Waiting Time} and \textit{Average Turnaround Time} for that algorithm. In addition to this, the name of the used algorithm together with the number of processes is displayed as well.
+
+  \begin{figure}[H]
+    \includegraphics[width=\linewidth]{./pics/alg.jpg}
+    \caption{Algorithm Panel}
+    \label{fig:Algorithm Panel}
+  \end{figure}
+
+  Here we can see the output of several algorithms with a process running. We can see how the processes is colored into a priority and how the summaries of the previous algorithms are shown to the user. The most recently run algorithm is also colored so it makes it easier to remember which is the most recent piece of data.
+
+  On the very bottom of this panel, there are two miniature windows. Both of them depict the graph of the \textit{Waiting Time} and \textit{Turnaround Time} in terms of \textbf{amount of time} (on the $y-axis$) and number of processes (on the $x-axis$). That is, at each CPU Burst rotation, the graph shows what are the current averages. This gives an idea on how the algorithm is performing over time. When it comes to comparing, these graphs will make it easier for further evaluation and records keeping.
+
+  \begin{figure}[H]
+    \includegraphics[width=\linewidth]{./pics/awt.jpg}
+    \caption{Waiting Time Panel}
+    \label{fig:Waiting Time Panel}
+  \end{figure}
+
+  Here is the screen for the graphical output of the average waiting time. We can see that on the left we have a scale that depicts the running time in milliseconds and it also plots the dots in the window. In this specific case, we can see the graph being very close to a logarithmic function. This is a big help when we are evaluating the algorithms in the end.
+
 \item \textbf{PROCESS} panel - This panel holds all of the processes that are in the \code{ready\_queue}. When a job jumps from doing CPU Bursts to doing IO operations, it jumps out of this panel, does its thing, and comes back inside again an the end of queue. When each CPU Burst finish, all of the processes do a rotation with one to the left, where the leftmost process will be the next one to execute. If a process is done, however, then it is popped out of the panel and inserted into the next one.
+
+  \begin{figure}[H]
+    \includegraphics[width=\linewidth]{./pics/prcs.jpg}
+    \caption{Process Panel}
+    \label{fig:Process Panel}
+  \end{figure}
+
+  In this screen we can see how the different processes and mix of processes are all in the ready queue. This means that all of these are either about to be executed or are being executed in the moment. We can see that some of the processes are already with a pre-defined priority, while the white ones will get theirs as soon as the algorithm is started.
+
 \item \textbf{DONE} panel - As mentioned above, this is the place where all of the done processes are held. The inserted processes are in the order of their completion.
+
+  \begin{figure}[H]
+    \includegraphics[width=\linewidth]{./pics/doneq.jpg}
+    \caption{Done Panel}
+    \label{fig:Done Panel}
+  \end{figure}
+
+  In this panel we can see a set of processes that have already finished execution and are put in the order by which they have finished.
+
 \item \textbf{LEGEND} panel - This is the final panel and it holds information for all of the commands the user can send to the program. This makes working with the application easier. On the top, the different priorities are shown, together with the key that will spawn a process with that priority. There are 7 in total, starting form 0, all the way up to priority 6. There is an additional key that creates random processes, that will not have a priority, but that will be evaluated by the algorithm at execution time. Below this, the legend also shows each of the implemented processes in the system plus the key that will start executing it. When a procedure is started, below it, a text will appear which will explain what are its features and what it does. That way, the learning and evaluation process is made easier on the user.
+
+  \begin{figure}[H]
+    \includegraphics[width=\linewidth]{./pics/legend.jpg}
+    \caption{Legend Panel}
+    \label{fig:Legend Panel}
+  \end{figure}
+
+  The legend panel color coded and we can see that in the brackets, next to each procedure, there is a character that will initiate it. Then, we can see how there are two sub-panels, one for the processes and one for the algorithms. This makes it exactly clear to the user what are the functionalities of the application.
+
+\end{itemize}
+
+Because the user interface has to also have some form of input, we must also accommodate to the fact that we must enter some data into the application. This means that we must parse some input from the user to the different processes into the app. This is done through the ncurses library, which allows for inputs. With the \code{getch()} method, which returns a number representation of the pressed character from the keyboard, we can see what the user has pressed. By following the legend and having the input given by the user, we can see what is needed to be done in the app. For instance, we might start executing some algorithm or we might create a specific process.
+
+The legend for the different accepted types of input is as follows:
+
+\begin{itemize}
+\item \code{0} to \code{6}. Pressing one of the numbers from 0 to 6 will create a certain type of a process, which is based on a priority. The priority on each of the button presses is expressed by a graphical color, indicated in the legend. When a process is created this way, the process with its ID is added to the ready queue and is printed with the priority color immediately.
+\item \code{r}. When this key is pressed, then a new type of process is created - a random one. Based on the aforementioned rules for process distribution, a new process is added to the ready queue and is colored in white, because then the algorithm will evaluate the process priority. It is completely possible for a user to both combine and mix random and pre-defined processes in the ready queue, which would cause the queue to be filled with colored and non-colored processes.
+\item \code{f}. When pressing the F key, we start working with the different algorithms. In this case, the FCFS algorithm would start executing on the filled ready queue. This means that we will start seeing how the processes we just created will be treated by this algorithm.
+\item \code{h}. As with the previous key, this will start the SJF method 1 algorithm.
+\item \code{s}. This is the SJF method 2 implementation.
+\item \code{o}. This is the Round Robin algorithm key.
+\item \code{p}. This is the Priority First scheduler.
+\item \code{c}. This is the Completely Fair Scheduler in action.
 \end{itemize}
 
 \subsubsection{\underline{Software Architecture}}
