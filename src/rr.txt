@@ -1,0 +1,22 @@
+The scheduler assigns a fixed time unit per process,
+and cycles through them. If process completes within
+that time-slice it gets terminated otherwise it is
+rescheduled after giving a chance to other processes.
+
+RR scheduling involves extensive overhead, especially
+with a small time unit.
+
+Balanced throughput between FCFS/ FIFO and SJF/SRTF,
+shorter jobs are completed faster than in FIFO and
+longer processes are completed faster than in SJF.
+
+Good average response time, waiting time is dependent
+on number of processes, and not average
+process length.
+
+Because of high waiting times, deadlines are rarely
+met in a pure RR system.
+
+Starvation can never occur, since no priority is
+given. Order of time unit allocation is based upon
+process arrival time, similar to FIFO.

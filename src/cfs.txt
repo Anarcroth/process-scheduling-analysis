@@ -1,0 +1,25 @@
+CFS is a process scheduler which was merged into
+the 2.6.23 (October 2007) release of the Linux
+kernel and is the default scheduler. It handles CPU
+resource allocation for executing processes, and aims
+to maximize overall CPU utilization while also
+maximizing interactive performance.
+
+The data structure used for the scheduling algorithm
+is a red-black tree in which the nodes are scheduler
+-specific sched_entity structures. These are derived
+from the general task_struct process descriptor, with
+added scheduler elements.
+
+The nodes are indexed by processor "execution time" in
+nanoseconds.
+
+A "maximum execution time" is also calculated for each
+process. This time is based upon the idea that an
+"ideal processor" would equally share processing power
+amongst all processes. Thus, the maximum execution
+time is the time the process has been waiting to run,
+divided by the total number of processes, or in other
+words, the maximum execution time is the time the
+process would have expected to run on an
+"ideal processor".

@@ -1,0 +1,25 @@
+With this strategy the scheduler arranges processes
+with the least estimated processing time remaining
+to be next in the queue. This requires advanced
+knowledge or estimations about the time required for
+a process to complete.
+
+If a shorter process arrives during another process's
+execution, the currently running process is
+interrupted, dividing that process into two separate
+computing blocks.
+
+This algorithm is designed for maximum throughput in
+most scenarios.
+
+Waiting time and response time increase as the
+process's computational requirements increase. Since
+turnaround time is based on waiting time plus
+processing time, longer processes are significantly
+affected by this.
+
+Starvation is possible, especially in a busy system
+with many small processes being run.
+
+To use this policy we should have at least two
+processes of different priority.
