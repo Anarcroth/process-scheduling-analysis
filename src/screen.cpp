@@ -352,6 +352,11 @@ void PSAscreen::show_process(process& pr)
 
 void PSAscreen::show_alg_info(std::string alg)
 {
+    // Reset the screen from the leftovers from the previous data.
+    wclear(wlegend);
+    draw_frame_of(wlegend, " LEGEND ");
+    draw_legend_cont();
+
     std::ifstream algfile;
     if (alg == "FCFS")
 	algfile.open("fcfs.txt");
