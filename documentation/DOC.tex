@@ -863,7 +863,8 @@ The structure of \textit{UI} is as follows: 4 main panels, each one holding info
   On the very bottom of this panel, there are two miniature windows. Both of them depict the graph of the \textit{Waiting Time} and \textit{Turnaround Time} in terms of \textbf{amount of time} (on the $y-axis$) and number of processes (on the $x-axis$). That is, at each CPU Burst rotation, the graph shows what are the current averages. This gives an idea on how the algorithm is performing over time. When it comes to comparing, these graphs will make it easier for further evaluation and records keeping.
 
   \begin{figure}[H]
-    \includegraphics[width=\linewidth]{./pics/awt.jpg}
+    \centering
+    \includegraphics[width=0.75\columnwidth]{./pics/awt.jpg}
     \caption{Waiting Time Panel}
     \label{fig:Waiting Time Panel}
   \end{figure}
@@ -883,6 +884,7 @@ The structure of \textit{UI} is as follows: 4 main panels, each one holding info
 \item \textbf{DONE} panel - As mentioned above, this is the place where all of the done processes are held. The inserted processes are in the order of their completion.
 
   \begin{figure}[H]
+    \centering
     \includegraphics[width=\linewidth]{./pics/doneq.jpg}
     \caption{Done Panel}
     \label{fig:Done Panel}
@@ -893,12 +895,24 @@ The structure of \textit{UI} is as follows: 4 main panels, each one holding info
 \item \textbf{LEGEND} panel - This is the final panel and it holds information for all of the commands the user can send to the program. This makes working with the application easier. On the top, the different priorities are shown, together with the key that will spawn a process with that priority. There are 7 in total, starting form 0, all the way up to priority 6. There is an additional key that creates random processes, that will not have a priority, but that will be evaluated by the algorithm at execution time. Below this, the legend also shows each of the implemented processes in the system plus the key that will start executing it. When a procedure is started, below it, a text will appear which will explain what are its features and what it does. That way, the learning and evaluation process is made easier on the user.
 
   \begin{figure}[H]
-    \includegraphics[width=\linewidth]{./pics/legend.jpg}
+    \centering
+    \includegraphics[width=0.75\columnwidth]{./pics/legend.jpg}
     \caption{Legend Panel}
     \label{fig:Legend Panel}
   \end{figure}
 
   The legend panel color coded and we can see that in the brackets, next to each procedure, there is a character that will initiate it. Then, we can see how there are two sub-panels, one for the processes and one for the algorithms. This makes it exactly clear to the user what are the functionalities of the application.
+
+  On top of everything, there is also additional information that is given for each algorithm that is being currently run. This information can be used to understand what is happening currently on the screen and to also make it easier for any pedagogical lessons.
+
+  \begin{figure}[H]
+    \centering
+    \includegraphics[width=0.65\columnwidth]{./pics/legenddata.jpg}
+    \caption{Legend Info Panel}
+    \label{fig:Legend Info Panel}
+  \end{figure}
+
+  Here we can see that the text is placed in the free area of the application in the Legend panel and is currently explaining about the Round Robin algorithm. This looks both nice visually and is helpful at the same time.
 
 \end{itemize}
 
@@ -919,7 +933,15 @@ The legend for the different accepted types of input is as follows:
 
 \subsubsection{\underline{Software Architecture}}
 
-The Software Architecture of the project can be seen as one of the following: \textit{Monolithic}, \textit{Event-driven}, or \textit{Procedural}. If we look at the project as a \textit{Monolithic}, we can say that it encapsulates itself into a \textit{single-tiered} software application in which the user interface and data access code are combined into a single program from a single platform. A monolithic application is self-contained, and independent from other computing applications. The design philosophy is that the application is responsible not just for a particular task, but can perform every step needed to complete a particular function. On the other hand, were we to look at it through the perspective of the \textit{Event-driven} design, we can see how it follows a pattern promoting the production, detection, consumption of, and reaction to events. An \textit{event} can be defined as \textit{"a significant change in state"}. For example, when a \textbf{process} \code{ttl} is completely done, it changes state from \code{RUNNING} $\rightarrow$ \code{DONE}. And again, if we are to look at the project from the standpoint of a \textit{Procedural} system, we would see that it follows a certain set of rules, which in the end, produce an output that can be interpreted and evaluated for further work. As an example, we would be able to see how the \textbf{SJF} algorithm performs under long processes.
+The Software Architecture of the project can be seen as one of the following: \textit{MVC}, \textit{Monolithic}, \textit{Event-driven}, or \textit{Procedural}. If we look at the project as a \textit{Monolithic}, we can say that it encapsulates itself into a \textit{single-tiered} software application in which the user interface and data access code are combined into a single program from a single platform. A monolithic application is self-contained, and independent from other computing applications. The design philosophy is that the application is responsible not just for a particular task, but can perform every step needed to complete a particular function. On the other hand, were we to look at it through the perspective of the \textit{Event-driven} design, we can see how it follows a pattern promoting the production, detection, consumption of, and reaction to events. An \textit{event} can be defined as \textit{"a significant change in state"}. For example, when a \textbf{process} \code{ttl} is completely done, it changes state from \code{RUNNING} $\rightarrow$ \code{DONE}. And again, if we are to look at the project from the standpoint of a \textit{Procedural} system, we would see that it follows a certain set of rules, which in the end, produce an output that can be interpreted and evaluated for further work. As an example, we would be able to see how the \textbf{SJF} algorithm performs under long processes.
+
+\bigskip
+
+\textbf{\underline{MVC}}
+
+The Model View Controller (usually known as MVC) is an architectural pattern commonly used for developing user interfaces that divides an application into three interconnected parts. This is done to separate internal representations of information from the ways information is presented to and accepted from the user. The MVC design pattern decouples these major components allowing for efficient code reuse and parallel development.
+
+The Model View Controller approach in this project can be seen as the following way. First, we can check what is the Model of the application. This is the part where the data is stored and is handled by the business logic. The central component of the pattern. It is the application's dynamic data structure, independent of the user interface. It directly manages the data, logic and rules of the application. A large part of the app is in the Model section, because it is handling and working with a lot of algorithmic data. So we can consider that the Dispatcher, Scheduler, the Red-Black tree, the Process Poll, Processes, etc. Because all of this data is working in the background and we just see its visualization, we can put it in the Model.
 
 \subsubsection{\underline{Security Features}}
 
