@@ -4,6 +4,7 @@
 #include <vector>
 #include <memory>
 #include <ncurses.h>
+#include <fstream>
 
 #include "process.hpp"
 
@@ -29,8 +30,8 @@ public:
     void show_wt(std::vector<process> dq, int wt);
     void show_tat(int tat);
     void show_statistics(std::vector<std::string>& summaries);
-
     void show_process(process& pr);
+    void show_alg_info(std::string alg);
 
     void push_prc_in(WINDOW* w, std::vector<process>& pcbs);
 
@@ -95,6 +96,7 @@ private:
     static const std::string LEG_SJFV2_ALG;
     static const std::string LEG_RR_ALG;
     static const std::string LEG_PJF_ALG;
+    static const std::string LEG_CFS_ALG;
 
     static const int PR0COLOR;
     static const int PR1COLOR;

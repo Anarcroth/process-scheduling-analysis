@@ -97,6 +97,8 @@ void scheduler::take(std::vector<process>::iterator& pit, int tq)
  */
 void scheduler::fcfs()
 {
+    PSAscreen::get().show_alg_info("FCFS");
+
     reset();
     pool::eval_prcs_prty();
     auto pit = pool::ready_queue.begin();
@@ -128,6 +130,8 @@ void scheduler::fcfs()
  */
 void scheduler::sjf_v1()
 {
+    PSAscreen::get().show_alg_info("SJF");
+
     reset();
     pool::eval_prcs_prty();
     std::sort(pool::ready_queue.begin(),
@@ -157,6 +161,8 @@ void scheduler::sjf_v1()
  */
 void scheduler::sjf_v2()
 {
+    PSAscreen::get().show_alg_info("SJF");
+
     reset();
     pool::eval_prcs_prty();
 
@@ -195,6 +201,8 @@ int scheduler::exponential_average(int prev_pr_ttl)
  */
 void scheduler::round_rob()
 {
+    PSAscreen::get().show_alg_info("RR");
+
     reset();
     pool::eval_prcs_prty();
     auto pit = pool::ready_queue.begin();
@@ -218,6 +226,8 @@ void scheduler::round_rob()
  */
 void scheduler::pjf()
 {
+    PSAscreen::get().show_alg_info("PJF");
+
     reset();
     pool::eval_prcs_prty();
     std::sort(pool::ready_queue.begin(),
@@ -238,6 +248,8 @@ void scheduler::pjf()
 
 void scheduler::cfs()
 {
+    PSAscreen::get().show_alg_info("CFS");
+
     reset();
     pool::eval_prcs_prty();
 

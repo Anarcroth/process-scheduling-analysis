@@ -51,6 +51,7 @@ const std::string PSAscreen::LEG_SJFV1_ALG = "Shortest Job First (V1): SJF1 (h)"
 const std::string PSAscreen::LEG_SJFV2_ALG = "Shortest Job First (V2): SJF2 (s)";
 const std::string PSAscreen::LEG_RR_ALG = "Round Robbin: RR (o)";
 const std::string PSAscreen::LEG_PJF_ALG = "Priority Job First: PJF (p)";
+const std::string PSAscreen::LEG_CFS_ALG = "Completely Fair Scheduler: CFS (c)";
 
 const int PSAscreen::PR0COLOR = 100;
 const int PSAscreen::PR1COLOR = 101;
@@ -216,6 +217,9 @@ void PSAscreen::draw_legend_cont()
     waddstr(wlegend, LEG_RR_ALG.c_str());
     wmove(wlegend, 20, 2);
     waddstr(wlegend, LEG_PJF_ALG.c_str());
+    wmove(wlegend, 22, 2);
+    waddstr(wlegend, LEG_CFS_ALG.c_str());
+
 
     wnoutrefresh(wlegend);
 }
@@ -344,6 +348,36 @@ void PSAscreen::show_process(process& pr)
     waddstr(walg, (std::to_string(pr.get_ttl()) + "    ").c_str());
 
     wrefresh(walg);
+}
+
+void PSAscreen::show_alg_info(std::string alg)
+{
+    std::ifstream algfile;
+    if (alg == "FCFS")
+	algfile.open("fcfs.txt");
+    else if (alg == "SJF")
+	algfile.open("sjf.txt");
+    else if (alg == "RR")
+	algfile.open("rr.txt");
+    else if (alg == "PJF")
+	algfile.open("pjf.txt");
+    else if (alg == "CFS")
+	algfile.open("cfs.txt");
+
+    std::string line;
+    std::vector<std::string> text;
+    if (algfile.is_open()) {
+	while (getline(algfile, line))
+	    text.push_back(line);
+	algfile.close();
+    }
+    int i = 0;
+    for (auto t : text) {
+	wmove(wlegend, 24 + i, 2);
+	waddstr(wlegend, t.c_str());
+	i += 1;
+    }
+    wnoutrefresh(wlegend);
 }
 
 void PSAscreen::draw_frame()
