@@ -29,6 +29,7 @@ int scheduler::avg_tat = 0;
 int scheduler::total_t = 0;
 int scheduler::prev_pr_burst = 1000;
 int scheduler::current_awt = 0;
+int scheduler::current_tat = 0;
 
 scheduler::scheduler() {}
 
@@ -44,12 +45,14 @@ void scheduler::reset()
     total_t = 0;
     prev_pr_burst = 0;
     current_awt = 0;
+    current_tat = 0;
 
     pool::clear();
 
     PSAscreen::get().clear_scr();
     PSAscreen::get().get_table_partitionings();
-    PSAscreen::get().draw_w_scale();
+    PSAscreen::get().draw_w_scale(PSAscreen::get().get_wwt());
+    PSAscreen::get().draw_w_scale(PSAscreen::get().get_wtat());
     PSAscreen::get().push_prc_in(PSAscreen::get().get_wdone(), pool::done_queue);
     PSAscreen::get().draw_frame_of(PSAscreen::get().get_wdone(), " DONE ");
 }
@@ -323,4 +326,12 @@ void scheduler::calc_current_awt(std::vector<process> d_queue)
 	current_awt += p.get_wait_t();
 
     current_awt = current_awt /	d_queue.size();
+}
+
+void scheduler::calc_current_tat(std::vector<process> d_queue)
+{
+    for (auto& p : d_queue)
+	current_tat += p.get_tat();
+
+    current_tat = current_tat /	d_queue.size();
 }

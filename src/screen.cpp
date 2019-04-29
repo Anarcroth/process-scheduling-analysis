@@ -295,19 +295,23 @@ void PSAscreen::show_wt(std::vector<process> dq, int wt)
     wnoutrefresh(wwt);
 }
 
+void PSAscreen::show_tat(std::vector<process> dq, int tat)
+{
+    wattron(wtat, COLOR_PAIR(8));
+
+    int x = std::floor(x_partitioning * dq.size() + 1);
+    int y = std::floor((tat / y_max) * 13);
+
+    wmove(wtat, 13 - y, x);
+    waddstr(wtat, "*");
+    wnoutrefresh(wtat);
+}
+
 void PSAscreen::get_table_partitionings()
 {
     // needs to be calculated only once each algorithm
     x_partitioning = 52 / pool::size();
     y_max = pool::size() * 1500;
-}
-
-void PSAscreen::show_tat(int tat)
-{
-    wattron(walg, COLOR_PAIR(9));
-    wmove(walg, 8, 2);
-    waddstr(walg, ("Average Turnaround time: " +
-		   std::to_string(tat) + "    ").c_str());
 }
 
 void PSAscreen::show_statistics(std::vector<std::string>& summaries)
@@ -401,16 +405,18 @@ void PSAscreen::draw_frame_of(WINDOW *w, std::string title)
     // The wt and tat windows should always have their scales drawn
     // makes sure to do that
     if (w == wwt)
-	draw_w_scale();
+	draw_w_scale(wwt);
+    if (w == wtat)
+	draw_w_scale(wtat);
 
     wnoutrefresh(w);
 }
 
-void PSAscreen::draw_w_scale()
+void PSAscreen::draw_w_scale(WINDOW *w)
 {
-    wattron(wwt, COLOR_PAIR(9));
+    wattron(w, COLOR_PAIR(9));
     for (int i = 1; i < 14; i++) {
-	wmove(wwt, 14 - i, 0);
+	wmove(w, 14 - i, 0);
 	std::string scale_num = std::to_string(
 	    std::floor(i * (y_max / 13)));
 	scale_num = scale_num.substr(0, scale_num.find("."));
@@ -422,9 +428,9 @@ void PSAscreen::draw_w_scale()
 	else
 	    scale_num = scale_num.substr(0, 2) + "k";
 
-	waddstr(wwt, scale_num.c_str());
+	waddstr(w, scale_num.c_str());
     }
-    wnoutrefresh(wwt);
+    wnoutrefresh(w);
 }
 
 void PSAscreen::clear_scr()
@@ -432,6 +438,9 @@ void PSAscreen::clear_scr()
     wclear(wwt);
     PSAscreen::get().draw_frame_of(
 	PSAscreen::get().get_wwt(), " Waiting Time ");
+    wclear(wtat);
+    PSAscreen::get().draw_frame_of(
+	PSAscreen::get().get_wtat(), " Turnaround Time ");
 }
 
 PSAscreen::~PSAscreen()

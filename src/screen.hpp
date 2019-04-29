@@ -21,14 +21,14 @@ public:
 
     void draw_small_arrows();
     void draw_legend_cont();
-    void draw_w_scale();
+    void draw_w_scale(WINDOW *w);
 
     void clear_scr();
 
     void update_process_scr(process& pr);
 
     void show_wt(std::vector<process> dq, int wt);
-    void show_tat(int tat);
+    void show_tat(std::vector<process> dq, int tat);
     void show_statistics(std::vector<std::string>& summaries);
     void show_process(process& pr);
     void show_alg_info(std::string alg);

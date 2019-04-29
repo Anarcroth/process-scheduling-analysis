@@ -19,6 +19,7 @@ public:
     void cfs();       /* completely fair scheduler */
 
     static void calc_current_awt(std::vector<process> d_queue);
+    static void calc_current_tat(std::vector<process> d_queue);
 
     static int avg_wt;        /* average waiting time in ready queue */
     static int avg_tat;       /* average turnaround time */
@@ -26,6 +27,7 @@ public:
     static int prev_pr_burst; /* previous process burst */
 
     static int current_awt;   /* current average waiting time */
+    static int current_tat;   /* current average turnaround time */
 
 private:
     void reset(); /* reset global variables */

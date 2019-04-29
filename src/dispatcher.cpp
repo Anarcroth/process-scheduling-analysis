@@ -45,8 +45,11 @@ namespace dispatcher
 	    pit = pool::ready_queue.erase(pit);
 
 	    scheduler::calc_current_awt(pool::done_queue);
+	    scheduler::calc_current_tat(pool::done_queue);
 	    PSAscreen::get().show_wt(pool::done_queue,
 				     scheduler::current_awt);
+	    PSAscreen::get().show_tat(pool::done_queue,
+				     scheduler::current_tat);
 
 	    PSAscreen::get().push_prc_in(
 		PSAscreen::get().get_wdone(), pool::done_queue);
@@ -114,7 +117,9 @@ namespace dispatcher
 		rbt.dq.push_back(std::move(pit));
 
 		scheduler::calc_current_awt(rbt.dq);
+		scheduler::calc_current_tat(rbt.dq);
 		PSAscreen::get().show_wt(rbt.dq, scheduler::current_awt);
+		PSAscreen::get().show_tat(rbt.dq, scheduler::current_tat);
 	    } else {
 		rbt.insert(pit);
 	    }
