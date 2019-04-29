@@ -17,6 +17,7 @@
 \usepackage{algorithm}
 \usepackage{algpseudocode}
 \usepackage{pgfplots}
+\usepackage[export]{adjustbox}
 
 \renewcommand{\familydefault}{\sfdefault}
 
@@ -436,6 +437,10 @@ The \textbf{R}ound \textbf{R}obin algorithm is one of the more complex, but far 
 
 It's also good to mention that this algorithm handles IO heavy tasks great, as it is constantly in a state where it changes the running task and it can parallelize itself in a good manner. Another interesting thing is that this algorithm is used in a real modern system - the current Windows 10 operating system is using it. But because this algorithm alone cannot handle the complexity of the entire OS, it is also combined with a multilevel priority queue, in order to have a good scheduler.
 
+\bigskip
+
+\underline{\textbf{Evaluation}}
+
 \begin{table}[H]
   \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
     \toprule
@@ -465,6 +470,10 @@ It's also good to mention that this algorithm handles IO heavy tasks great, as i
 \end{table}
 
 From this table we can gather a few things. This is the first algorithm that is running in an optimal time. The complexity of the algorithm itself is in linear time, but the execution of the processes is in fact in logarithmic, meaning that we can expect optimal evaluation in the end. The reason that the algorithm is in linear time is because we are dealing with the full set of processes and we are iterating over them in a sequential manner. But the execution time of the processes is in logarithmic time, because each process will gradually go over its life time, where in the end, all of the process will almost simultaneously finish.
+
+\bigskip
+
+\underline{\textbf{Example}}
 
 Let's take an example and look at a Gantt chart to see how this will look like.
 
@@ -537,11 +546,120 @@ From the table we can draw the conclusion that the waiting time is significantly
 
 \subsubsection{\underline{Priority Job First}}
 
+The SJF algorithm is a special case of the general priority-scheduling algorithm. A priority is associated with each process, and the CPU is allocated to the process with the highest priority. Equal-priority processes are scheduled in FCFS order. An SJF algorithm is simply a priority algorithm where the priority(p) is the inverse of the (predicted) next CPU burst. The larger the CPU burst, the lower the priority, and vice versa. Note that we discuss scheduling in terms of high priority and low priority. Priorities are generally indicated by some fixed range of numbers, such as 0 to 7 or 0 to 4,095. However, there is no general agreement on whether 0 is the highest or lowest priority. Some systems use low numbers to represent low priority; others use low numbers for high priority. This difference can lead to confusion. In this application, it has been chosen that there would be 7 priorities, starting form 0, all the way to 6, where the highest priority is 6 and the lowest one is 0.
+
+Priorities can be defined either internally or externally. Internally defined priorities use some measurable quantity or quantities to compute the priority of a process. For example, time limits, memory requirements, the number of open files, and the ratio of average I/O burst to average CPU burst have been used in computing priorities. External priorities are set by criteria outside the Operating System, such as the importance of the process, the type and amount of funds being paid for computer use, the department sponsoring the work, and other, factors. Priority scheduling can be either preemptive or non-preemptive. When a process arrives at the ready queue, its priority is compared with the priority of the currently running process. A preemptive priority scheduling algorithm will preempt the CPU if the priority of the newly arrived process is higher than the priority of the currently running process. A non-preemptive priority scheduling algorithm will simply put the new process at the head of the ready queue.
+
+A major problem with priority scheduling algorithms is starvation. A process that is ready to run but waiting for the CPU can be considered blocked. A priority scheduling algorithm can leave some low-priority processes waiting indefinitely. In a heavily loaded computer system, a steady stream of higher-priority processes can prevent a low-priority process from ever getting the CPU. Generally, one of two things will happen. Either the process will eventually be run, or the computer system will eventually crash and lose all unfinished low-priority processes. With this application, we cannot have such a problem, because of the simple case that there are no new processes that are being entered during algorithm execution. Although the problem can easily be simulated and reproduced, changing the whole system just for that demonstrations deems unnecessary.
+
+\bigskip
+
+\underline{\textbf{Evaluation}}
+
+\begin{table}[H]
+  \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
+    \toprule
+    \hfil\bfseries Pros & \hfil\bfseries Cons \\
+    \cmidrule(r{3\tabcolsep}){1-1}\cmidrule(l{-\tabcolsep}){2-2}
+
+    Used in real system\par
+    Can be optimized to good speeds\par
+    Allows for a more interactive system\par
+
+    &
+
+    Has starvation problem\par
+    Needs additional system to work good\par
+    Not completely optimal \\
+    \bottomrule
+    \toprule
+    \hfil\bfseries Algorithm Complexity & \hfil\bfseries Execution Complexity \\
+
+    \\
+    \centerline{$O(n)$}\par
+
+    &
+
+    \centerline{$O(n)$}
+  \end{tabularx}
+  \caption{Pros and Cons of PJF}
+\end{table}
+
+The Priority Job First algorithm is one that is a key component to other algorithms, but on its own, it cannot outperform other algorithms. It is used in conjunction with other implementations, in order to build more stable systems, but standalone it cannot fair all that good. It does allow for a more interactive system, where the user can influence the process priority, but on the other side, it does have a serious problems with starvation on processes. There are fixes to this problem, but most of the time, they are quite complicated.
+
+\bigskip
+
+\textbf{\underline{Example}}
+
+\begin{table}[H]
+  \begin{center}
+    \label{tab:PJF processes}
+    \begin{tabular}{c|c|c}
+      \toprule
+      \textbf{Process ID} & \textbf{Time To Live} & \textbf{Priority} \\
+      \midrule
+      cd23 & 10 & 3 \\
+      12a0 & 1 & 1 \\
+      ff83 & 2 & 4 \\
+      43bb & 2 & 5 \\
+      9b9a & 5 & 2 \\
+      \bottomrule
+    \end{tabular}
+    \caption{PJF processes table}
+  \end{center}
+\end{table}
+
+In this table for the example, we have one additional filed, which is the specified priority. In this specific case, we take it that the lower priority number means that the process is more important. That is why we would consider that the second process is with the most importance, while the second to last one is the least significant one. Having this in mind, we can plot the execution of the processes and see where they fair in the Gantt chart. We would be expecting that the results not to be better than the previous algorithms.
+
+\begin{figure}[H]
+  \centering
+  \begin{ganttchart}[
+    expand chart=\textwidth,
+    hgrid={black}
+    ]{1}{20}
+    \gantttitle{\textbf{PJF}}{20} \\
+    \gantttitlelist{1,...,20}{1} \\
+    \ganttbar[bar/.append style={fill=pr6}]{12a0}{1}{1} \\
+    \ganttbar[bar/.append style={fill=pr5}]{9b9a}{2}{6} \\
+    \ganttbar[bar/.append style={fill=pr3}]{cd23}{7}{16} \\
+    \ganttbar[bar/.append style={fill=pr2}]{ff83}{17}{18} \\
+    \ganttbar[bar/.append style={fill=pr1}]{43bb}{19}{20} \\
+  \end{ganttchart}
+  \caption{PJF Gantt Chart}
+  \label{fig:PJF Gantt Chart}
+\end{figure}
+
+The Gantt chart shows us that the processes are executed in a sequential manner, based on their predefined priority. As they are colored, we can see that the process with the highest priority, regardless of the fact that it doesn't have the best execution time, is scheduled first. After that the rest follow on the same principle. If the user has specified that this is the order of execution he/she want the processes to be in, then this is fine, but from an evaluation stand point, we can see that this doesn't fair well.
+
+\begin{table}[H]
+  \begin{center}
+    \label{tab:RR times}
+    \begin{tabular}{c|c|c}
+      \toprule
+      \textbf{Process ID} & \textbf{Waiting time} & \textbf{Turnaround time} \\
+      \midrule
+      cd23 & 6 & 10 \\
+      12a0 & 0 & 1 \\
+      ff83 & 16 & 2 \\
+      43bb & 18 & 2 \\
+      9b9a & 1 & 5 \\
+      \bottomrule
+      \toprule
+      \textbf{Average} & \textbf{8.2} & \textbf{4} \\
+    \end{tabular}
+    \caption{RR times table}
+  \end{center}
+\end{table}
+
+The average waiting time is way too high for our liking and as we would expect, the turnaround time is still the same. It is clear that this algorithm isn't all that good alone and it needs another structure. Usually we would combine this with a multilevel queue, which would create a multilevel priority queue. This is what Windows 10 uses as a scheduler.
+
 \subsubsection{\underline{Completely Fair Scheduling}}
 
 The \textbf{C}ompletely \textbf{F}air \textbf{S}cheduler is one of the most interesting scheduling schemes we can observe. It is the famous scheduler, used by default, in the GNU/Linux Operating System. First introduced in the 2.6 patch in 2007, and shortly after optimized for the 2.6.24 release, this algorithm provides, as the name suggests, a completely fair scheduling for all of the processes.
 
-\subsubsection{\underline{A short history of Linux schedulers}}
+\bigskip
+
+\textbf{\underline{A short history of Linux Schedulers}}
 
 Early Linux schedulers used minimal designs, obviously not focused on massive architectures with many processors or even hyperthreading. The 1.2 Linux scheduler used a circular queue for runnable task management that operated with a round-robin scheduling policy. This scheduler was efficient for adding and removing processes (with a lock to protect the structure). In short, the scheduler wasn’t complex but was simple and fast.
 
@@ -551,7 +669,9 @@ The 2.4 kernel included a relatively simple scheduler that operated in O(N) time
 
 The early 2.6 scheduler, called the O(1) scheduler, was designed to solve many of the problems with the 2.4 scheduler—namely, the scheduler was not required to iterate the entire task list to identify the next task to schedule (resulting in its name, O(1), which meant that it was much more efficient and much more scalable). The O(1) scheduler kept track of runnable tasks in a run queue (actually, two run queues for each priority level—one for active and one for expired tasks), which meant that to identify the task to execute next, the scheduler simply needed to dequeue the next task off the specific active per-priority run queue. The O(1) scheduler was much more scalable and incorporated interactivity metrics with numerous heuristics to determine whether tasks were I/O-bound or processor-bound. But the O(1) scheduler became unwieldy in the kernel. The large mass of code needed to calculate heuristics was fundamentally difficult to manage and, for the purist, lacked algorithmic substance.
 
-\subsubsection{\underline{How CFS works}}
+\bigskip
+
+\textbf{\underline{How CFS works}}
 
 CFS tries to be "fair" to every task running in the system.
 
@@ -589,6 +709,69 @@ To determine the balance, the CFS maintains the amount of time provided to a giv
 But rather than maintain the tasks in a run queue, as has been done in prior Linux schedulers, the CFS maintains a time-ordered red-black tree. A red-black tree is a tree with a couple of interesting and useful properties. First, it's self-balancing, which means that no path in the tree will ever be more than twice as long as any other. Second, operations on the tree occur in O(log n) time (where n is the number of nodes in the tree). This means that you can insert or delete a task quickly and efficiently.
 
 With tasks (represented by \code{sched\_entity} objects) stored in the time-ordered red-black tree, tasks with the gravest need for the processor (lowest virtual runtime) are stored toward the left side of the tree, and tasks with the least need of the processor (highest virtual runtimes) are stored toward the right side of the tree. The scheduler then, to be fair, picks the left-most node of the red-black tree to schedule next to maintain fairness. The task accounts for its time with the CPU by adding its execution time to the virtual runtime and is then inserted back into the tree if runnable. In this way, tasks on the left side of the tree are given time to execute, and the contents of the tree migrate from the right to the left to maintain fairness. Therefore, each runnable task chases the other to maintain a balance of execution across the set of runnable tasks.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.7\textwidth]{./pics/linuxkernel.png}
+  \caption{Linux Kernel Simplified}
+  \label{fig:Linux Kernel Simplified}
+\end{figure}
+
+Here we see a simplified version of the kernel where the scheduling system can be seen in action and how it interacts with the rest of the system. The dispatcher is in a close relationship with the IRQs and has a wide reach to all systems.
+
+A "maximum execution time" is also calculated for each process. This time is based upon the idea that an "ideal processor" would equally share processing power amongst all processes. Thus, the maximum execution time is the time the process has been waiting to run, divided by the total number of processes, or in other words, the maximum execution time is the time the process would have expected to run on an "ideal processor".
+
+When the scheduler is invoked to run a new process, the operation of the scheduler is as follows:
+
+\begin{itemize}
+\item The leftmost node of the scheduling tree is chosen (as it will have the lowest spent execution time), and sent for execution.
+\item If the process simply completes execution, it is removed from the system and scheduling tree.
+\item If the process reaches its maximum execution time or is otherwise stopped (voluntarily or via interrupt) it is reinserted into the scheduling tree based on its new spent execution time.
+\item The new leftmost node will then be selected from the tree, repeating the iteration.
+\end{itemize}
+
+If the process spends a lot of its time sleeping, then its spent time value is low and it automatically gets the priority boost when it finally needs it. Hence such tasks do not get less processor time than the tasks that are constantly running.
+
+CFS is an implementation of a well-studied, classic scheduling algorithm called weighted fair queuing.
+
+Originally invented for packet networks, fair queuing had been previously applied to CPU scheduling under the name stride scheduling. However, CFS uses terminology different from that normally applied to fair queuing. "Service error" (the amount by which a process's obtained CPU share differs from its expected CPU share) is called "wait\_runtime" in Linux's implementation, and "queue virtual time" (QVT) is called "fair\_clock".
+
+The fair queuing CFS scheduler has a scheduling complexity of O(log N), where N is the number of tasks in the runqueue. Choosing a task can be done in constant time, but reinserting a task after it has run requires O(log N) operations, because the runqueue is implemented as a red-black tree.
+
+CFS is the first implementation of a fair queuing process scheduler widely used in a general-purpose operating system.
+
+\bigskip
+
+\textbf{\underline{What is a Red-Black Tree}}
+
+The real beauty in this algorithm is the fact that it uses the famous Red-Black tree which is a self-balancing tree. Each node of the binary tree has an extra bit, and that bit is often interpreted as the color (red or black) of the node. These color bits are used to ensure the tree remains approximately balanced during insertions and deletions.
+
+Balance is preserved by painting each node of the tree with one of two colors in a way that satisfies certain properties, which collectively constrain how unbalanced the tree can become in the worst case. When the tree is modified, the new tree is subsequently rearranged and repainted to restore the coloring properties. The properties are designed in such a way that this rearranging and recoloring can be performed efficiently.
+
+The balancing of the tree is not perfect, but it is good enough to allow it to guarantee searching in O(log n) time, where n is the total number of elements in the tree. The insertion and deletion operations, along with the tree rearrangement and recoloring, are also performed in O(log n) time.
+
+Tracking the color of each node requires only 1 bit of information per node because there are only two colors. The tree does not contain any other data specific to its being a red–black tree so its memory footprint is almost identical to a classic (uncolored) binary search tree. In many cases, the additional bit of information can be stored at no additional memory cost.
+
+In addition to the requirements imposed on a binary search tree the following must be satisfied by a red-black tree:
+
+\begin{itemize}
+\item Each node is either red or black.
+\item The root is black. This rule is sometimes omitted. Since the root can always be changed from red to black, but not necessarily vice versa, this rule has little effect on analysis.
+\item All leaves (NIL) are black.
+\item If a node is red, then both its children are black.
+\item Every path from a given node to any of its descendant NIL nodes contains the same number of black nodes.
+\end{itemize}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{./pics/rbt.png}
+  \caption{Red-Black Tree}
+  \label{fig:Red-Black Tree}
+\end{figure}
+
+These constraints enforce a critical property of red–black trees: the path from the root to the farthest leaf is no more than twice as long as the path from the root to the nearest leaf. The result is that the tree is roughly height-balanced. Since operations such as inserting, deleting, and finding values require worst-case time proportional to the height of the tree, this theoretical upper bound on the height allows red–black trees to be efficient in the worst case, unlike ordinary binary search trees.
+
+To see why this is guaranteed, it suffices to consider the effect of properties 4 and 5 together. For a red–black tree T, let B be the number of black nodes in property 5. Let the shortest possible path from the root of T to any leaf consist of B black nodes. Longer possible paths may be constructed by inserting red nodes. However, property 4 makes it impossible to insert more than one consecutive red node. Therefore, ignoring any black NIL leaves, the longest possible path consists of 2*B nodes, alternating black and red (this is the worst case). Counting the black NIL leaves, the longest possible path consists of 2*B-1 nodes.
 
 \subsubsection{\underline{Normal and Even Distributions for Processes}}
 
@@ -941,9 +1124,63 @@ The Software Architecture of the project can be seen as one of the following: \t
 
 The Model View Controller (usually known as MVC) is an architectural pattern commonly used for developing user interfaces that divides an application into three interconnected parts. This is done to separate internal representations of information from the ways information is presented to and accepted from the user. The MVC design pattern decouples these major components allowing for efficient code reuse and parallel development.
 
-The Model View Controller approach in this project can be seen as the following way. First, we can check what is the Model of the application. This is the part where the data is stored and is handled by the business logic. The central component of the pattern. It is the application's dynamic data structure, independent of the user interface. It directly manages the data, logic and rules of the application. A large part of the app is in the Model section, because it is handling and working with a lot of algorithmic data. So we can consider that the Dispatcher, Scheduler, the Red-Black tree, the Process Poll, Processes, etc. Because all of this data is working in the background and we just see its visualization, we can put it in the Model.
+The Model View Controller approach in this project can be seen as the following way. First, we can check what is the Model of the application. This is the part where the data is stored and is handled by the business logic. The central component of the pattern. It is the application's dynamic data structure, independent of the user interface. It directly manages the data, logic and rules of the application. The model is responsible for managing the data of the application. It receives user input from the controller. A large part of the app is in the Model section, because it is handling and working with a lot of algorithmic data. So we can consider that the Dispatcher, Scheduler, the Red-Black tree, the Process Poll, Processes, etc. Because all of this data is working in the background and we just see its visualization, we can put it in the Model. All of the algorithms that are implemented, plus the management of the data-structures and the pool queues are also handled in the Model part.
+
+The View is for any representation of information such as a chart, diagram or table. Multiple views of the same information are possible, such as a bar chart for management and a tabular view for accountants. The view means presentation of the model in a particular format. For us, we have plenty of data in the View, although we have only one class that is managing this whole section, which would be the screen class. This class manages all of the windows and sub-windows that we see, plus any text and dynamics that are represented during execution. This is great for us, because we have one singleton that has an open API to the other parts, and can be called and used in a completely decoupled way. So if we want to change some of the headings on some of the panels or to create some new data, the screen class allows us to do that easily. Beneath the screen class lies the ncurses library that allows all of these graphics manipulations in the terminal, but having a custom written API makes things much more easier to manage and work with. In the end we end up with an intuitive and fun User Interface that makes working with the application much more enjoyable.
+
+The Controller accepts input and converts it to commands for the model or view. The controller responds to the user input and performs interactions on the data model objects. The controller receives the input, optionally validates it and then passes the input to the model. For this application, the Controller is the main driver of the project, which would be just a small part, actually the smallest piece of code, that there is, that manages the data flow. In this case, the controller is the one that takes in the data character input from the user and sends it to the scheduling system, which would be part of the Model. Then the Controller updates the information and gives it to the screen, where the View can add it to the output and we can see it represented in the terminal. Although very small, it is a key part of the whole system, because it accounts for security measures and proper data flow.
+
+\bigskip
+
+\textbf{\underline{Monolithic}}
+
+A Monolithic application describes a single-tiered software application in which the user interface and data access code are combined into a single program from a single platform. A Monolithic application is self-contained, and independent from other computing applications. The design philosophy is that the application is responsible not just for a particular task, but can perform every step needed to complete a particular function.
+
+Of course another approach to take the architecture of the project is to look at it like a monolithic structure. Because of the overwhelming part of the logic and algorithmic work that is being put into this app, we can say that it is massive in those terms and that it holds value as a desktop application. The GUI part of the desktop app is the terminal and the terminal graphics that are being used. Then all of the other data is being processes is part of the monolithic structure and comes packaged together into a whole bundle. This doesn't mean that the project is unmanageable, or that it is difficult to write and support, but it means that it has built up to a stature of complexity, similar to that of a desktop app.
+
+Because the app is written in C++, a language which, although popular, is difficult to distribute across many platforms, and is also using a third-party software library (the ncurses library), we can say that packaging this app into a single entity makes sense and provides good distribution and sharing across platforms. With a simple installation, this can be ported to other Linux boxes, where it can be freely run. This also means that it can be used in a classroom, where the students can open the application and play with it for learning purposes.
+
+\subsubsection{\underline{Components}}
+
+From a component standpoint, we can see in the following diagram how the whole procedure in the application fairs. There are two interesting things to notice in the diagram.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{./pics/component.jpg}
+  \caption{Component Diagram}
+  \label{fig:Component Diagram}
+\end{figure}
+
+First thing is that the diagram is relatively simple to follow. We have 3 major components that are separated into their respective place. There is the Algorithm part, which encapsulates most of the classes in the app. There is the UI component section, which comprises from the screen class. Finally, there is Infrastructure section, which can be seen in the two separate classes - the PSA and the Commons section.
+
+The second thing we cannot directly see from this diagram is that although it looks simple, the internal workings of the application are hidden from the diagram. The meat of the project is hidden behind the algorithm, trees, dispatchers, pools, and processes, which all have a high dynamic of data flow.
+
+Let's look at each component individually. Starting from the Screen, it is the part of the application which ensures the UI is working. This is the only a single component, because we don't need it to be too big or too complex. It has an open interface towards the driver section of the app. The screen is the class that takes every piece of data and provides a nice output for the terminal. Thus, this is the way we see things that are put on the screen. Now let's move to the Infrastructure part. This comprises of two separate classes. The reason they are not under the same umbrella, is because they are play a different key role in the app, but are still a vital part of the whole functionality. The Commons class is a generic small library, that includes different pieces of data and calculations that do not fit in any other place. For instance, it calculates the different distributions for the process generations, it provides conversions from numbers to strings, and so on. This component also has an open API, which allows very easy access to the different functionalities. The PSA is another small component, which is the main driver of the app. Through it, we reach the UI section in order to regularly update the screen, input key presses, and also start new algorithms and add new processes. The final part of the whole story is the Algorithm section. This is by far the largest piece of software we have. First we take a look at the Pool. This has a direct access to the Commons component, because it uses it the most on a regular basis. Then the data flow from the pool is going through the Dispatcher, then onto the Scheduler and Process classes. All of these classes are simple to understand, but the magic hides behind the fact that they are calculating complex things. We also have a Red Black tree section, which exists only for the CFS algorithm, but the data flow also passes through it.
+
+So in conclusion for this part, we can say that the app is easy to understand, but much more difficult to follow once the algorithms start executing.
+
+\subsubsection{\underline{Deployment}}
+
+From a deployment stand point, we have an even simpler diagram, but that's okay. This is still a desktop application and a project that serves to be pedagogical and used for research. So let's look at the diagram.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{./pics/deployment.jpg}
+  \caption{Deployment Diagram}
+  \label{fig:Deployment Diagram}
+\end{figure}
+
+Here we can see how the user can access the project through some machine and can run it there. Once we start, we go to the infrastructure part, where we can see which files play a role in. These would be the psa and common files, allowing for a connection between the other components. In this case we can see that this is the Controller section of the app looking at it like an MVC. Then there is the Frontend part, which is the screen files, allowing for ncurses to do its job. The Backend is part of an algorithm section, or the Model if you like. Then we have two subsections - one is the general bunch of algorithms that are part of the whole project and another is the subsection for the CFS scheduler, where we can see that the red black tree files are there. So these two comprise the back end of the project and it communicates with the psa file in order to provide everything to the user.
 
 \subsubsection{\underline{Security Features}}
+
+Coming into the security part of the application, there are a few things to consider. First, because this is a desktop app and it does not have an actual database or a connection to the internet, we can say that the security measures we have to take must be unconventional. Second, we must be careful with the execution of the processes, as this is a desktop app, we must make sure that we do not stall the terminal or break the system if we overload it.
+
+This project has a few files that are loaded and used to represent the information for the different algorithms. These files come with the standard package of the program and they are part of the source files, where they are programmatically loaded. So unless someone manually start tempering with the project system files, in order to change to algorithm output when it is given in the legend panel, then there is no need nor necessity for any more complex database preservation or encryption schemes. Additionally, the program is written in such a way, that the process execution and creation cannot be tempered with through any breakage and cannot be changed in any configuration files. For one, there are not configuration files to begin with. The best security is the one for which you don't need any security.
+
+Another aspect we have to look at is the distribution method for the project. Because we want this to be used for research and studying, we have to have it in a safe space and packaged without being compromised. This can easily be achieved if there is a distributed source and package that is downloadable over a secure connection. One such way to achieve this is to upload the project to GitHub and to package it systematically for different operating systems. This both allows to have an open source secure project that can be assured that there is no tempering with and it also allows for easy usage of the app in general.
+
+We must also keep in mind that because we are playing with timing, processes, simulations, and also having the risk of blocking the whole terminal, we must take special precautions that do not allow any such situations. One thing to notice is that there are some cases where if we do not limit the user interface, then the user can destroy their system. So what could happen is that they can overload the application, which could cause the terminal to overload and then the CPU start overheating. Because of this, the user is allow to have a limited input window, there are no open inputs that would cause overheating and needless input, there is not a chance to break the system and it's safe for the common user.
 
 \section{\underline{Implementation}}
 
@@ -951,7 +1188,237 @@ This software is developed entirely with the \code{C++} programming language. Al
 
 In addition to this, the famous library \code{ncurses} is used in order to make working with terminal emulators easier. \code{ncurses} provides an \code{API} for manipulating the graphics and output of the terminal. Since this is an application, based on working with a terminal emulator, such a library would be of great help. The specific terminal that was used to test and run the application is \code{xterm}, but this was also tested on \code{gnome-terminal}.
 
-The operating system used to create the software is \code{Arch Linux}, with additional testing environment under \code{Fedora 29}.
+The Operating System used to create the software is \code{Arch Linux}, with additional testing environment under \code{Fedora 29}. There isn't much of a importance on what Linux box this is tested and what terminal is used, as long as the app has access to the ncurses library that is used.
+
+The reason that C++ was used is because it's both a challenging and granular language. C++ is very verbose and you have to write a lot of code to get things going, there is a lot of file management, but it also allows for much faster and better performance. If we compare this to using Python, then Python is fast, but not as fast as C++ and it doesn't allow for such fine tuning that C++ has. Because of the nature of the project, where we are moving objects, working with move semantics, have some form of memory management, dealing with mutexes, and having additional threads, then C++ is the right choice.
+
+\bigskip
+
+\textbf{\underline{Installation}}
+
+In order to run this project, we must have the ncurses library, we must have a running terminal emulator, such as gnome-terminal or xterm, and we must have C++ 11 or above running. Then we acquire a copy of the project, optimally from GitHub, and once we download it, we just have to compile it. The compilation step is very easy, because in order to do that we just have to run one single command. The reason for this is because there is a nifty \code{Makefile}, where all of the different files are bundled and combined, which makes a nice executable in the end.
+
+\begin{lstlisting}
+# Compiler:
+CC = clang++
+
+# Compiler flags:
+#  -g    	adds debugging information to the executable file
+#  -std=c++11	use c++ 11 standard
+#  -Wall 	turns on most, but not all, compiler warnings
+#  -lncurses  	adds the ncurses library
+CPPFLAGS = -g -std=c++11 -Wall -lncurses -lpthread
+
+# Invoke the first target entry:
+default: psa
+
+# To create the executable file:
+psa: psa.o process.o commons.o screen.o scheduler.o pool.o dispatcher.o rbtree.o
+	$(CC) $(CPPFLAGS) -o psa.app psa.o process.o commons.o screen.o scheduler.o pool.o dispatcher.o rbtree.o
+
+# Provide source files:
+psa.o: psa.cpp
+	$(CC) -c psa.cpp
+
+process.o: process.cpp
+	$(CC) -c process.cpp
+
+commons.o: commons.cpp
+	$(CC) -c commons.cpp
+
+screen.o: screen.cpp
+	$(CC) -c screen.cpp
+
+scheduler.o: scheduler.cpp
+	$(CC) -c scheduler.cpp
+
+pool.o: pool.cpp
+	$(CC) -c pool.cpp
+
+dispatcher.o: dispatcher.cpp
+	$(CC) -c dispatcher.cpp
+
+rbtree.o: cfs/rbtree.cpp
+	$(CC) -c cfs/rbtree.cpp
+
+# Remove executable files, as well as old .o object
+# files and *~ backup files:
+clean:
+	$(RM) psa *.o *~
+\end{lstlisting}
+
+With this file, we can run a command and we can see that the product would be an executable that is called \code{psa.app}. It is clear from the file that we are using at least C++ 11, with the pthread library, the ncurses library, with all the warning are on.
+
+\begin{lstlisting}
+# Download source
+git clone https://github.com/Anarcroth/process-scheduling-analysis.git
+
+# Navigate to folder
+cd process-scheduling-analysis
+cd src
+
+# Compile
+make
+
+# Run
+./psa.app
+\end{lstlisting}
+
+All of these steps have to be done in the terminal. Then when we execute them, we will be sure that we will have a running application. It will be in full screen and we can start using it.
+
+\bigskip
+
+\textbf{\underline{Interesting Implementations}}
+
+There are a few implementations that are curious and worth looking at. First off, we can look at the algorithm implementations for different algorithms. There is no point in looking at every algorithm, but there are a few that are interesting. So we will look at the SJF method 2, Round-Robin, CFS.
+
+So once we know how these algorithms work, we can see their implementation in action. Looking at the implementation of SJF, we have to have some form of predictions and we have to also track which would be the shortest processes.
+
+\begin{lstlisting}
+void scheduler::sjf_v2()
+{
+    PSAscreen::get().show_alg_info("SJF");
+
+    reset();
+    pool::eval_prcs_prty();
+
+    int prediction = prev_pr_burst;
+    auto pit = pool::ready_queue.begin();
+    while (pit != pool::ready_queue.end()) {
+	PSAscreen::get().update_process_scr(*pit);
+
+	// must be saved before the next process comes
+	int prev_pr_ttl = pit->get_ttl();
+	take(pit, prediction);
+	prediction = exponential_average(prev_pr_ttl);
+    }
+    add_summary("SJF V2");
+    PSAscreen::get().show_statistics(summaries);
+}
+\end{lstlisting}
+
+In the beginning, we show the info for the algorithm. Then we reset the values for which we keep track of, such as the global statistics. Each process has its priority evaluated. Then an execution estimation is made as to how long should that process execute. This prediction is updated on every that comes next. Each process can have IO and be pushed to the ready queue again. At the end, the statistics of executions are shown.
+
+\begin{lstlisting}
+int scheduler::exponential_average(int prev_pr_ttl)
+{
+    prev_pr_burst = ALPHA * prev_pr_ttl + (1 - ALPHA) * prev_pr_burst;
+    return prev_pr_burst;
+}
+\end{lstlisting}
+
+This calculates the next expected duration of a process CPU burst and returns it as a recommendation. As we know from the aforementioned theory above, then we know that the constant \code{ALPHA} must be somewhere between 0 and 1, with a middle value of 0.5. In this case, we use the middle value because we both care for the previous process and the processes before that. Of course this constant is made as a part of the scheduler, which can be programatically changed.
+
+\begin{lstlisting}
+void scheduler::round_rob()
+{
+    PSAscreen::get().show_alg_info("RR");
+
+    reset();
+    pool::eval_prcs_prty();
+    auto pit = pool::ready_queue.begin();
+    while (!pool::empty()) {
+	PSAscreen::get().show_process(*pit);
+	take(pit, TIME_QUANTUM);
+
+    }
+    add_summary("Round Robin");
+    PSAscreen::get().show_statistics(summaries);
+}
+\end{lstlisting}
+
+Each process has its priority evaluated. Each sequential process is taken and is executed for a constant TIME\_QUANTUM. Each process can have IO and be pushed to the ready queue again. At the end, the statistics of executions are shown. As with the previous algorithm, we have another global constant that is put in the scheduler class. This TIME\_QUANTUM is set to the middle value of having 50 milliseconds. For us, this is just fine, because with this time, we are forcing the program to sleep for that amount of time. Although we can make it sleep for less time, this sleeping function causes quite a bit of overhead, which means that if the number is slow enough then we would be causes an un-even process execution, stutter, and jitters in the graphics.
+
+\begin{lstlisting}
+void scheduler::cfs()
+{
+    PSAscreen::get().show_alg_info("CFS");
+
+    reset();
+    pool::eval_prcs_prty();
+
+    rbtree rbt;
+    for (auto p : pool::ready_queue)
+    	rbt.insert(p);
+
+    // small hack to make the thing more optimal
+    rbt.fix_internal_repr();
+\end{lstlisting}
+
+Finally we are looking at the CFS algorithm. It is a hefty piece of software, but what we can take away is that we have one additional object, which would be the red black tree. We have to do a few hacks in order to make things a little bit better. Because until know we were dealing with the global pool which was holding the processes, introducing a whole other complex tree structure to the mix causes huge problems with visualizing the algorithm. This means that we need an internal set of vectors that will be holding the processes in the tree. That is why we must maintain two queues in order for things to work. Because of this additional maintenance we have to do, we must optimize things a little bit, which means that we have to keep a proper organization of the processes in the tree queues. That is why we are sorting the processes once we enter them in the tree initially.
+
+\begin{lstlisting}
+    while (!rbt.empty()) {
+
+	sched_entity *shortest = rbt.get_smallest(rbt.root);
+	process pr = shortest->key;
+
+	rbt.delete_node(shortest);
+
+	PSAscreen::get().update_process_scr(pr);
+
+	// stats
+	pr.set_tos(total_t);
+	pr.add_wait_t(total_t);
+
+	// exec time calc
+	pr.calc_max_exec_t();
+	int exec_t = 0;
+	if (pr.get_max_exec_t() > 0)
+	    exec_t = pr.get_max_exec_t();
+	else
+	    exec_t = pr.get_ttl();
+
+	// IO
+	if (pr.has_io())
+	    exec(exec_t / 2);
+	else
+	    exec(exec_t);
+
+	pr.add_vruntime(exec_t);
+	dispatcher::cfs::con_swch(pr, exec_t, rbt);
+    }
+}
+\end{lstlisting}
+
+And while we are iterating over the non-empty tree, we have to pick the left-most node of the tree. This will be the smallest node in the tree, which is the exact one we want to get. After we get the process, we delete that node, as we have to do in theory, and then we continue with the execution of the algorithm. We do the standard procedures of accumulating the statistical data for each process and we also take into account the fact that must execute the maximum execution time. Due to the limitations of this project, we make some calculations a little bit simpler so that we do not waste time and still have a working version. After we calculate the maximum execution time, we then push the process to be executed for that amount and then we add it to the virtual runtime. In the end we call the special dispatcher, which does a context switch.
+
+Now that we have mentioned the dispatcher, we can look at how it works and what are the curiosities around it. We know that the two main jobs of this piece is to either engage into context switches or to handle interrupts. Here is how the interrupt handler works.
+
+\begin{lstlisting}
+void interrupt(std::vector<process>::iterator& pit, int tq)
+{
+    save_state(pit, tq);
+
+    pool::wait_queue.push_back(std::move(*pit));
+    pit = pool::ready_queue.erase(pit);
+
+    std::thread iothread(dispatcher::exec_io,
+     		     pool::wait_queue.begin());
+    iothread.detach();
+}
+\end{lstlisting}
+
+We can see that even during such an event, we first must save the state of the current process, expressed as a pointer iterator to the actual process. Then we push that process to the waiting queue. Here we are utilizing the move semantics of C++, which basically transfers ownership of one object from one container to another. We remove the process from the ready queue and then we create a special separate thread which will call the execution of the IO operation. Then what we do is we detach this separate thread from the main one. By doing this, we tell C++ that we want this method to execute independently from any other execution and when it finishes, it will end quietly. In order to do this we need the following code.
+
+\begin{lstlisting}
+void exec_io(std::vector<process>::iterator pit)
+{
+    iomutex.lock();
+
+    auto io_ttl = pit->get_ioops().begin();
+    std::this_thread::sleep_for(std::chrono::milliseconds(*io_ttl));
+    pit->add_tat(*io_ttl);
+    pit->get_ioops().erase(io_ttl);
+
+    pool::ready_queue.push_back(std::move(*pit));
+    pool::wait_queue.erase(pit);
+
+    iomutex.unlock();
+}
+\end{lstlisting}
+
+Here, using the special \code{iomutex} object, we lock this piece of code and ensure that these calculations that we are doing are not going to cause a race condition and that we wont invalidate some piece of memory. Additionally, here we are executing the IO operation, by calling the sleep function and removing one IO operation from the set that the specific process has.
 
 \section{\underline{Testing}}
 
