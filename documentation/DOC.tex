@@ -67,9 +67,9 @@
 
 \begin{document}
 
-\maketitle
 \pagenumbering{arabic}
 
+\tableofcontents
 \newpage
 
 \section{\underline{Introduction}}
@@ -1422,6 +1422,47 @@ Here, using the special \code{iomutex} object, we lock this piece of code and en
 
 \section{\underline{Testing}}
 
+Testing this application is done through several executables that have been created in order to generate several procedural programs that would in the end evaluate the average performance of each algorithm. These exes have been made in order to streamline and make evaluation of the algorithms easier in the end. In addition to testing the different algorithms, also testing the effects of the different types of input a user has on the app was also done.
+
+A part of the initial executables can be portrayed like so.
+
+\begin{lstlisting}
+-rwxr-xr-x 1 root root 228K 03:03 psa100fcfs.app
+-rwxr-xr-x 1 root root 228K 03:02 psa100rr.app
+-rwxr-xr-x 1 root root 228K 03:02 psa100sjf1.app
+-rwxr-xr-x 1 root root 228K 03:03 psa100sjf2.app
+-rwxr-xr-x 1 root root 228K 03:04 psa200fcfs.app
+-rwxr-xr-x 1 root root 228K 03:02 psa200rr.app
+-rwxr-xr-x 1 root root 228K 03:02 psa200sjf1.app
+-rwxr-xr-x 1 root root 228K 03:03 psa200sjf2.app
+-rwxr-xr-x 1 root root 228K 03:01 psa50fcfs.app
+-rwxr-xr-x 1 root root 228K 03:01 psa50rr.app
+-rwxr-xr-x 1 root root 228K 03:01 psa50sjf1.app
+-rwxr-xr-x 1 root root 228K 03:01 psa50sjf2.app
+\end{lstlisting}
+
+This is the output if we list part of the generated test apps. They represent a few things. The number indicates the number of processes used in the experiment. Then after the number, follows the name of the algorithm that is being tested. In the end, and output is generated to the standard output to the terminal and it looks like this.
+
+\begin{lstlisting}
+Round Robin (50) > Average Waiting Time: 42645 Average Turnaround Time: 42450
+Round Robin (50) > Average Waiting Time: 41640 Average Turnaround Time: 41460
+Round Robin (50) > Average Waiting Time: 42418 Average Turnaround Time: 42290
+Round Robin (50) > Average Waiting Time: 43167 Average Turnaround Time: 42999
+Round Robin (50) > Average Waiting Time: 42914 Average Turnaround Time: 42734
+Round Robin (50) > Average Waiting Time: 43048 Average Turnaround Time: 42864
+Round Robin (50) > Average Waiting Time: 40998 Average Turnaround Time: 40795
+Round Robin (50) > Average Waiting Time: 41722 Average Turnaround Time: 41525
+Round Robin (50) > Average Waiting Time: 44473 Average Turnaround Time: 44334
+Round Robin (50) > Average Waiting Time: 42477 Average Turnaround Time: 42280
+Average Wait Time: 42645
+Average Turnaround Time: 42450
+Average Time of Execution: 52546
+\end{lstlisting}
+
+We have to keep in mind that this output is the generation of running the specified algorithm with the number of process in total of 10 times, where the total output is averaged between all 10 runs. The reason this was done is because we are generating random numbers, which means that we want to avoid having one set, which might have an uneven process distribution for some reason in comparison to another set.
+
+Another set of important tests that were done were in order to make sure that the app will not break under normal usage. During the course of development, there were cases where the process would continue indefinitely and will stall the whole terminal window. This was a big problem, as the terminal had to be forced to be stopped and closed. This caused a lot of problems, so in order to be fixed, not only the expected types of input were tested, but also all types of inputs, key presses and combinations and so on had to be checked in order for things to be running smoothly.
+
 \section{\underline{Result and Conclusion}}
 
 In the end we have to compare all this information. We would expect that in theory, some of the algorithms would be significantly slower than others.
@@ -1476,6 +1517,19 @@ In this table, we see how we are comparing several algorithms, based on the numb
   \end{tabular}
 \end{center}
 
+\newpage
+
 \section{\underline{References}}
+
+\begingroup
+\renewcommand{\section}[2]{}%
+%\renewcommand{\chapter}[2]{}% for other classes
+\begin{thebibliography}{}
+\bibitem{ano05}
+    A. Nonymous et al.\ 2005
+\bibitem{oe04}
+    A.N. Other \& S.O.M. Ebody 2004
+\end{thebibliography}
+\endgroup
 
 \end{document}
