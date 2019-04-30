@@ -68,6 +68,7 @@
 \begin{document}
 
 \pagenumbering{arabic}
+\setcounter{page}{4}
 
 \tableofcontents
 \newpage
@@ -1128,6 +1129,15 @@ The Model View Controller approach in this project can be seen as the following 
 
 The View is for any representation of information such as a chart, diagram or table. Multiple views of the same information are possible, such as a bar chart for management and a tabular view for accountants. The view means presentation of the model in a particular format. For us, we have plenty of data in the View, although we have only one class that is managing this whole section, which would be the screen class. This class manages all of the windows and sub-windows that we see, plus any text and dynamics that are represented during execution. This is great for us, because we have one singleton that has an open API to the other parts, and can be called and used in a completely decoupled way. So if we want to change some of the headings on some of the panels or to create some new data, the screen class allows us to do that easily. Beneath the screen class lies the ncurses library that allows all of these graphics manipulations in the terminal, but having a custom written API makes things much more easier to manage and work with. In the end we end up with an intuitive and fun User Interface that makes working with the application much more enjoyable.
 
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\linewidth]{./pics/mvc.jpg}
+  \caption{MVC Diagram}
+  \label{fig:MVC Diagram}
+\end{figure}
+
+From this MVC diagram we can see that the user is interacting with the Controller part, which is the driver program of the PSA class. Then that class manipulates the Model, which we can sum up with the Scheduler class. Finally, the Model is constantly updating the View part, being that the Screen class. The Screen class gives the visual information to the user and then the circle is complete.
+
 The Controller accepts input and converts it to commands for the model or view. The controller responds to the user input and performs interactions on the data model objects. The controller receives the input, optionally validates it and then passes the input to the model. For this application, the Controller is the main driver of the project, which would be just a small part, actually the smallest piece of code, that there is, that manages the data flow. In this case, the controller is the one that takes in the data character input from the user and sends it to the scheduling system, which would be part of the Model. Then the Controller updates the information and gives it to the screen, where the View can add it to the output and we can see it represented in the terminal. Although very small, it is a key part of the whole system, because it accounts for security measures and proper data flow.
 
 \bigskip
@@ -1171,6 +1181,40 @@ From a deployment stand point, we have an even simpler diagram, but that's okay.
 \end{figure}
 
 Here we can see how the user can access the project through some machine and can run it there. Once we start, we go to the infrastructure part, where we can see which files play a role in. These would be the psa and common files, allowing for a connection between the other components. In this case we can see that this is the Controller section of the app looking at it like an MVC. Then there is the Frontend part, which is the screen files, allowing for ncurses to do its job. The Backend is part of an algorithm section, or the Model if you like. Then we have two subsections - one is the general bunch of algorithms that are part of the whole project and another is the subsection for the CFS scheduler, where we can see that the red black tree files are there. So these two comprise the back end of the project and it communicates with the psa file in order to provide everything to the user.
+
+\bigskip
+
+\underline{\textbf{Evaluation}}
+
+\begin{table}[H]
+  \begin{tabularx}{\linewidth}{>{\parskip1ex}X@{\kern4\tabcolsep}>{\parskip1ex}X}
+    \toprule
+    \hfil\bfseries Pros & \hfil\bfseries Cons \\
+    \cmidrule(r{3\tabcolsep}){1-1}\cmidrule(l{-\tabcolsep}){2-2}
+
+    Used in real systems\par
+    Super Fast\par
+    Optimal\par
+    Interesting\par
+
+    &
+
+    Very hard to implement \\
+    \bottomrule
+    \toprule
+    \hfil\bfseries Algorithm Complexity & \hfil\bfseries Execution Complexity \\
+
+    \\
+    \centerline{$O(n)$}\par
+
+    &
+
+    \centerline{$O(log(n))$}
+  \end{tabularx}
+  \caption{Pros and Cons of PJF}
+\end{table}
+
+This algorithm is very interesting and great to test and play with, but it is very difficult to understand and even implement, because of the difficult data structures, variable management, tracking and even visualization. This is my favorite algorithm from the whole bunch, but it took so long to implement that a lot of stress was built up around it. It was worth it regardless!
 
 \subsubsection{\underline{Security Features}}
 
@@ -1420,6 +1464,132 @@ void exec_io(std::vector<process>::iterator pit)
 
 Here, using the special \code{iomutex} object, we lock this piece of code and ensure that these calculations that we are doing are not going to cause a race condition and that we wont invalidate some piece of memory. Additionally, here we are executing the IO operation, by calling the sleep function and removing one IO operation from the set that the specific process has.
 
+Another interesting thing that we have to look at is the famous red black tree, which was a great achievement to program in C++. Here we can see in the snippet that there are some curiosities with the insertion and deletion sections.
+
+\begin{lstlisting}
+void rbtree::insert(sched_entity *&node, sched_entity *&parent, process key)
+{
+    if (!node) {
+        node = new sched_entity(key, parent, nullptr, nullptr, col::RED);
+        rebalance(node);
+        rq.push_back(key);
+    } else if (key.get_vruntime() <= node->key.get_vruntime()) {
+        insert(node->left, node, key);
+    } else {
+        insert(node->right, node, key);
+    }
+}
+\end{lstlisting}
+
+This is the main insertion function that creates new nodes, based on the calculated virtual runtime of each process. When a process is deleted and then re-inserted with the new runtime, this method does all the magic. Here we can see the recursive nature of the method, where the empty left and right nodes are being created when we reach the right position with the key. We also see two interesting methods. One is the push back to the internal ready queue, which is necessary to do here, because as we already mentioned, with this structure we need to maintain such queues separately. The other thing we notice is the rebalance method, which is the next code we cover.
+
+\begin{lstlisting}
+void rbtree::rebalance(sched_entity *&node)
+{
+    if (!node)
+        return;
+
+    if (root == node) {
+        root->rb = col::BLACK;
+        return;
+    }
+
+    sched_entity *nnode = node;
+    if (node->rb == col::RED && node->parent->rb == col::RED) {
+        auto *grand_p = parent(node->parent);
+        sched_entity *aunt;
+
+        if (grand_p->left != node->parent)
+            aunt = grand_p->left;
+        else
+            aunt = grand_p->right;
+
+        if (!aunt || aunt->rb == col::BLACK)
+            nnode = rotate(node, grand_p);
+        else
+            nnode = color_flip(node);
+    }
+
+    // if there is no parent to the root
+    if (!nnode->parent)
+        root = nnode;
+
+    rebalance(nnode->parent);
+}
+\end{lstlisting}
+
+The rebalance method is very important to have, because of the complex rules that the insertion has. Here we do a lot of things. First we check that the node we are inserting is valid. If it is not, we quit. Then if that node is equal to the root node, we have to make sure that the root is black and then we don't need to do anything else so we return nothing. After that, we check if the node and the parent node are red, which means that we have two consecutive nodes one after another. If we have such a case, then we take the grand parent of the node, then we check the state of the aunt. If the aunt is black or null, then we have to do a rotation in order to rebalance the tree properly. Otherwise, we just flip the colors. In the end we make sure that the root is the right one. Finally, we ensure the rest of the tree is valid and call the same method recursively.
+
+\begin{lstlisting}
+sched_entity *rbtree::left_rot(sched_entity *&root)
+{
+    auto *tmp = root->right;
+    auto *grand_p = parent(root);
+    root->right = tmp->left;
+    tmp->left = root;
+    root->parent = tmp;
+    if (root->right)
+        root->right->parent = root;
+    if (grand_p) {
+        if (root == grand_p->left)
+            grand_p->left = tmp;
+        else if (root == grand_p->right)
+            grand_p->right = tmp;
+    }
+    tmp->parent = grand_p;
+    return tmp;
+}
+\end{lstlisting}
+
+Because rotation is a key point of the whole algorithm, we have to see how such a rotation is done. It is very similar to the rotation done in an AVL tree, but there are a few other complications. Because the red black tree is having the notion of parent and aunt nodes, we must keep a valid pointer track for the parent nodes of each node. Because of this thing, we have to check a few cases, where the parent node after rotation should be fixed and in the proper place. In this method, we can see that the standard rotation is done in the first 4 lines, but after that we have to check if the grand parent is valid and then assign the proper children to it.
+
+\begin{lstlisting}
+void rbtree::__delete_node(sched_entity *node)
+{
+    sched_entity *rnode = replace(node);
+
+    bool dubblack = ((!rnode || rnode->rb == col::BLACK)
+		    && (node->rb == col::BLACK));
+
+    sched_entity *par = parent(node);
+
+    if (!rnode) {
+	if (node == root) {
+	    root = nullptr;
+	} else {
+	    if (dubblack) {
+		fix_dubs_black(node);
+	    } else {
+		if (sibling(node))
+		    sibling(node)->rb = col::RED;
+	    }
+
+	    if (node == node->parent->left)
+		par->left = nullptr;
+	    else
+		par->right = nullptr;
+	}
+	delete node;
+	return;
+    }
+\end{lstlisting}
+
+The deletion part of the tree is also quite difficult to get, because the red black tree has a notion of being in a state of a double blacks, which has to be fixed in order for the balancing to work. There is no point in showing all of the code, but we have to look at least some of the implementation, to get an idea of what's happening. So in the beginning, what we do is we check for the double black case, then we replace the node with the node we passed as an argument, and then we proceed with the balancing.
+
+\begin{lstlisting}
+int process::set_ttl()
+{
+    // Guarantees no negative ttls
+    int temp_ttl = 0;
+    while (temp_ttl < 1)
+	temp_ttl = commons::gen_gaus_rand(TTL_MEAN, TTL_STDDEV);
+
+    return temp_ttl;
+}
+\end{lstlisting}
+
+An interesting thing to also consider is how the process time to lives are created. We use the commons library in order to generate the normal distribution with which set the ttl of the specific process. The two constants we see are part of the process global constants and are there so that every process is with the same relative numbers in the end. Also this method guarantees that there won't be any outliers or at least any that are with negative numbers, which would be complete nonsense.
+
 \section{\underline{Testing}}
 
 Testing this application is done through several executables that have been created in order to generate several procedural programs that would in the end evaluate the average performance of each algorithm. These exes have been made in order to streamline and make evaluation of the algorithms easier in the end. In addition to testing the different algorithms, also testing the effects of the different types of input a user has on the app was also done.
@@ -1463,11 +1633,45 @@ We have to keep in mind that this output is the generation of running the specif
 
 Another set of important tests that were done were in order to make sure that the app will not break under normal usage. During the course of development, there were cases where the process would continue indefinitely and will stall the whole terminal window. This was a big problem, as the terminal had to be forced to be stopped and closed. This caused a lot of problems, so in order to be fixed, not only the expected types of input were tested, but also all types of inputs, key presses and combinations and so on had to be checked in order for things to be running smoothly.
 
+Because we are writing in C++, we always fall into the trap that we would be having invalid memory allocations and that there are some cases that the program will break. Because of this, test cases were made for the red black tree which were specific for it and that it functioned normally. This means that two things have to be done. Log files were created in the name of passing the test cases and also additional helper functions were generated that also ensured normal work. The log files were procedurally appended with data that was evaluated and then check several times to guarantee proper working mechanics. The two log files were called \code{log\_file.txt} and \code{log\_rbt.txt}. Because we need two different logs for the red black tree and the scheduler, we have these two.
+
+\begin{lstlisting}
+void log(const std::string &text)
+{
+    std::ofstream log_file(
+        "log_file.txt", std::ios_base::out | std::ios_base::app);
+    log_file << text << std::endl;
+}
+\end{lstlisting}
+
+With this simple helper function we can log anything we want and then we can see what is the result. The reason we want log files is two-fold. For one, when C++ spits out a \code{segfault}, we are not aware what and where the problem is. Also we are working with a graphical interface, which makes things even more difficult to debug. Having these log files was a great idea in order to do proper testing in the end.
+
+Here is one cases that took a lot of time to debug and fix, which was about 5 days of non-stop testing.
+
+\begin{lstlisting}
+sched_entity *rbtree::left_rot(sched_entity *&root)
+{
+    auto *tmp = root->right;
+    auto *grand_p = parent(root);
+    root->right = tmp->left;
+\end{lstlisting}
+
+In these simple lines of code, part of the rotation scheme, we have a devilish bug that is fixed with the \code{parent(node)} method. If that method is not there and we are directly accessing the node parent pointer, then there is some form of compiler optimization happening in the code, which is not validating the pointer and is removing the reference to the parent. This was a very difficult bug to find and fix, but because of logging and acceptance test, I did it successfully!
+
+\begin{lstlisting}
+sched_entity *rbtree::parent(sched_entity *root)
+{
+    return *&root->parent;
+}
+\end{lstlisting}
+
+With this function, we have a copy of the pointer we want and we also stop the compiler from doing any unnecessary optimizations that were happening under the hood.
+
 \section{\underline{Result and Conclusion}}
 
-In the end we have to compare all this information. We would expect that in theory, some of the algorithms would be significantly slower than others.
+In the end we have to compare all this information. We would expect that in theory, some of the algorithms would be significantly slower than others. For instance, we would expect that the FCFS algorithm would fair in a similar fashion to the SJF one, with the first method implemented. Also we would expect that the Round Robin would be a bit faster than the rest. In the end, we would also expect that CFS would be the fastest of them all, meaning that it is the best algorithm to use for the most general cases. This does also mean that we are looking at the execution time and the criteria for waiting time and turnaround time. If the waiting time is low, then the algorithm is doing good, if it is high, then it is not an optimal procedure.
 
-In this table, we see how we are comparing several algorithms, based on the number of processes that are submitted to the queue.
+We must also note on what algorithms we are comparing. Some are not so suitable to be compared to others, which means that we must pick the right algorithms to work with, when doing the final evaluation. Having this in mind, let's take a look at the FCFS and the SJF method 1 algorithms to see how they are doing.
 
 \begin{center}
   \begin{tabular}{l|c|c|r}
@@ -1493,7 +1697,13 @@ In this table, we see how we are comparing several algorithms, based on the numb
     \toprule
   \end{tabular}
 \end{center}
-\newpage
+
+From this table and the set of processes we can see a few things. One is that for all of the different executions on the different number of processes, we can see that there is a pattern followed by the algorithms. We notice that there is a close to an linear progression of the FCFS algorithm and the SJF. The waiting time increases in the same manner as the process count increases. The turnaround time is relatively the same and there is a good reason for that. As we saw from the Gantt charts, the turnaround time would be close to that of the process time to live. That is why in these cases, it is almost the same, because the process execution time is around the time of 1000 milliseconds.
+
+Our expectations and guesses are correct for these algorithms and are in line with the theory.
+
+The next set of processes we can compare is the SJF method 2 and the Round Robin one. Here we can see that several other factors play in hand. Here we introduce the notion of the processes having IO operations. Knowing this, we can expect that the execution time would be larger and that the numbers would also be. We would also expect that the SJF method 2 algorithm would be a bit better than the previous ones, but still not as good as the Round Robin one. Let's look at the data.
+
 \begin{center}
   \begin{tabular}{l|c|c|r}
     \multicolumn{4}{c}{SJF2} \\
@@ -1517,6 +1727,12 @@ In this table, we see how we are comparing several algorithms, based on the numb
   \end{tabular}
 \end{center}
 
+Here we can see that there are huge jumps between the two tables. We notice that there are for the SJF 2 algorithm, the execution time and the waiting time are increasing not exactly in linear fashion, but also not in logarithmic time. This means that the algorithm is linear, but because of the predictions, there is some form of optimization that is done, making the times better. Looking at the Round Robin, we can tell that the increase in time is definitely not linear, but logarithmic. But because it is not optimized, the logarithmic time is not optimal, but still better than the rest of the other algorithms.
+
+In the end I would say that the experimentation and development was interesting yet difficult. It was interesting because the topic and the algorithms I have covered are very interesting to me and I think that they are a valuable way to learn and to understand the workings of the operating system. But there are also a lot of difficulties that were involved. Writing this project in C++ cause a lot of problems, many lines of code, and a lot of implementation details that are difficult to figure out. Because of this, valuable time is lost on fixing problems that are not concerned with the actual heart of the problem.
+
+I think that I proved what I set out to do and to compare how the different procedures interact and how they work. There is plenty of work to be done more, like writing more detailed algorithms and comparing them on a more linear system, without having to visualize them.
+
 \newpage
 
 \section{\underline{References}}
@@ -1526,9 +1742,31 @@ In this table, we see how we are comparing several algorithms, based on the numb
 %\renewcommand{\chapter}[2]{}% for other classes
 \begin{thebibliography}{}
 \bibitem{ano05}
-    A. Nonymous et al.\ 2005
+  https://en.wikipedia.org/wiki/Red%E2%80%93black_tree
 \bibitem{oe04}
-    A.N. Other \& S.O.M. Ebody 2004
+  https://www.linuxjournal.com/node/10267
+\bibitem{aoeu}
+  Silberschatz, A., Galvin, P. B., \& Gagne, G. (2014). Operating system concepts. Hoboken, N.J: Wiley.
+\bibitem{aoe2}
+  https://www.coders-hub.com/2015/07/red-black-tree-rb-tree-using-c.html
+\bibitem{nttt}
+  https://www.geeksforgeeks.org/c-program-red-black-tree-insertion/
+\bibitem{oeue}
+  https://www.mjmwired.net/kernel/Documentation/scheduler/sched-design-CFS.txt
+\bibitem{oeun}
+  https://en.wikipedia.org/wiki/Completely\_Fair\_Scheduler
+\bibitem{ao22}
+  https://developer.ibm.com/tutorials/l-completely-fair-scheduler/
+\bibitem{sttt}
+  https://www.cs.usfca.edu/~mmalensek/cs326/schedule/lectures/326-L7.pdf
+\bibitem{stt1}
+  https://www.kernel.org/doc/Documentation/scheduler/sched-design-CFS.txt
+\bibitem{stt2}
+  https://oakbytes.wordpress.com/2012/07/03/linux-scheduler-cfs-and-virtual-run-time/
+\bibitem{stt3}
+  https://stackoverflow.com/questions/54565683/at-what-point-does-a-program-become-a-process-virtual-machine
+\bibitem{hnn2}
+  https://stackoverflow.com/questions/19181834/what-is-the-concept-of-vruntime-in-cfs
 \end{thebibliography}
 \endgroup
 

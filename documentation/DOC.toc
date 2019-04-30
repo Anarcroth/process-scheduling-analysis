@@ -1,0 +1,22 @@
+\contentsline {section}{\numberline {1}\relax $\@@underline {\hbox {Introduction}}\mathsurround \z@ $\relax }{5}% 
+\contentsline {section}{\numberline {2}\relax $\@@underline {\hbox {Specification and Analysis of the Software Requirements}}\mathsurround \z@ $\relax }{6}% 
+\contentsline {subsection}{\numberline {2.1}Requirements}{6}% 
+\contentsline {subsection}{\numberline {2.2}\relax $\@@underline {\hbox {Use cases}}\mathsurround \z@ $\relax }{8}% 
+\contentsline {section}{\numberline {3}\relax $\@@underline {\hbox {Design of the Software Solution}}\mathsurround \z@ $\relax }{11}% 
+\contentsline {subsection}{\numberline {3.1}\relax $\@@underline {\hbox {Algorithms and Data-structures}}\mathsurround \z@ $\relax }{11}% 
+\contentsline {subsubsection}{\numberline {3.1.1}\relax $\@@underline {\hbox {FCFS}}\mathsurround \z@ $\relax }{11}% 
+\contentsline {subsubsection}{\numberline {3.1.2}\relax $\@@underline {\hbox {SJF}}\mathsurround \z@ $\relax }{14}% 
+\contentsline {subsubsection}{\numberline {3.1.3}\relax $\@@underline {\hbox {Round-Robin}}\mathsurround \z@ $\relax }{16}% 
+\contentsline {subsubsection}{\numberline {3.1.4}\relax $\@@underline {\hbox {Priority Job First}}\mathsurround \z@ $\relax }{19}% 
+\contentsline {subsubsection}{\numberline {3.1.5}\relax $\@@underline {\hbox {Completely Fair Scheduling}}\mathsurround \z@ $\relax }{21}% 
+\contentsline {subsubsection}{\numberline {3.1.6}\relax $\@@underline {\hbox {Normal and Even Distributions for Processes}}\mathsurround \z@ $\relax }{27}% 
+\contentsline {subsubsection}{\numberline {3.1.7}\relax $\@@underline {\hbox {Data-structures}}\mathsurround \z@ $\relax }{29}% 
+\contentsline {subsubsection}{\numberline {3.1.8}\relax $\@@underline {\hbox {User Interface}}\mathsurround \z@ $\relax }{31}% 
+\contentsline {subsubsection}{\numberline {3.1.9}\relax $\@@underline {\hbox {Software Architecture}}\mathsurround \z@ $\relax }{35}% 
+\contentsline {subsubsection}{\numberline {3.1.10}\relax $\@@underline {\hbox {Components}}\mathsurround \z@ $\relax }{37}% 
+\contentsline {subsubsection}{\numberline {3.1.11}\relax $\@@underline {\hbox {Deployment}}\mathsurround \z@ $\relax }{39}% 
+\contentsline {subsubsection}{\numberline {3.1.12}\relax $\@@underline {\hbox {Security Features}}\mathsurround \z@ $\relax }{40}% 
+\contentsline {section}{\numberline {4}\relax $\@@underline {\hbox {Implementation}}\mathsurround \z@ $\relax }{41}% 
+\contentsline {section}{\numberline {5}\relax $\@@underline {\hbox {Testing}}\mathsurround \z@ $\relax }{50}% 
+\contentsline {section}{\numberline {6}\relax $\@@underline {\hbox {Result and Conclusion}}\mathsurround \z@ $\relax }{52}% 
+\contentsline {section}{\numberline {7}\relax $\@@underline {\hbox {References}}\mathsurround \z@ $\relax }{54}% 
